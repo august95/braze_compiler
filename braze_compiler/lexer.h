@@ -14,6 +14,8 @@ public:
 
 private:
 
+	//TODO: these functions and ifstream should be provided by an interface(made by template?) 
+	//the lexer should not own the file stream
 	char peekChar();
 	char nextChar();
 	void pushChar(char ch);
