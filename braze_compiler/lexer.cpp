@@ -1,4 +1,6 @@
 #include "lexer.h"
+#include "braze_compiler.h"
+
 
 lexer::lexer() :
 m_filename_to_lex("test.c"),
@@ -16,7 +18,7 @@ char lexer::peekChar()
 {
 	if(m_file)
 		return m_file.peek();
-	std::cout << "LEX error: could not open test.c";
+	cerror("LEX error: could not open test.c");
 	return 'x';
 }
 
@@ -24,7 +26,7 @@ char lexer::nextChar()
 {
 	if (m_file)
 		return m_file.get();
-	std::cout << "LEX error: could not open test.c";
+	cerror("LEX error: could not open test.c");
 	return 'x';
 }
 
@@ -32,5 +34,5 @@ void lexer::pushChar(char ch)
 {
 	if (m_file)
 		m_file.putback(ch);
-	std::cout << "LEX error: could not open test.c";
+	cerror("LEX error: could not open test.c");
 }
