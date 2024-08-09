@@ -1,9 +1,7 @@
 #pragma once
-class lexer
+class parser
 {
 public:
-	lexer();
-
-
+	parser();
 };
 
