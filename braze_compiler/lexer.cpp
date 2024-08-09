@@ -1,21 +1,36 @@
 #include "lexer.h"
 
-lexer::lexer()
+lexer::lexer() :
+m_filename_to_lex("test.c"),
+m_file(m_filename_to_lex)
 {
 
+}
+
+lexer::~lexer()
+{
+	m_file.close();
 }
 
 char lexer::peekChar()
 {
-	return '0';
+	if(m_file)
+		return m_file.peek();
+	std::cout << "LEX error: could not open test.c";
+	return 'x';
 }
 
 char lexer::nextChar()
 {
-	return '0';
+	if (m_file)
+		return m_file.get();
+	std::cout << "LEX error: could not open test.c";
+	return 'x';
 }
 
-void lexer::pushChar()
+void lexer::pushChar(char ch)
 {
-
+	if (m_file)
+		m_file.putback(ch);
+	std::cout << "LEX error: could not open test.c";
 }
