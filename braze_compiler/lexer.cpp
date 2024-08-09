@@ -32,7 +32,8 @@ char lexer::nextChar()
 
 void lexer::pushChar(char ch)
 {
-	if (m_file)
-		m_file.putback(ch);
+	if (!m_file)
+		return;
+	m_file.putback(ch);
 	cerror("LEX error: could not open test.c");
 }
