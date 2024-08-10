@@ -1,12 +1,17 @@
 #include "filePosition.h"
 #include <iostream>
 
-filePosition::filePosition(std::string filename)
-	:m_line(0),
-	m_col(0),
-	m_filename(filename)
+filePosition::filePosition()
+	:m_line(1),
+	m_col(1),
+	m_filename()
 {
 
+}
+
+void filePosition::setFileName(std::string filename)
+{
+	m_filename = filename;
 }
 
 void filePosition::incrementLine()

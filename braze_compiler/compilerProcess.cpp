@@ -5,6 +5,11 @@ compileProcess::compileProcess()
 
 }
 
+void compileProcess::intialize()
+{
+	lexer.initialize("test.c");
+}
+
 void compileProcess::startCompiler()
 {
 	lexer.startLexer();

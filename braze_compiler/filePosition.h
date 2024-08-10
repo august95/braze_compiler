@@ -6,7 +6,8 @@
 class filePosition
 {
 public:
-	filePosition(std::string filename);
+	filePosition();
+	void setFileName(std::string filename);
 	void incrementLine();
 	void incrementCol();
 	void printFileLocation();

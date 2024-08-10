@@ -12,6 +12,7 @@ public:
 	lexer();
 	~lexer();
 
+	void initialize(std::string filename);
 	void startLexer();
 
 private:
@@ -22,7 +23,7 @@ private:
 	char nextChar();
 	void pushChar(char ch);
 
-	std::string m_filename_to_lex;
+	std::string m_filename;
 	std::ifstream m_file;
 	filePosition m_file_position;
 };

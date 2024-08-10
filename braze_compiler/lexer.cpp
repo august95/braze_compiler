@@ -3,9 +3,9 @@
 
 
 lexer::lexer() :
-m_filename_to_lex("test.c"),
-m_file(m_filename_to_lex),
-m_file_position(m_filename_to_lex)
+m_filename(),
+m_file(),
+m_file_position()
 {
 
 }
@@ -15,9 +15,18 @@ lexer::~lexer()
 	m_file.close();
 }
 
+void lexer::initialize(std::string filename)
+{
+	m_filename = filename;
+	m_file.open(m_filename);
+	m_file_position.setFileName(m_filename);
+}
+
 void lexer::startLexer()
 {
-
+	std::cout << peekChar() << "\n";
+	std::cout << nextChar() << "\n";
+	m_file_position.printFileLocation();
 }
 
 char lexer::peekChar()
