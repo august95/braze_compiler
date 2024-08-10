@@ -4,7 +4,8 @@
 
 lexer::lexer() :
 m_filename_to_lex("test.c"),
-m_file(m_filename_to_lex)
+m_file(m_filename_to_lex),
+m_file_position(m_filename_to_lex)
 {
 
 }
@@ -14,19 +15,35 @@ lexer::~lexer()
 	m_file.close();
 }
 
+void lexer::startLexer()
+{
+
+}
+
 char lexer::peekChar()
 {
-	if(m_file)
+	if (m_file)
+	{
 		return m_file.peek();
-	cerror("LEX error: could not open test.c");
+	}
+	cerror("could not open test.c");
 	return 'x';
 }
 
 char lexer::nextChar()
 {
 	if (m_file)
-		return m_file.get();
-	cerror("LEX error: could not open test.c");
+	{
+		char c = m_file.get();	
+		m_file_position.incrementCol();
+		if (c == '\n')
+		{
+			m_file_position.incrementLine();
+		}
+		return c;
+	}
+
+	cerror("could not open test.c");
 	return 'x';
 }
 

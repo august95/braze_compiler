@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "filePosition.h"
 
 class lexer
 {
@@ -11,6 +12,7 @@ public:
 	lexer();
 	~lexer();
 
+	void startLexer();
 
 private:
 
@@ -22,6 +24,6 @@ private:
 
 	std::string m_filename_to_lex;
 	std::ifstream m_file;
-	
+	filePosition m_file_position;
 };
 
