@@ -14,6 +14,8 @@ public:
 
 	void initialize(std::string filename);
 	void startLexer();
+	void lexFile();
+
 
 private:
 

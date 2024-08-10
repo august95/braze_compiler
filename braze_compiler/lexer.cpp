@@ -24,9 +24,33 @@ void lexer::initialize(std::string filename)
 
 void lexer::startLexer()
 {
-	std::cout << peekChar() << "\n";
-	std::cout << nextChar() << "\n";
-	m_file_position.printFileLocation();
+	if (!m_file.is_open())
+	{
+		cerror("failed to open file");
+		return;
+	}
+
+	lexFile();
+}
+
+void lexer::lexFile()
+{
+	/*
+	* TODO:
+	* creat token class
+	* choose a RAII method, should I use smart pointers to tokens?
+	* How should I store the tokens? a vector might work.
+	* A parser needs to access the tokens in the order they was created, queue or linked list might do the work
+	* 
+	*/
+	/*
+	token token = readNextToken();
+	while (token)
+	{
+		tokens->push(token);
+		token = readNextToken();
+	}
+	*/
 }
 
 char lexer::peekChar()
