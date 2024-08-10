@@ -4,3 +4,8 @@ compileProcess::compileProcess()
 {
 
 }
+
+void compileProcess::startCompiler()
+{
+	lexer.startLexer();
+}

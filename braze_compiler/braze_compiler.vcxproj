@@ -129,11 +129,13 @@
   <ItemGroup>
     <ClCompile Include="braze_compiler.cpp" />
     <ClCompile Include="compilerProcess.cpp" />
+    <ClCompile Include="filePosition.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="parser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compilerProcess.h" />
+    <ClInclude Include="filePosition.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="parser.h" />
   </ItemGroup>

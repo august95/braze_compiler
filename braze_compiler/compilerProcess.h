@@ -10,7 +10,7 @@ class compileProcess
 {
 public:
 	compileProcess();
-
+	void startCompiler();
 
 private:
 
