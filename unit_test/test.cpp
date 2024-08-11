@@ -1,13 +1,14 @@
 #include "pch.h"
-#include "../../braze_compiler/braze_compiler/compilerProcess.h"
+
+#include "../compiler_lib/compiler_lib.cpp"
+#include "../compiler_lib/compilerProcess.h"
 
 TEST(TestCaseName, TestName) {
   EXPECT_EQ(1, 1);
   EXPECT_TRUE(true);
-}
 
-TEST(braze_compiler, test)
-{
-	compileProcess compile_process;
-	EXPECT_TRUE(1);
+
+  compileProcess process;
+  process.intialize();
+  process.startCompiler();
 }

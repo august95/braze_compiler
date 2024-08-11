@@ -1,5 +1,7 @@
+#include "pch.h"
 #include "lexer.h"
 #include "braze_compiler.h"
+#include <iostream>
 
 
 lexer::lexer() :
@@ -51,6 +53,8 @@ void lexer::lexFile()
 		token = readNextToken();
 	}
 	*/
+
+	std::cout << "test";
 }
 
 char lexer::peekChar()

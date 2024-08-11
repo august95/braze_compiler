@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{316682c0-ac5e-4bcf-ae1b-41eadf841932}</ProjectGuid>
+    <ProjectGuid>{5f320e0c-ca65-47db-aa9a-273a441fcf91}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
     <ConfigurationType>Application</ConfigurationType>
@@ -61,6 +61,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);$(SolutionDir)x64\Debug\compiler_lib.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -108,8 +109,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\braze_compiler\braze_compiler.vcxproj">
-      <Project>{8fc4f567-28e5-42df-bc0e-d088313ada7f}</Project>
+    <ProjectReference Include="..\compiler_lib\compiler_lib.vcxproj">
+      <Project>{efa26aee-a32d-495f-b94b-9766b182edaa}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
