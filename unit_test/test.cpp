@@ -6,7 +6,8 @@
 
 std::string file_path = "test_files";
 
-TEST(lexer, number) {
+TEST(TestCaseName, TestName) {
+  EXPECT_EQ(1, 1);
   EXPECT_TRUE(true);
 
 
