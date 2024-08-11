@@ -6,9 +6,9 @@ compileProcess::compileProcess()
 
 }
 
-void compileProcess::intialize()
+void compileProcess::intialize(std::string filename)
 {
-	lexer.initialize("test.c");
+	lexer.initialize(filename);
 }
 
 void compileProcess::startCompiler()
