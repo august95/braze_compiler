@@ -35,6 +35,7 @@ private:
 	std::shared_ptr < token > makeHexicalNumberToken();
 	std::shared_ptr < token > makeBinaryNumberToken();
 	std::shared_ptr < token > makeDecimalNumberToken();
+	std::shared_ptr < token > handle_whitespace();
 	bool isHexChar(char c);
 
 

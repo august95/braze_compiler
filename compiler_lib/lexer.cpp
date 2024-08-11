@@ -123,6 +123,12 @@ std::shared_ptr< token > lexer::readNextToken()
 	CASE_NUMERIC:
 		token = makeNumberToken();
 		break;
+
+	case ' ':
+	case '\t':
+	case '\r':
+		token = handle_whitespace();
+		break;
 	}
 
 	return token;
@@ -193,6 +199,13 @@ std::shared_ptr < token > lexer::makeDecimalNumberToken()
 	}
 	number = atoll(number_str.c_str());
 	return std::make_shared < token >(tokenType::TOKEN_TYPE_NUMBER, m_file_position, number);
+}
+
+std::shared_ptr < token > lexer::handle_whitespace()
+{
+	_assert_(peekChar() == ' ' || peekChar() == '\t' || peekChar() == '\r');
+	nextChar();
+	return readNextToken();
 }
 
 bool lexer::isHexChar(char c)
