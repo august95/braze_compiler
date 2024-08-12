@@ -147,7 +147,7 @@ std::shared_ptr< token > lexer::readNextToken()
 		break;
 
 	CASE_OPERATOR:
-		token = makeOperatorToken();
+		token = makeOperatorTokenOrIncludeString(); // '<' can be operator or part of #inlcude <...h>
 		break;
 
 	case ' ':
@@ -160,12 +160,15 @@ std::shared_ptr< token > lexer::readNextToken()
 	return token;
 }
 
-std::shared_ptr < token > lexer::makeOperatorToken()
+std::shared_ptr < token > lexer::makeOperatorTokenOrIncludeString()
 {
-	std::shared_ptr < token > token(0);
+	/*
+	* get last pushed token, and check if it is the keyword include
+	* parse string
+	*/
 
-
-	return token;
+	
+	return std::make_shared < token >(tokenType::TOKEN_TYPE_OPERATOR, m_file_position, getOperatorString());
 }
 
 std::string lexer::getOperatorString()
@@ -174,8 +177,9 @@ std::string lexer::getOperatorString()
 	char first_op = nextChar(); //'+'
 	std::string operator_string("");
 	operator_string += first_op;
-	operator_string += peekChar(); //'='
-	if (isOperatorValid(operator_string)) //'+'
+	_assert_(isOperatorValid(operator_string));
+	operator_string += peekChar(); //'=' or 5
+	if (isOperatorValid(operator_string)) //'+='
 	{
 		nextChar();
 		return operator_string;
@@ -218,7 +222,7 @@ bool lexer::isOperatorValid(std::string _operator_)
 		S_EQ(_operator_.c_str(), "[") ||
 		S_EQ(_operator_.c_str(), ",") ||
 		S_EQ(_operator_.c_str(), ".") ||
-		S_EQ(_operator_.c_str(), "...") ||
+		//S_EQ(_operator_.c_str(), "...") || // FIXME: add support
 		S_EQ(_operator_.c_str(), "~") ||
 		S_EQ(_operator_.c_str(), "?") ||
 		S_EQ(_operator_.c_str(), "%");

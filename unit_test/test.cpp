@@ -30,44 +30,55 @@ TEST(lexer, template) {
 
 	std::shared_ptr < token > token = tokens.front();
 	// perform test
+	EXPECT_EQ();
 	tokens.pop_front();
 
 	std::shared_ptr < token > token = tokens.front();
 	// perform test
+	EXPECT_EQ();
 	tokens.pop_front();
 }
 
 */
 
 
-TEST(lexer, operators) 
+TEST(lexer, operators)
 {
 
-	std::string file_name = "test_test.c";
+	std::string file_name = "test_lexer_operators.c";
 	/*
 	* File Content
 	*
-	* 01234 0x1af34 0b0101
+	* + -  +=  == 
 	*/
 
-	
 
-		const int num_of_tokens = 3;
 
-		compileProcess process;
-		process.intialize(file_path + file_name);
-		process.startCompiler();
+	const int num_of_tokens = 4;
 
-		std::list < std::shared_ptr < token > > tokens = process.getTokens();
-		EXPECT_EQ(tokens.size(), num_of_tokens);
+	compileProcess process;
+	process.intialize(file_path + file_name);
+	process.startCompiler();
 
-		std::shared_ptr < token > token = tokens.front();
-		// perform test
-		tokens.pop_front();
+	std::list < std::shared_ptr < token > > tokens = process.getTokens();
+	EXPECT_EQ(tokens.size(), num_of_tokens);
 
-		std::shared_ptr < token > token = tokens.front();
-		// perform test
-		tokens.pop_front();
+	std::shared_ptr < token > token = tokens.front();
+	EXPECT_EQ(token->getStringValue(), "+");
+	tokens.pop_front();
+
+	token = tokens.front();
+	EXPECT_EQ(token->getStringValue(), "-");
+	tokens.pop_front();
+
+	 token = tokens.front();
+	EXPECT_EQ(token->getStringValue(), "+=");
+	tokens.pop_front();
+
+	token = tokens.front();
+	EXPECT_EQ(token->getStringValue(), "==");
+	tokens.pop_front();
+
 }
 
 	
@@ -92,15 +103,15 @@ TEST(lexer, numbers) {
   EXPECT_EQ(tokens.size(), num_of_tokens);
   
   std::shared_ptr < token > token = tokens.front();
-  EXPECT_EQ(token->getValue(), 1234);
+  EXPECT_EQ(token->getNumberValue(), 1234);
   tokens.pop_front();
 
   token = tokens.front();
-  EXPECT_EQ(token->getValue(), 0x1af34);
+  EXPECT_EQ(token->getNumberValue(), 0x1af34);
   tokens.pop_front();
 
   token = tokens.front();
-  EXPECT_EQ(token->getValue(), 0b0101);
+  EXPECT_EQ(token->getNumberValue(), 0b0101);
   tokens.pop_front();
 
 }

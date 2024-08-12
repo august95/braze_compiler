@@ -20,14 +20,17 @@ class token
 public:
 	token();
 	token(tokenType token_type, filePosition file_position, unsigned int value);
+	token(tokenType token_type, filePosition file_position, std::string string_value);
 	bool isTokenTypeNone();
-	unsigned long getValue() { return m_value; }
+	unsigned long getNumberValue() { return m_number_value; }
+	std::string getStringValue() { return m_string_value; }
 
 private:
 	tokenType m_token_tyoe;
 	filePosition m_file_position;
 	
-	unsigned long m_value;
+	std::string m_string_value;
+	unsigned long m_number_value;
 
 };
 
