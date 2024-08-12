@@ -39,6 +39,39 @@ TEST(lexer, template) {
 
 */
 
+
+TEST(lexer, operators) 
+{
+
+	std::string file_name = "test_test.c";
+	/*
+	* File Content
+	*
+	* 01234 0x1af34 0b0101
+	*/
+
+	
+
+		const int num_of_tokens = 3;
+
+		compileProcess process;
+		process.intialize(file_path + file_name);
+		process.startCompiler();
+
+		std::list < std::shared_ptr < token > > tokens = process.getTokens();
+		EXPECT_EQ(tokens.size(), num_of_tokens);
+
+		std::shared_ptr < token > token = tokens.front();
+		// perform test
+		tokens.pop_front();
+
+		std::shared_ptr < token > token = tokens.front();
+		// perform test
+		tokens.pop_front();
+}
+
+	
+
 TEST(lexer, numbers) {
 
   std::string file_name = "test_lexer_numbers.c";

@@ -4,6 +4,9 @@
 #include <iostream>
 #include <assert.h>
 
+#define S_EQ(str, str2) \
+    (str && str2 && (strcmp(str, str2) == 0))
+
 #define CASE_NUMERIC \
     case '0':        \
     case '1':        \
@@ -15,6 +18,25 @@
     case '7':        \
     case '8':        \
     case '9'
+
+#define CASE_OPERATOR \
+    case '+':                            \
+    case '-':                            \
+    case '*':                            \
+    case '>':                            \
+    case '<':                            \
+    case '^':                            \
+    case '%':                            \
+    case '!':                            \
+    case '=':                            \
+    case '~':                            \
+    case '|':                            \
+    case '&':                            \
+    case '(':                            \
+    case '[':                            \
+    case ',':                            \
+    case '.':                            \
+    case '?'
 
 lexer::lexer() :
 m_filename(),
@@ -124,6 +146,10 @@ std::shared_ptr< token > lexer::readNextToken()
 		token = makeNumberToken();
 		break;
 
+	CASE_OPERATOR:
+		token = makeOperatorToken();
+		break;
+
 	case ' ':
 	case '\t':
 	case '\r':
@@ -132,6 +158,70 @@ std::shared_ptr< token > lexer::readNextToken()
 	}
 
 	return token;
+}
+
+std::shared_ptr < token > lexer::makeOperatorToken()
+{
+	std::shared_ptr < token > token(0);
+
+
+	return token;
+}
+
+std::string lexer::getOperatorString()
+{
+	//operator might be a single char '+' 5, or two chars "+="
+	char first_op = nextChar(); //'+'
+	std::string operator_string("");
+	operator_string += first_op;
+	operator_string += peekChar(); //'='
+	if (isOperatorValid(operator_string)) //'+'
+	{
+		nextChar();
+		return operator_string;
+	}
+	operator_string.clear();
+	operator_string += first_op; //'+' 5
+	return operator_string; 
+
+}
+
+bool lexer::isOperatorValid(std::string _operator_)
+{
+	return S_EQ(_operator_.c_str(), "+") ||
+		S_EQ(_operator_.c_str(), "-") ||
+		S_EQ(_operator_.c_str(), "*") ||
+		S_EQ(_operator_.c_str(), "/") ||
+		S_EQ(_operator_.c_str(), "!") ||
+		S_EQ(_operator_.c_str(), "^") ||
+		S_EQ(_operator_.c_str(), "+=") ||
+		S_EQ(_operator_.c_str(), "-=") ||
+		S_EQ(_operator_.c_str(), "*=") ||
+		S_EQ(_operator_.c_str(), "/=") ||
+		S_EQ(_operator_.c_str(), ">>") ||
+		S_EQ(_operator_.c_str(), "<<") ||
+		S_EQ(_operator_.c_str(), "<=") ||
+		S_EQ(_operator_.c_str(), ">=") ||
+		S_EQ(_operator_.c_str(), "<") ||
+		S_EQ(_operator_.c_str(), ">") ||
+		S_EQ(_operator_.c_str(), "||") ||
+		S_EQ(_operator_.c_str(), "&&") ||
+		S_EQ(_operator_.c_str(), "|") ||
+		S_EQ(_operator_.c_str(), "&") ||
+		S_EQ(_operator_.c_str(), "++") ||
+		S_EQ(_operator_.c_str(), "--") ||
+		S_EQ(_operator_.c_str(), "=") ||
+		S_EQ(_operator_.c_str(), "!=") ||
+		S_EQ(_operator_.c_str(), "==") ||
+		S_EQ(_operator_.c_str(), "->") ||
+		S_EQ(_operator_.c_str(), "(") ||
+		S_EQ(_operator_.c_str(), "[") ||
+		S_EQ(_operator_.c_str(), ",") ||
+		S_EQ(_operator_.c_str(), ".") ||
+		S_EQ(_operator_.c_str(), "...") ||
+		S_EQ(_operator_.c_str(), "~") ||
+		S_EQ(_operator_.c_str(), "?") ||
+		S_EQ(_operator_.c_str(), "%");
 }
 
 std::shared_ptr < token > lexer::makeNumberToken()
@@ -201,16 +291,16 @@ std::shared_ptr < token > lexer::makeDecimalNumberToken()
 	return std::make_shared < token >(tokenType::TOKEN_TYPE_NUMBER, m_file_position, number);
 }
 
-std::shared_ptr < token > lexer::handle_whitespace()
-{
-	_assert_(peekChar() == ' ' || peekChar() == '\t' || peekChar() == '\r');
-	nextChar();
-	return readNextToken();
-}
-
 bool lexer::isHexChar(char c)
 {
 	char c_lower = tolower(c);
     return (c_lower >= '0' && c_lower <= '9') || (c_lower >= 'a' && c_lower <= 'f');
 }
 
+
+std::shared_ptr < token > lexer::handle_whitespace()
+{
+	_assert_(peekChar() == ' ' || peekChar() == '\t' || peekChar() == '\r');
+	nextChar();
+	return readNextToken();
+}

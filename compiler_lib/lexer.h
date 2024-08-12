@@ -32,12 +32,18 @@ private:
 
 
 	std::shared_ptr < token > readNextToken();
+
+	std::shared_ptr < token > makeOperatorToken();
+	std::string getOperatorString();
+	bool isOperatorValid(std::string _operator_);
+
 	std::shared_ptr < token > makeNumberToken();
 	std::shared_ptr < token > makeHexicalNumberToken();
 	std::shared_ptr < token > makeBinaryNumberToken();
 	std::shared_ptr < token > makeDecimalNumberToken();
-	std::shared_ptr < token > handle_whitespace();
 	bool isHexChar(char c);
+
+	std::shared_ptr < token > handle_whitespace();
 
 
 
