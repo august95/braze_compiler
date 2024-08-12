@@ -32,7 +32,7 @@ lexer::~lexer()
 
 char lexer::peekChar()
 {
-	if (m_file)
+	if (m_file.is_open())
 	{
 		return m_file.peek();
 	}
@@ -42,7 +42,7 @@ char lexer::peekChar()
 
 char lexer::nextChar()
 {
-	if (m_file)
+	if (m_file.is_open())
 	{
 		char c = m_file.get();
 		m_file_position.incrementCol();
@@ -59,10 +59,12 @@ char lexer::nextChar()
 
 void lexer::pushChar(char ch)
 {
-	if (!m_file)
+	if (!m_file.is_open())
+	{
+		cerror("LEX error: could not open test.c");
 		return;
+	}
 	m_file.putback(ch);
-	cerror("LEX error: could not open test.c");
 }
 
 
@@ -102,8 +104,6 @@ void lexer::lexFile()
 		tokens.push_back(token);
 		token = readNextToken();
 	}
-
-	std::cout << "test";
 }
 
 
@@ -179,7 +179,7 @@ std::shared_ptr < token > lexer::makeBinaryNumberToken()
 	_assert_(nextChar() == 'b');
 	unsigned long number = 0;
 	std::string number_str;
-	while (peekChar() == '0' || peekChar() <= '1')
+	while (peekChar() == '0' || peekChar() == '1')
 	{
 		number_str += peekChar();
 		nextChar();

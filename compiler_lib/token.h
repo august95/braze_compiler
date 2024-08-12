@@ -21,6 +21,7 @@ public:
 	token();
 	token(tokenType token_type, filePosition file_position, unsigned int value);
 	bool isTokenTypeNone();
+	unsigned long getValue() { return m_value; }
 
 private:
 	tokenType m_token_tyoe;

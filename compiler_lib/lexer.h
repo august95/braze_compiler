@@ -26,6 +26,7 @@ public:
 	void startLexer();
 	void lexFile();
 	void _assert_(bool condition);
+	std::list < std::shared_ptr < token > > getTokens() { return tokens; }
 
 private:
 
