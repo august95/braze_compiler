@@ -25,8 +25,4 @@ token::token(tokenType token_type, filePosition file_position, std::string strin
 {
 
 }
-
-bool token::isTokenTypeNone()
-{
-	return m_token_tyoe == tokenType::TOKEN_TYPE_NONE;
-}
+	

@@ -42,6 +42,62 @@ TEST(lexer, template) {
 */
 
 
+
+TEST(lexer, identifierOrKeyword) {
+
+	std::string file_name = "test_lexer_identifiers_symbols.c";
+	/*
+	* File Content
+	*
+	* 01234 0x1af34 0b0101
+	*/
+
+		const int num_of_tokens = 5;
+
+		compileProcess process;
+		process.intialize(file_path + file_name);
+		process.startCompiler();
+
+		std::list < std::shared_ptr < token > > tokens = process.getTokens();
+		EXPECT_EQ(tokens.size(), num_of_tokens);
+
+		std::shared_ptr < token > token = tokens.front();
+		// perform test
+		EXPECT_EQ(token->getStringValue(), "testClass");
+		EXPECT_TRUE(token->isTokenTypeIdentifier());
+		tokens.pop_front();
+
+		token = tokens.front();
+		// perform test
+		EXPECT_EQ(token->getStringValue(), "return");
+		EXPECT_TRUE(token->isTokenTypeKeyword());
+		tokens.pop_front();
+
+		token = tokens.front();
+		// perform test
+		EXPECT_EQ(token->getStringValue(), "void");
+		EXPECT_TRUE(token->isTokenTypeKeyword());
+		tokens.pop_front();
+
+		token = tokens.front();
+		// perform test
+		EXPECT_EQ(token->getStringValue(), "avxname");
+		EXPECT_TRUE(token->isTokenTypeIdentifier());
+		tokens.pop_front();
+
+		token = tokens.front();
+		// perform test
+		EXPECT_EQ(token->getStringValue(), "___braze");
+		EXPECT_TRUE(token->isTokenTypeIdentifier());
+		tokens.pop_front();
+
+
+	}
+
+	
+
+
+
 TEST(lexer, operators)
 {
 
