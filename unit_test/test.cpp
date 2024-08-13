@@ -49,12 +49,12 @@ TEST(lexer, operators)
 	/*
 	* File Content
 	*
-	* + -  +=  == 
+	* + -  +=  == ... ^
 	*/
 
 
 
-	const int num_of_tokens = 4;
+	const int num_of_tokens = 6;
 
 	compileProcess process;
 	process.intialize(file_path + file_name);
@@ -77,6 +77,14 @@ TEST(lexer, operators)
 
 	token = tokens.front();
 	EXPECT_EQ(token->getStringValue(), "==");
+	tokens.pop_front();
+
+	token = tokens.front();
+	EXPECT_EQ(token->getStringValue(), "...");
+	tokens.pop_front();
+
+	token = tokens.front();
+	EXPECT_EQ(token->getStringValue(), "^");
 	tokens.pop_front();
 
 }
