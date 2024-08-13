@@ -174,14 +174,23 @@ std::shared_ptr < token > lexer::makeOperatorTokenOrIncludeString()
 std::string lexer::getOperatorString()
 {
 	//operator might be a single char '+' 5, or two chars "+="
+	//operator might be a single char then something else '+' 5, or two chars "+="
 	char first_op = nextChar(); //'+'
 	std::string operator_string("");
 	operator_string += first_op;
 	_assert_(isOperatorValid(operator_string));
+	_assert_(isOperatorValid(operator_string),("'%s' is not a valid operator", operator_string.c_str()));
 	operator_string += peekChar(); //'=' or 5
 	if (isOperatorValid(operator_string)) //'+='
 	{
 		nextChar();
+		return operator_string;
+	}
+	else if (S_EQ(operator_string.c_str(), "..")) // operator "..." infinite arguments
+	{
+		nextChar();
+		_assert_(peekChar() == '.', "expected '.' after '..' to complete operator '...'");
+		operator_string += nextChar();
 		return operator_string;
 	}
 	operator_string.clear();
@@ -223,6 +232,7 @@ bool lexer::isOperatorValid(std::string _operator_)
 		S_EQ(_operator_.c_str(), ",") ||
 		S_EQ(_operator_.c_str(), ".") ||
 		//S_EQ(_operator_.c_str(), "...") || // FIXME: add support
+		S_EQ(_operator_.c_str(), "...") || // FIXME: add support
 		S_EQ(_operator_.c_str(), "~") ||
 		S_EQ(_operator_.c_str(), "?") ||
 		S_EQ(_operator_.c_str(), "%");
