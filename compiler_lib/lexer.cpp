@@ -128,19 +128,6 @@ void lexer::lexFile()
 	}
 }
 
-
-void lexer::_assert_(bool condition, std::string message)
-{
-	if (!condition)
-	{
-		if (!message.empty())
-		{
-			cerror(message.c_str());
-		}
-	}
-	assert(condition);
-}
-
 std::shared_ptr< token > lexer::readNextToken()
 {
 	std::shared_ptr < token > token(0);
