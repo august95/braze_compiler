@@ -4,7 +4,7 @@
 #include <iostream>
 #include <assert.h>
 
-#define S_EQ(str, str2) \
+#define STRINGS_EQUAL(str, str2) \
     (str && str2 && (strcmp(str, str2) == 0))
 
 #define CASE_NUMERIC \
@@ -200,36 +200,36 @@ std::shared_ptr < token > lexer::makeIdentifierOrKeyword()
 
 bool lexer::is_keyword(std::string _keyword_)
 {
-	return S_EQ(_keyword_.c_str(), "unsigned") ||
-		S_EQ(_keyword_.c_str(), "signed") ||
-		S_EQ(_keyword_.c_str(), "char") ||
-		S_EQ(_keyword_.c_str(), "short") ||
-		S_EQ(_keyword_.c_str(), "int") ||
-		S_EQ(_keyword_.c_str(), "long") ||
-		S_EQ(_keyword_.c_str(), "double") ||
-		S_EQ(_keyword_.c_str(), "void") ||
-		S_EQ(_keyword_.c_str(), "struct") ||
-		S_EQ(_keyword_.c_str(), "union") ||
-		S_EQ(_keyword_.c_str(), "static") ||
-		S_EQ(_keyword_.c_str(), "__ignore_typecheck") ||
-		S_EQ(_keyword_.c_str(), "return") ||
-		S_EQ(_keyword_.c_str(), "include") ||
-		S_EQ(_keyword_.c_str(), "sizeof") ||
-		S_EQ(_keyword_.c_str(), "if") ||
-		S_EQ(_keyword_.c_str(), "else") ||
-		S_EQ(_keyword_.c_str(), "while") ||
-		S_EQ(_keyword_.c_str(), "for") ||
-		S_EQ(_keyword_.c_str(), "do") ||
-		S_EQ(_keyword_.c_str(), "break") ||
-		S_EQ(_keyword_.c_str(), "continue") ||
-		S_EQ(_keyword_.c_str(), "switch") ||
-		S_EQ(_keyword_.c_str(), "case") ||
-		S_EQ(_keyword_.c_str(), "default") ||
-		S_EQ(_keyword_.c_str(), "goto") ||
-		S_EQ(_keyword_.c_str(), "typedef") ||
-		S_EQ(_keyword_.c_str(), "const") ||
-		S_EQ(_keyword_.c_str(), "extern") ||
-		S_EQ(_keyword_.c_str(), "restrict");
+	return STRINGS_EQUAL(_keyword_.c_str(), "unsigned") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "signed") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "char") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "short") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "int") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "long") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "double") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "void") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "struct") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "union") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "static") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "__ignore_typecheck") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "return") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "include") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "sizeof") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "if") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "else") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "while") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "for") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "do") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "break") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "continue") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "switch") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "case") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "default") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "goto") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "typedef") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "const") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "extern") ||
+		STRINGS_EQUAL(_keyword_.c_str(), "restrict");
 }
 
 std::shared_ptr < token > lexer::makeOperatorTokenOrIncludeString()
@@ -259,7 +259,7 @@ std::string lexer::getOperatorString()
 		nextChar();
 		return operator_string;
 	}
-	else if (S_EQ(operator_string.c_str(), "..")) // operator "..." infinite arguments
+	else if (STRINGS_EQUAL(operator_string.c_str(), "..")) // operator "..." infinite arguments
 	{
 		nextChar();
 		_assert_(peekChar() == '.', "expected '.' after '..' to complete operator '...'");
@@ -274,40 +274,40 @@ std::string lexer::getOperatorString()
 
 bool lexer::isOperatorValid(std::string _operator_)
 {
-	return S_EQ(_operator_.c_str(), "+") ||
-		S_EQ(_operator_.c_str(), "-") ||
-		S_EQ(_operator_.c_str(), "*") ||
-		S_EQ(_operator_.c_str(), "/") ||
-		S_EQ(_operator_.c_str(), "!") ||
-		S_EQ(_operator_.c_str(), "^") ||
-		S_EQ(_operator_.c_str(), "+=") ||
-		S_EQ(_operator_.c_str(), "-=") ||
-		S_EQ(_operator_.c_str(), "*=") ||
-		S_EQ(_operator_.c_str(), "/=") ||
-		S_EQ(_operator_.c_str(), ">>") ||
-		S_EQ(_operator_.c_str(), "<<") ||
-		S_EQ(_operator_.c_str(), "<=") ||
-		S_EQ(_operator_.c_str(), ">=") ||
-		S_EQ(_operator_.c_str(), "<") ||
-		S_EQ(_operator_.c_str(), ">") ||
-		S_EQ(_operator_.c_str(), "||") ||
-		S_EQ(_operator_.c_str(), "&&") ||
-		S_EQ(_operator_.c_str(), "|") ||
-		S_EQ(_operator_.c_str(), "&") ||
-		S_EQ(_operator_.c_str(), "++") ||
-		S_EQ(_operator_.c_str(), "--") ||
-		S_EQ(_operator_.c_str(), "=") ||
-		S_EQ(_operator_.c_str(), "!=") ||
-		S_EQ(_operator_.c_str(), "==") ||
-		S_EQ(_operator_.c_str(), "->") ||
-		S_EQ(_operator_.c_str(), "(") ||
-		S_EQ(_operator_.c_str(), "[") ||
-		S_EQ(_operator_.c_str(), ",") ||
-		S_EQ(_operator_.c_str(), ".") ||
-		S_EQ(_operator_.c_str(), "...") || // FIXME: add support
-		S_EQ(_operator_.c_str(), "~") ||
-		S_EQ(_operator_.c_str(), "?") ||
-		S_EQ(_operator_.c_str(), "%");
+	return STRINGS_EQUAL(_operator_.c_str(), "+") ||
+		STRINGS_EQUAL(_operator_.c_str(), "-") ||
+		STRINGS_EQUAL(_operator_.c_str(), "*") ||
+		STRINGS_EQUAL(_operator_.c_str(), "/") ||
+		STRINGS_EQUAL(_operator_.c_str(), "!") ||
+		STRINGS_EQUAL(_operator_.c_str(), "^") ||
+		STRINGS_EQUAL(_operator_.c_str(), "+=") ||
+		STRINGS_EQUAL(_operator_.c_str(), "-=") ||
+		STRINGS_EQUAL(_operator_.c_str(), "*=") ||
+		STRINGS_EQUAL(_operator_.c_str(), "/=") ||
+		STRINGS_EQUAL(_operator_.c_str(), ">>") ||
+		STRINGS_EQUAL(_operator_.c_str(), "<<") ||
+		STRINGS_EQUAL(_operator_.c_str(), "<=") ||
+		STRINGS_EQUAL(_operator_.c_str(), ">=") ||
+		STRINGS_EQUAL(_operator_.c_str(), "<") ||
+		STRINGS_EQUAL(_operator_.c_str(), ">") ||
+		STRINGS_EQUAL(_operator_.c_str(), "||") ||
+		STRINGS_EQUAL(_operator_.c_str(), "&&") ||
+		STRINGS_EQUAL(_operator_.c_str(), "|") ||
+		STRINGS_EQUAL(_operator_.c_str(), "&") ||
+		STRINGS_EQUAL(_operator_.c_str(), "++") ||
+		STRINGS_EQUAL(_operator_.c_str(), "--") ||
+		STRINGS_EQUAL(_operator_.c_str(), "=") ||
+		STRINGS_EQUAL(_operator_.c_str(), "!=") ||
+		STRINGS_EQUAL(_operator_.c_str(), "==") ||
+		STRINGS_EQUAL(_operator_.c_str(), "->") ||
+		STRINGS_EQUAL(_operator_.c_str(), "(") ||
+		STRINGS_EQUAL(_operator_.c_str(), "[") ||
+		STRINGS_EQUAL(_operator_.c_str(), ",") ||
+		STRINGS_EQUAL(_operator_.c_str(), ".") ||
+		STRINGS_EQUAL(_operator_.c_str(), "...") || // FIXME: add support
+		STRINGS_EQUAL(_operator_.c_str(), "~") ||
+		STRINGS_EQUAL(_operator_.c_str(), "?") ||
+		STRINGS_EQUAL(_operator_.c_str(), "%");
 }
 
 bool lexer::lastTokenIsInlcudeKeyword()
@@ -316,7 +316,7 @@ bool lexer::lastTokenIsInlcudeKeyword()
 	{
 		std::shared_ptr < token > last_token = tokens.back();
 
-		if (last_token->isTokenTypeKeyword() && S_EQ(last_token->getStringValue().c_str(), "include"))
+		if (last_token->isTokenTypeKeyword() && STRINGS_EQUAL(last_token->getStringValue().c_str(), "include"))
 		{
 			return true;
 		}
