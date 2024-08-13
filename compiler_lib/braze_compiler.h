@@ -1,6 +1,7 @@
 // add headers that you want to pre-compile here
 #include "framework.h"
 #include <iostream>
+#include <assert.h>
 
 static void cerror(const char* error) { std::cout << "Compiler Error: " << error << "\n"; }
 static void cwarning(const char* warning) { std::cout << "Compiler Warning: " << warning << "\n"; }
