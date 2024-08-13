@@ -42,6 +42,65 @@ TEST(lexer, template) {
 */
 
 
+TEST(lexer, stringsAndIncludeStrings) {
+
+	std::string file_name = "test_lexer_string_and_include_strings.c";
+	/*
+	* File Content
+	*
+	* "braze" include <test_file.c> include "test.c" "test_string"
+	*/
+
+
+
+	const int num_of_tokens = 6;
+
+	compileProcess process;
+	process.intialize(file_path + file_name);
+	process.startCompiler();
+
+	std::list < std::shared_ptr < token > > tokens = process.getTokens();
+	EXPECT_EQ(tokens.size(), num_of_tokens);
+
+	std::shared_ptr < token > token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "braze");
+	EXPECT_TRUE(token->isTokenTypeString());
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "include");
+	EXPECT_TRUE(token->isTokenTypeKeyword());
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "test_file.c");
+	EXPECT_TRUE(token->isTokenTypeString());
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "include");
+	EXPECT_TRUE(token->isTokenTypeKeyword());
+	tokens.pop_front();
+
+	
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "test.c");
+	EXPECT_TRUE(token->isTokenTypeString());
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "test_string");
+	EXPECT_TRUE(token->isTokenTypeString());
+	tokens.pop_front();
+}
+
+
 
 TEST(lexer, identifierOrKeyword) {
 
@@ -49,7 +108,7 @@ TEST(lexer, identifierOrKeyword) {
 	/*
 	* File Content
 	*
-	* 01234 0x1af34 0b0101
+	* testClass  return void  avxname ___braze
 	*/
 
 		const int num_of_tokens = 5;

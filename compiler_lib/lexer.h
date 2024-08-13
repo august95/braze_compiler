@@ -32,12 +32,17 @@ private:
 
 	std::shared_ptr < token > readNextToken();
 
+
 	std::shared_ptr < token > makeIdentifierOrKeyword();
 	bool is_keyword(std::string _keyword_);
 
 	std::shared_ptr < token > makeOperatorTokenOrIncludeString();
 	std::string getOperatorString();
 	bool isOperatorValid(std::string _operator_);
+	bool lastTokenIsInlcudeKeyword();
+
+	std::shared_ptr < token > makeStringToken();
+	std::string createString(char start_char, char end_char);
 
 	std::shared_ptr < token > makeNumberToken();
 	std::shared_ptr < token > makeHexicalNumberToken();

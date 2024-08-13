@@ -136,6 +136,9 @@ std::shared_ptr< token > lexer::readNextToken()
 	
 	switch (c)
 	{
+	case EOF:
+		break;
+
 	CASE_NUMERIC:
 		token = makeNumberToken();
 		break;
@@ -144,15 +147,16 @@ std::shared_ptr< token > lexer::readNextToken()
 		token = makeOperatorTokenOrIncludeString(); // '<' can be operator or part of #inlcude <...h>
 		break;
 
+	case '"':
+		token = makeStringToken();
+		break;
+
 	case ' ':
 	case '\t':
 	case '\r':
 		token = handle_whitespace();
 		break;
 
-	case EOF:
-		break;
-	
 	default:
 		token = makeIdentifierOrKeyword();
 		break;
@@ -218,13 +222,16 @@ bool lexer::is_keyword(std::string _keyword_)
 
 std::shared_ptr < token > lexer::makeOperatorTokenOrIncludeString()
 {
-	/*
-	* get last pushed token, and check if it is the keyword include
-	* parse string
-	*/
+	//testing if lexing #include <file_name.c>
+	if (lastTokenIsInlcudeKeyword())
+	{
+		std::string include_string = createString('<', '>');
+		return std::make_shared < token >(tokenType::TOKEN_TYPE_STRING, m_file_position, include_string);
+	}
 
-	
-	return std::make_shared < token >(tokenType::TOKEN_TYPE_OPERATOR, m_file_position, getOperatorString());
+
+	std::string operator_string = getOperatorString();
+	return std::make_shared < token >(tokenType::TOKEN_TYPE_OPERATOR, m_file_position, operator_string);
 }
 
 std::string lexer::getOperatorString()
@@ -289,6 +296,44 @@ bool lexer::isOperatorValid(std::string _operator_)
 		S_EQ(_operator_.c_str(), "~") ||
 		S_EQ(_operator_.c_str(), "?") ||
 		S_EQ(_operator_.c_str(), "%");
+}
+
+bool lexer::lastTokenIsInlcudeKeyword()
+{
+	if (tokens.size() > 0)
+	{
+		std::shared_ptr < token > last_token = tokens.back();
+
+		if (last_token->isTokenTypeKeyword() && S_EQ(last_token->getStringValue().c_str(), "include"))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+std::shared_ptr < token > lexer::makeStringToken()
+{
+	std::string _string = createString('"', '"');
+	return std::make_shared < token >(tokenType::TOKEN_TYPE_STRING, m_file_position, _string);
+}
+
+std::string lexer::createString(char start_char, char end_char)
+{
+	_assert_(start_char == nextChar(),"expected beginning of string");
+	char c = nextChar();
+	std::string string_to_return;
+	for (; c != end_char && c != EOF; c = nextChar())
+	{
+		if (c == '\\')
+		{
+			// we need to handle an escape character.
+			continue;
+		}
+		string_to_return += c;
+	}
+
+	return string_to_return;
 }
 
 std::shared_ptr < token > lexer::makeNumberToken()
