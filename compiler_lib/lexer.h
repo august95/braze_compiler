@@ -1,5 +1,5 @@
 #pragma once
-//lexing source code to create tokens
+//lexing source code and creates a collectino of tokens that represents the content in the source code. 
 
 #include <iostream>
 #include <fstream>

@@ -133,6 +133,17 @@ std::shared_ptr< token > lexer::readNextToken()
 	std::shared_ptr < token > token(0);
 
 	char c = peekChar();
+
+	/*
+	* TODO
+	* 
+	* comments
+	* new line
+	* symbol
+	* expression depth???
+	* quote ''
+	* 
+	*/
 	
 	switch (c)
 	{
@@ -167,6 +178,7 @@ std::shared_ptr< token > lexer::readNextToken()
 
 std::shared_ptr < token > lexer::makeIdentifierOrKeyword()
 {
+	//might parse a variable 'myvar' or a keyword return
 	char c = peekChar();
 	if (isalpha(c) || c == '_')
 	{	
