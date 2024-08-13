@@ -149,9 +149,71 @@ std::shared_ptr< token > lexer::readNextToken()
 	case '\r':
 		token = handle_whitespace();
 		break;
+
+	case EOF:
+		break;
+	
+	default:
+		token = makeIdentifierOrKeyword();
+		break;
 	}
 
 	return token;
+}
+
+std::shared_ptr < token > lexer::makeIdentifierOrKeyword()
+{
+	char c = peekChar();
+	if (isalpha(c) || c == '_')
+	{	
+		std::string identifier_or_keyword;
+		while ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_')
+		{
+			identifier_or_keyword += nextChar();
+			c = peekChar();
+		}
+		if (is_keyword(identifier_or_keyword))
+		{
+			return std::make_shared < token >(tokenType::TOKEN_TYPE_KEYWORD, m_file_position, identifier_or_keyword); //keyword
+		}
+
+		return std::make_shared < token >(tokenType::TOKEN_TYPE_IDENTIFIER, m_file_position, identifier_or_keyword); //identifier
+	}
+	_assert_(false, "error could not lex identifier or keyword");
+}
+
+bool lexer::is_keyword(std::string _keyword_)
+{
+	return S_EQ(_keyword_.c_str(), "unsigned") ||
+		S_EQ(_keyword_.c_str(), "signed") ||
+		S_EQ(_keyword_.c_str(), "char") ||
+		S_EQ(_keyword_.c_str(), "short") ||
+		S_EQ(_keyword_.c_str(), "int") ||
+		S_EQ(_keyword_.c_str(), "long") ||
+		S_EQ(_keyword_.c_str(), "double") ||
+		S_EQ(_keyword_.c_str(), "void") ||
+		S_EQ(_keyword_.c_str(), "struct") ||
+		S_EQ(_keyword_.c_str(), "union") ||
+		S_EQ(_keyword_.c_str(), "static") ||
+		S_EQ(_keyword_.c_str(), "__ignore_typecheck") ||
+		S_EQ(_keyword_.c_str(), "return") ||
+		S_EQ(_keyword_.c_str(), "include") ||
+		S_EQ(_keyword_.c_str(), "sizeof") ||
+		S_EQ(_keyword_.c_str(), "if") ||
+		S_EQ(_keyword_.c_str(), "else") ||
+		S_EQ(_keyword_.c_str(), "while") ||
+		S_EQ(_keyword_.c_str(), "for") ||
+		S_EQ(_keyword_.c_str(), "do") ||
+		S_EQ(_keyword_.c_str(), "break") ||
+		S_EQ(_keyword_.c_str(), "continue") ||
+		S_EQ(_keyword_.c_str(), "switch") ||
+		S_EQ(_keyword_.c_str(), "case") ||
+		S_EQ(_keyword_.c_str(), "default") ||
+		S_EQ(_keyword_.c_str(), "goto") ||
+		S_EQ(_keyword_.c_str(), "typedef") ||
+		S_EQ(_keyword_.c_str(), "const") ||
+		S_EQ(_keyword_.c_str(), "extern") ||
+		S_EQ(_keyword_.c_str(), "restrict");
 }
 
 std::shared_ptr < token > lexer::makeOperatorTokenOrIncludeString()

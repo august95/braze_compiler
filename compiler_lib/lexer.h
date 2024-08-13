@@ -32,6 +32,9 @@ private:
 
 	std::shared_ptr < token > readNextToken();
 
+	std::shared_ptr < token > makeIdentifierOrKeyword();
+	bool is_keyword(std::string _keyword_);
+
 	std::shared_ptr < token > makeOperatorTokenOrIncludeString();
 	std::string getOperatorString();
 	bool isOperatorValid(std::string _operator_);
