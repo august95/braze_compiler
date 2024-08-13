@@ -129,8 +129,15 @@ void lexer::lexFile()
 }
 
 
-void lexer::_assert_(bool condition)
+void lexer::_assert_(bool condition, std::string message)
 {
+	if (!condition)
+	{
+		if (!message.empty())
+		{
+			cerror(message.c_str());
+		}
+	}
 	assert(condition);
 }
 
@@ -173,12 +180,10 @@ std::shared_ptr < token > lexer::makeOperatorTokenOrIncludeString()
 
 std::string lexer::getOperatorString()
 {
-	//operator might be a single char '+' 5, or two chars "+="
 	//operator might be a single char then something else '+' 5, or two chars "+="
 	char first_op = nextChar(); //'+'
 	std::string operator_string("");
 	operator_string += first_op;
-	_assert_(isOperatorValid(operator_string));
 	_assert_(isOperatorValid(operator_string),("'%s' is not a valid operator", operator_string.c_str()));
 	operator_string += peekChar(); //'=' or 5
 	if (isOperatorValid(operator_string)) //'+='
@@ -231,7 +236,6 @@ bool lexer::isOperatorValid(std::string _operator_)
 		S_EQ(_operator_.c_str(), "[") ||
 		S_EQ(_operator_.c_str(), ",") ||
 		S_EQ(_operator_.c_str(), ".") ||
-		//S_EQ(_operator_.c_str(), "...") || // FIXME: add support
 		S_EQ(_operator_.c_str(), "...") || // FIXME: add support
 		S_EQ(_operator_.c_str(), "~") ||
 		S_EQ(_operator_.c_str(), "?") ||
@@ -266,7 +270,7 @@ std::shared_ptr < token > lexer::makeNumberToken()
 
 std::shared_ptr < token > lexer::makeHexicalNumberToken()
 {
-	_assert_(nextChar() == 'x');
+	_assert_(nextChar() == 'x', "expected char 'x'");
 	unsigned long number = 0;
 	std::string number_str;
 	while (isHexChar(peekChar()))
@@ -280,7 +284,7 @@ std::shared_ptr < token > lexer::makeHexicalNumberToken()
 
 std::shared_ptr < token > lexer::makeBinaryNumberToken()
 {
-	_assert_(nextChar() == 'b');
+	_assert_(nextChar() == 'b', "expected char 'b'");
 	unsigned long number = 0;
 	std::string number_str;
 	while (peekChar() == '0' || peekChar() == '1')
@@ -314,7 +318,7 @@ bool lexer::isHexChar(char c)
 
 std::shared_ptr < token > lexer::handle_whitespace()
 {
-	_assert_(peekChar() == ' ' || peekChar() == '\t' || peekChar() == '\r');
+	_assert_(peekChar() == ' ' || peekChar() == '\t' || peekChar() == '\r', "expected ' ' '\t' or '\r'");
 	nextChar();
 	return readNextToken();
 }
