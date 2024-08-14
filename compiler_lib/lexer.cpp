@@ -185,6 +185,7 @@ std::shared_ptr< token > lexer::readNextToken()
 
 	case '\n':
 		token = makeNewLineToken();
+		break;
 
 	default:
 		token = makeIdentifierOrKeyword();
