@@ -27,6 +27,7 @@ public:
 
 	unsigned long getNumberValue() { return m_number_value; }
 	std::string getStringValue() { return m_string_value; }
+	char getCharValue() { return m_char_value; }
 
 private:
 	tokenType m_token_tyoe;
@@ -35,6 +36,7 @@ private:
 	//create enum for all the keywords/operators to avoid dealing with strings in the parser?
 	std::string m_string_value;
 	unsigned long m_number_value;
+	char m_char_value;
 
 
 

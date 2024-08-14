@@ -38,6 +38,16 @@
     case '.':                            \
     case '?'
 
+#define CASE_SYMBOL \
+    case '{':       \
+    case '}':       \
+    case ':':       \
+    case ';':       \
+    case '#':       \
+    case '\\':      \
+    case ')':       \
+    case ']'
+
 lexer::lexer() :
 m_filename(),
 m_file(),
@@ -155,6 +165,10 @@ std::shared_ptr< token > lexer::readNextToken()
 
 	CASE_OPERATOR:
 		token = makeOperatorTokenOrIncludeString(); // '<' can be operator or part of #inlcude <...h>
+		break;
+
+	CASE_SYMBOL:
+		token = makeSymbolToken();
 		break;
 
 	case '"':
@@ -351,6 +365,12 @@ std::string lexer::createString(char start_char, char end_char)
 	return string_to_return;
 }
 
+std::shared_ptr < token > lexer::makeSymbolToken()
+{
+	char c = nextChar();
+	return std::make_shared < token >(tokenType::TOKEN_TYPE_SYMBOL, m_file_position, c);
+}
+
 std::shared_ptr < token > lexer::makeQuoteToken()
 {
 	_assert_(nextChar() ==  '\'', "expected beginning of quote ' '");
@@ -369,10 +389,7 @@ std::shared_ptr < token > lexer::makeQuoteToken()
 	}
 	_assert_(nextChar() == '\'', "expected ending of quote ''");
 
-	//keyword in front of char will define datatype during parsing. Propagate char as string, and deal with it later
-	std::string _char_;
-	_char_+= c;
-	return std::make_shared < token >(tokenType::TOKEN_TYPE_STRING, m_file_position, _char_);
+	return std::make_shared < token >(tokenType::TOKEN_TYPE_STRING, m_file_position, c);
 
 }
 

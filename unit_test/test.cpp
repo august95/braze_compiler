@@ -64,23 +64,23 @@ TEST(lexer, quote) {
 
 	std::shared_ptr < token > token = tokens.front();
 	// perform test
-	EXPECT_EQ(token->getStringValue(), "a");
+	EXPECT_EQ(token->getCharValue(), 'a');
 	tokens.pop_front();
 
 	token = tokens.front();
 	// perform test
-	EXPECT_EQ(token->getStringValue(), "x");
+	EXPECT_EQ(token->getCharValue(), 'x');
 	tokens.pop_front();
 	
 	
 	token = tokens.front();
 	// perform test
-	EXPECT_EQ(token->getStringValue(), "\n");
+	EXPECT_EQ(token->getCharValue(), '\n');
 	tokens.pop_front();
 
 	token = tokens.front();
 	// perform test
-	EXPECT_EQ(token->getStringValue(), "\\");
+	EXPECT_EQ(token->getCharValue(), '\\');
 	tokens.pop_front();
 }
 
