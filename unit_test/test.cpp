@@ -33,13 +33,60 @@ TEST(lexer, template) {
 	EXPECT_EQ();
 	tokens.pop_front();
 
-	std::shared_ptr < token > token = tokens.front();
+	token = tokens.front();
 	// perform test
 	EXPECT_EQ();
 	tokens.pop_front();
 }
 
 */
+
+
+TEST(lexer, quote) {
+
+	std::string file_name = "test_lexer_quote.c";
+	/*
+	* File Content
+	*
+	* 'a' 'x' '\n' '\\' 
+	*/
+
+
+
+	const int num_of_tokens = 4;
+
+	compileProcess process;
+	process.intialize(file_path + file_name);
+	process.startCompiler();
+
+	std::list < std::shared_ptr < token > > tokens = process.getTokens();
+	EXPECT_EQ(tokens.size(), num_of_tokens);
+
+	std::shared_ptr < token > token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "a");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "x");
+	tokens.pop_front();
+	
+	
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "\n");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "\\");
+	tokens.pop_front();
+}
+
+
+
+
 
 
 TEST(lexer, stringsAndIncludeStrings) {

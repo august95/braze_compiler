@@ -141,7 +141,6 @@ std::shared_ptr< token > lexer::readNextToken()
 	* new line
 	* symbol
 	* expression depth???
-	* quote ''
 	* 
 	*/
 	
@@ -160,6 +159,10 @@ std::shared_ptr< token > lexer::readNextToken()
 
 	case '"':
 		token = makeStringToken();
+		break;
+
+	case '\'':
+		token = makeQuoteToken();
 		break;
 
 	case ' ':
@@ -346,6 +349,31 @@ std::string lexer::createString(char start_char, char end_char)
 	}
 
 	return string_to_return;
+}
+
+std::shared_ptr < token > lexer::makeQuoteToken()
+{
+	_assert_(nextChar() ==  '\'', "expected beginning of quote ' '");
+	char c = nextChar(); //content of quote 'c'
+
+	//for example '\n' and '\\' are single chars, but we must pop 2 chars from the input file
+	if (c == '\\')
+	{
+		c = nextChar();
+		if      (c == 'n')  c = '\n';
+		else if (c == '\\') c = '\\';
+		else if (c == 't' ) c = '\t';
+		else if (c == '\'') c = '\'';
+		else if (c == 'r' ) c = '\r';
+		
+	}
+	_assert_(nextChar() == '\'', "expected ending of quote ''");
+
+	//keyword in front of char will define datatype during parsing. Propagate char as string, and deal with it later
+	std::string _char_;
+	_char_+= c;
+	return std::make_shared < token >(tokenType::TOKEN_TYPE_STRING, m_file_position, _char_);
+
 }
 
 std::shared_ptr < token > lexer::makeNumberToken()

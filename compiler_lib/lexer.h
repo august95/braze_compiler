@@ -44,6 +44,8 @@ private:
 	std::shared_ptr < token > makeStringToken();
 	std::string createString(char start_char, char end_char);
 
+	std::shared_ptr < token > makeQuoteToken();
+
 	std::shared_ptr < token > makeNumberToken();
 	std::shared_ptr < token > makeHexicalNumberToken();
 	std::shared_ptr < token > makeBinaryNumberToken();
