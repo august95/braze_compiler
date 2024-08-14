@@ -41,6 +41,54 @@ TEST(lexer, template) {
 
 */
 
+TEST(lexer, symbols) {
+
+	std::string file_name = "test_lexer_symbol.c";
+	/*
+	* File Content
+	*
+	* 'a' 'x' '\n' '\\'
+	*/
+
+
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.intialize(file_path + file_name);
+	process.startCompiler();
+
+	std::list < std::shared_ptr < token > > tokens = process.getTokens();
+	EXPECT_EQ(tokens.size(), num_of_tokens);
+
+	std::shared_ptr < token > token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getCharValue(), '\\');
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getCharValue(), '{');
+	tokens.pop_front();
+
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getCharValue(), '}');
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getCharValue(), '#');
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getCharValue(), ')');
+	tokens.pop_front();
+}
+
+
 
 TEST(lexer, quote) {
 
