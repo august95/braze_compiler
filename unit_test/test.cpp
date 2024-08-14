@@ -47,7 +47,7 @@ TEST(lexer, symbols) {
 	/*
 	* File Content
 	*
-	* 'a' 'x' '\n' '\\'
+	* \ { } # )
 	*/
 
 

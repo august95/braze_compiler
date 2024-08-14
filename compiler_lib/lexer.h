@@ -21,17 +21,15 @@ public:
 	char nextChar();
 	void pushChar(char ch);
 
-
 	void initialize(std::string filename);
 	void startLexer();
-	void lexFile();
 	std::list < std::shared_ptr < token > > getTokens() { return tokens; }
 
 private:
 
 
+	void lexFile();
 	std::shared_ptr < token > readNextToken();
-
 
 	std::shared_ptr < token > makeIdentifierOrKeyword();
 	bool is_keyword(std::string _keyword_);
@@ -40,12 +38,12 @@ private:
 	std::string getOperatorString();
 	bool isOperatorValid(std::string _operator_);
 	bool lastTokenIsInlcudeKeyword();
-
 	std::shared_ptr < token > makeStringToken();
 	std::string createString(char start_char, char end_char);
 
 	std::shared_ptr < token > makeSymbolToken();
 	std::shared_ptr < token > makeQuoteToken();
+	std::shared_ptr < token > makeNewLineToken();
 
 	std::shared_ptr < token > makeNumberToken();
 	std::shared_ptr < token > makeHexicalNumberToken();

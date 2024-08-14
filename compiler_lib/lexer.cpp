@@ -148,8 +148,6 @@ std::shared_ptr< token > lexer::readNextToken()
 	* TODO
 	* 
 	* comments
-	* new line
-	* symbol
 	* expression depth???
 	* 
 	*/
@@ -184,6 +182,9 @@ std::shared_ptr< token > lexer::readNextToken()
 	case '\r':
 		token = handle_whitespace();
 		break;
+
+	case '\n':
+		token = makeNewLineToken();
 
 	default:
 		token = makeIdentifierOrKeyword();
@@ -391,6 +392,12 @@ std::shared_ptr < token > lexer::makeQuoteToken()
 
 	return std::make_shared < token >(tokenType::TOKEN_TYPE_STRING, m_file_position, c);
 
+}
+
+std::shared_ptr < token > lexer::makeNewLineToken()
+{
+	nextChar();
+	return std::make_shared < token >(tokenType::TOKEN_TYPE_NEWLINE, m_file_position, 0);
 }
 
 std::shared_ptr < token > lexer::makeNumberToken()
