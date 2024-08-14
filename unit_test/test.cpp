@@ -41,6 +41,7 @@ TEST(lexer, template) {
 
 */
 
+
 TEST(lexer, symbols) {
 
 	std::string file_name = "test_lexer_symbol.c";
@@ -333,3 +334,230 @@ TEST(lexer, numbers) {
   tokens.pop_front();
 
 }
+TEST(lexer, ordinaryCFile) {
+
+	std::string file_name = "test_lexer_ordinary_c_file.c";
+	/*
+	* File Content
+	*
+	* #include <iostram>
+	*
+	* int main()
+	* {
+	* 	string a = "abc";
+	* 	bool var = true;
+	* 	if (!var)
+	* 	{
+	* 		return 0xf;
+	* 	}
+	* }
+	*/
+
+
+
+	const int num_of_tokens = 38;
+
+	compileProcess process;
+	process.intialize(file_path + file_name);
+	process.startCompiler();
+
+	std::list < std::shared_ptr < token > > tokens = process.getTokens();
+	EXPECT_EQ(tokens.size(), num_of_tokens);
+
+	std::shared_ptr < token > token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getCharValue(), '#');
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "include");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "iostream");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_TRUE(token->isTokenTypeNewLine());
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "int");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "main");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "(");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getCharValue(), ')');
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_TRUE(token->isTokenTypeNewLine());
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getCharValue(), '{');
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_TRUE(token->isTokenTypeNewLine());
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "string");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "a");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "=");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "abc");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getCharValue(), ';');
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_TRUE(token->isTokenTypeNewLine());
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "bool");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "var");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "=");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "true");
+	tokens.pop_front();
+
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getCharValue(), ';');
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_TRUE(token->isTokenTypeNewLine());
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "if");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "(");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "!");
+	tokens.pop_front();
+
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "var");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getCharValue(), ')');
+	tokens.pop_front();
+
+
+	token = tokens.front();
+	// perform test
+	EXPECT_TRUE(token->isTokenTypeNewLine());
+	tokens.pop_front();
+
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getCharValue(), '{');
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_TRUE(token->isTokenTypeNewLine());
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getStringValue(), "return");
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getNumberValue(), 0xf);
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getCharValue(), ';');
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_TRUE(token->isTokenTypeNewLine());
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getCharValue(), '}');
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_TRUE(token->isTokenTypeNewLine());
+	tokens.pop_front();
+
+	token = tokens.front();
+	// perform test
+	EXPECT_EQ(token->getCharValue(), '}');
+	tokens.pop_front();
+
+
+}
+
