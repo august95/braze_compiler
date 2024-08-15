@@ -50,10 +50,9 @@ private:
 	std::shared_ptr < token > makeBinaryNumberToken();
 	std::shared_ptr < token > makeDecimalNumberToken();
 	bool isHexChar(char c);
-
 	std::shared_ptr < token > handle_whitespace();
 
-
+	filePosition getFilePostiion() { return m_file_position; }
 
 	std::string m_filename;
 	std::ifstream m_file;

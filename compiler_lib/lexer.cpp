@@ -209,10 +209,10 @@ std::shared_ptr < token > lexer::makeIdentifierOrKeyword()
 		}
 		if (is_keyword(identifier_or_keyword))
 		{
-			return std::make_shared < token >(tokenType::TOKEN_TYPE_KEYWORD, m_file_position, identifier_or_keyword); //keyword
+			return std::make_shared < token >(tokenType::TOKEN_TYPE_KEYWORD, getFilePostiion(), identifier_or_keyword); //keyword
 		}
 
-		return std::make_shared < token >(tokenType::TOKEN_TYPE_IDENTIFIER, m_file_position, identifier_or_keyword); //identifier
+		return std::make_shared < token >(tokenType::TOKEN_TYPE_IDENTIFIER, getFilePostiion(), identifier_or_keyword); //identifier
 	}
 	_assert_(false, "error could not lex identifier or keyword");
 }
@@ -257,12 +257,12 @@ std::shared_ptr < token > lexer::makeOperatorTokenOrIncludeString()
 	if (lastTokenIsInlcudeKeyword())
 	{
 		std::string include_string = createString('<', '>');
-		return std::make_shared < token >(tokenType::TOKEN_TYPE_STRING, m_file_position, include_string);
+		return std::make_shared < token >(tokenType::TOKEN_TYPE_STRING, getFilePostiion(), include_string);
 	}
 
 
 	std::string operator_string = getOperatorString();
-	return std::make_shared < token >(tokenType::TOKEN_TYPE_OPERATOR, m_file_position, operator_string);
+	return std::make_shared < token >(tokenType::TOKEN_TYPE_OPERATOR, getFilePostiion(), operator_string);
 }
 
 std::string lexer::getOperatorString()
@@ -346,7 +346,7 @@ bool lexer::lastTokenIsInlcudeKeyword()
 std::shared_ptr < token > lexer::makeStringToken()
 {
 	std::string _string = createString('"', '"');
-	return std::make_shared < token >(tokenType::TOKEN_TYPE_STRING, m_file_position, _string);
+	return std::make_shared < token >(tokenType::TOKEN_TYPE_STRING, getFilePostiion(), _string);
 }
 
 std::string lexer::createString(char start_char, char end_char)
@@ -370,7 +370,7 @@ std::string lexer::createString(char start_char, char end_char)
 std::shared_ptr < token > lexer::makeSymbolToken()
 {
 	char c = nextChar();
-	return std::make_shared < token >(tokenType::TOKEN_TYPE_SYMBOL, m_file_position, c);
+	return std::make_shared < token >(tokenType::TOKEN_TYPE_SYMBOL, getFilePostiion(), c);
 }
 
 std::shared_ptr < token > lexer::makeQuoteToken()
@@ -391,14 +391,14 @@ std::shared_ptr < token > lexer::makeQuoteToken()
 	}
 	_assert_(nextChar() == '\'', "expected ending of quote ''");
 
-	return std::make_shared < token >(tokenType::TOKEN_TYPE_STRING, m_file_position, c);
+	return std::make_shared < token >(tokenType::TOKEN_TYPE_STRING, getFilePostiion(), c);
 
 }
 
 std::shared_ptr < token > lexer::makeNewLineToken()
 {
 	nextChar();
-	return std::make_shared < token >(tokenType::TOKEN_TYPE_NEWLINE, m_file_position, 0);
+	return std::make_shared < token >(tokenType::TOKEN_TYPE_NEWLINE, getFilePostiion(), 0);
 }
 
 std::shared_ptr < token > lexer::makeNumberToken()
@@ -438,7 +438,7 @@ std::shared_ptr < token > lexer::makeHexicalNumberToken()
 		nextChar();
 	}
 	number = strtol(number_str.c_str(), 0, 16);
-	return std::make_shared < token >(tokenType::TOKEN_TYPE_NUMBER, m_file_position, number);
+	return std::make_shared < token >(tokenType::TOKEN_TYPE_NUMBER, getFilePostiion(), number);
 }
 
 std::shared_ptr < token > lexer::makeBinaryNumberToken()
@@ -452,7 +452,7 @@ std::shared_ptr < token > lexer::makeBinaryNumberToken()
 		nextChar();
 	}
 	number = strtol(number_str.c_str(), 0, 2);
-	return std::make_shared < token >(tokenType::TOKEN_TYPE_NUMBER, m_file_position, number);
+	return std::make_shared < token >(tokenType::TOKEN_TYPE_NUMBER, getFilePostiion(), number);
 }
 
 std::shared_ptr < token > lexer::makeDecimalNumberToken()
@@ -465,7 +465,7 @@ std::shared_ptr < token > lexer::makeDecimalNumberToken()
 		nextChar();
 	}
 	number = atoll(number_str.c_str());
-	return std::make_shared < token >(tokenType::TOKEN_TYPE_NUMBER, m_file_position, number);
+	return std::make_shared < token >(tokenType::TOKEN_TYPE_NUMBER, getFilePostiion(), number);
 }
 
 bool lexer::isHexChar(char c)
