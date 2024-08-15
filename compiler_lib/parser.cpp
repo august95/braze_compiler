@@ -9,7 +9,7 @@ parser::parser()
 
 void parser::startParser()
 {
-	std::shared_ptr < token > token = nextToken();
+	parseTokens();
 }
 
 std::shared_ptr < token > parser::nextToken()
@@ -23,3 +23,34 @@ std::shared_ptr < token > parser::peekToken()
 {
 	return m_tokens.front();
 }
+
+void parser::parseTokens()
+{
+	while (!m_tokens.empty())
+	{
+		parseNextToken();
+	}
+}
+
+void parser::parseNextToken()
+{
+	std::shared_ptr < token > token = peekToken();
+	if (token->isTokenTypeNumber() || token->isTokenTypeIdentifier() ||	token->isTokenTypeString())
+	{
+		parseExpression();
+	}
+}
+
+void parser::parseExpression()
+{
+	//while (parseExpressionOperatorOrOperand())
+	{
+
+	}
+}
+
+int parser::parseExpressionOperatorOrOperand()
+{
+	return 0;
+}
+

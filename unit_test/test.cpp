@@ -561,3 +561,23 @@ TEST(lexer, ordinaryCFile) {
 
 }
 
+
+
+
+TEST(parser, testParser) {
+
+	std::string file_name = "test_parser_test.c";
+	/*
+	* File Content
+	*
+	*  504 + 3
+	*/
+
+
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+}
