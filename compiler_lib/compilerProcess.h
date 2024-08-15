@@ -10,7 +10,7 @@ class compileProcess
 {
 public:
 	compileProcess();
-	void intialize(std::string filename);
+	void initialize(std::string filename);
 	void startCompiler();
 
 	//for unit tests

@@ -21,11 +21,11 @@ TEST(lexer, template) {
 
 	const int num_of_tokens = 3;
 
-	compileProcess process;
-	process.intialize(file_path + file_name);
-	process.startCompiler();
+	lexer lexer;
+	lexer.initialize(file_path + file_name);
+	lexer.startLexer();
 
-	std::list < std::shared_ptr < token > > tokens = process.getTokens();
+	std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
 	EXPECT_EQ(tokens.size(), num_of_tokens);
 
 	std::shared_ptr < token > token = tokens.front();
@@ -55,11 +55,11 @@ TEST(lexer, symbols) {
 
 	const int num_of_tokens = 5;
 
-	compileProcess process;
-	process.intialize(file_path + file_name);
-	process.startCompiler();
+	lexer lexer;
+	lexer.initialize(file_path + file_name);
+	lexer.startLexer();
 
-	std::list < std::shared_ptr < token > > tokens = process.getTokens();
+	std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
 	EXPECT_EQ(tokens.size(), num_of_tokens);
 
 	std::shared_ptr < token > token = tokens.front();
@@ -104,11 +104,11 @@ TEST(lexer, quote) {
 
 	const int num_of_tokens = 4;
 
-	compileProcess process;
-	process.intialize(file_path + file_name);
-	process.startCompiler();
+	lexer lexer;
+	lexer.initialize(file_path + file_name);
+	lexer.startLexer();
 
-	std::list < std::shared_ptr < token > > tokens = process.getTokens();
+	std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
 	EXPECT_EQ(tokens.size(), num_of_tokens);
 
 	std::shared_ptr < token > token = tokens.front();
@@ -151,11 +151,11 @@ TEST(lexer, stringsAndIncludeStrings) {
 
 	const int num_of_tokens = 6;
 
-	compileProcess process;
-	process.intialize(file_path + file_name);
-	process.startCompiler();
+	lexer lexer;
+	lexer.initialize(file_path + file_name);
+	lexer.startLexer();
 
-	std::list < std::shared_ptr < token > > tokens = process.getTokens();
+	std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
 	EXPECT_EQ(tokens.size(), num_of_tokens);
 
 	std::shared_ptr < token > token = tokens.front();
@@ -209,11 +209,11 @@ TEST(lexer, identifierOrKeyword) {
 
 		const int num_of_tokens = 5;
 
-		compileProcess process;
-		process.intialize(file_path + file_name);
-		process.startCompiler();
+		lexer lexer;
+		lexer.initialize(file_path + file_name);
+		lexer.startLexer();
 
-		std::list < std::shared_ptr < token > > tokens = process.getTokens();
+		std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
 		EXPECT_EQ(tokens.size(), num_of_tokens);
 
 		std::shared_ptr < token > token = tokens.front();
@@ -267,11 +267,11 @@ TEST(lexer, operators)
 
 	const int num_of_tokens = 6;
 
-	compileProcess process;
-	process.intialize(file_path + file_name);
-	process.startCompiler();
+	lexer lexer;
+	lexer.initialize(file_path + file_name);
+	lexer.startLexer();
 
-	std::list < std::shared_ptr < token > > tokens = process.getTokens();
+	std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
 	EXPECT_EQ(tokens.size(), num_of_tokens);
 
 	std::shared_ptr < token > token = tokens.front();
@@ -314,11 +314,11 @@ TEST(lexer, numbers) {
 
   const int num_of_tokens = 3;
 
-  compileProcess process;
-  process.intialize(file_path + file_name);
-  process.startCompiler();
+  lexer lexer;
+  lexer.initialize(file_path + file_name);
+  lexer.startLexer();
 
-  std::list < std::shared_ptr < token > > tokens = process.getTokens();
+  std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
   EXPECT_EQ(tokens.size(), num_of_tokens);
   
   std::shared_ptr < token > token = tokens.front();
@@ -357,11 +357,11 @@ TEST(lexer, ordinaryCFile) {
 
 	const int num_of_tokens = 38;
 
-	compileProcess process;
-	process.intialize(file_path + file_name);
-	process.startCompiler();
+	lexer lexer;
+	lexer.initialize(file_path + file_name);
+	lexer.startLexer();
 
-	std::list < std::shared_ptr < token > > tokens = process.getTokens();
+	std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
 	EXPECT_EQ(tokens.size(), num_of_tokens);
 
 	std::shared_ptr < token > token = tokens.front();

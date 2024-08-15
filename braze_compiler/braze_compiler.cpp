@@ -10,7 +10,7 @@ int main()
 {
 
 	compileProcess process;
-	process.intialize("test_lexer.c");
+	process.initialize("test_lexer.c");
 	process.startCompiler();
 }
 

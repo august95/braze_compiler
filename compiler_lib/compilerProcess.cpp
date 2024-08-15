@@ -6,7 +6,7 @@ compileProcess::compileProcess()
 
 }
 
-void compileProcess::intialize(std::string filename)
+void compileProcess::initialize(std::string filename)
 {
 	lexer.initialize(filename);
 }
@@ -14,4 +14,6 @@ void compileProcess::intialize(std::string filename)
 void compileProcess::startCompiler()
 {
 	lexer.startLexer();
+	parser.setTokenList(lexer.getTokens());
+	parser.startParser();
 }
