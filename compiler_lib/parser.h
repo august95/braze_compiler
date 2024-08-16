@@ -1,4 +1,4 @@
-#pragma once
+#pragma onc
 
 //receives a list of tokens, creates an abstract syntax tree with nodes
 
@@ -19,12 +19,25 @@ public:
 private:
 	std::shared_ptr < token > nextToken();
 	std::shared_ptr < token > peekToken();
+	void pushNode(std::shared_ptr < node > node);
+	std::shared_ptr < node > peekLastNode() { return m_nodes.back(); }
+	std::shared_ptr < node > peekLastNodeExpect(nodeType node_type);
+	std::shared_ptr < node > popLastNode() { auto node = m_nodes.back(); m_nodes.pop_back(); return node; }
+	//void makeNode(nodeType node_type, filePosition file_position);
+
+
+	template <class nodeType>
+	std::shared_ptr <nodeType> cast_node(std::shared_ptr<node> node_);
 
 	void parseTokens();
 	void parseNextToken();
+	
 
 	void parseExpression();
 	int parseExpressionOperatorOrOperand();
+	void parseSingleTokenToExpresssionNode();
+	void parseOperand();
+	void parseNormalExpression();
 
 private:
 	std::list < std::shared_ptr < node > > m_nodes;
@@ -34,4 +47,5 @@ private:
 
 
 };
+
 
