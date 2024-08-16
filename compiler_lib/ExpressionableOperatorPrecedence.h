@@ -1,5 +1,8 @@
 #include <string>
 #include <vector>
+namespace precedence
+{
+
 
 enum precedenceAssocitivity
 {
@@ -52,6 +55,24 @@ precedenceGroup getPrecedence(const std::string& op)
 	
 }
 
+bool leftOperatorHasPriority(std::string operator_left, std::string operator_right)
+{
+	if (operator_left == operator_right)
+	{
+		return false;
+	}
+
+	struct precedenceGroup group_left = getPrecedence(operator_left);
+	struct precedenceGroup group_right = getPrecedence(operator_right);
+
+	if (group_left.associtivity == ASSOSCIATIVITY_RIGHT_TO_LEFT)
+	{
+		false;
+	}
+	return group_left.precedence <= group_right.precedence;
+}
+
+
 
 /*
 	ExpressionableOperatorPrecedence()
@@ -73,3 +94,5 @@ precedenceGroup getPrecedence(const std::string& op)
 		}
 	{
 */
+
+}

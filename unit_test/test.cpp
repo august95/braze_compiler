@@ -4,6 +4,7 @@
 #include "../compiler_lib/compilerProcess.h"
 #include <string>
 #include <list>
+#include "../compiler_lib/ExpressionableOperatorPrecedence.h"
 
 std::string file_path = "test_files/";
 
@@ -564,7 +565,21 @@ TEST(lexer, ordinaryCFile) {
 
 
 
-TEST(parser, testParser) {
+TEST(precedence, precedence) {
+
+	using namespace precedence;
+	std::string op = "<<";
+	std::string op2 = ",";
+	EXPECT_FALSE(leftOperatorHasPriority("<<", "++"));
+	EXPECT_TRUE(leftOperatorHasPriority("<<", "?"));
+	precedenceGroup group = getPrecedence(op);
+	EXPECT_EQ(group.precedence, 3);
+	group = getPrecedence(op2);
+	EXPECT_EQ(group.precedence, 12);
+
+}
+
+TEST(parser, precedence) {
 
 	std::string file_name = "test_parser_test.c";
 	/*
@@ -572,12 +587,10 @@ TEST(parser, testParser) {
 	*
 	*  504 + 3
 	*/
-
-
-
 	const int num_of_tokens = 5;
 
 	compileProcess process;
 	process.initialize(file_path + file_name);
 	process.startCompiler();
+
 }
