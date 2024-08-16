@@ -48,6 +48,7 @@ public:
 	node(nodeType node_type, filePosition file_position);
 	nodeType getNodeType() { return m_node_type;	}
 	bool isValidExpressionType();
+	filePosition getFilePosition() { return m_file_position; }
 protected:
 	nodeType m_node_type;
 	filePosition m_file_position;

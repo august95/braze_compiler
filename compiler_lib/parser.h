@@ -6,6 +6,7 @@
 #include "node.h"
 #include <list>
 #include <iostream>
+#include "nodeExpresssion.h"
 
 
 class parser
@@ -23,8 +24,8 @@ private:
 	std::shared_ptr < node > peekLastNode() { return m_nodes.back(); }
 	std::shared_ptr < node > peekLastNodeExpect(nodeType node_type);
 	std::shared_ptr < node > popLastNode() { auto node = m_nodes.back(); m_nodes.pop_back(); return node; }
-	//void makeNode(nodeType node_type, filePosition file_position);
-
+	std::shared_ptr < nodeExpresssion > makeExpressionNode(filePosition file_position, std::string operator_, 
+													  	   std::shared_ptr < node > left_node, std::shared_ptr < node > right_node);
 
 	template <class nodeType>
 	std::shared_ptr <nodeType> cast_node(std::shared_ptr<node> node_);

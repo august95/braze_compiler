@@ -42,6 +42,15 @@ std::shared_ptr < node > parser::peekLastNodeExpect(nodeType node_type)
 	return node;
 }
 
+std::shared_ptr < nodeExpresssion > parser::makeExpressionNode(filePosition file_position, std::string operator_, std::shared_ptr < node > left_node, std::shared_ptr < node > right_node)
+{
+	std::shared_ptr < nodeExpresssion > left_exp_node = cast_node<nodeExpresssion>(left_node);
+	std::shared_ptr < nodeExpresssion > right_exp_node = cast_node<nodeExpresssion>(right_node);
+	std::shared_ptr < nodeExpresssion > expression_node = std::make_shared<nodeExpresssion>(NODE_TYPE_EXPRESSION, file_position, left_exp_node, right_exp_node);
+	expression_node->setStringValue(operator_);
+	return expression_node;
+}
+
 template <class nodeType>
 std::shared_ptr<nodeType> parser::cast_node(std::shared_ptr<node> node_)
 {
@@ -52,18 +61,6 @@ std::shared_ptr<nodeType> parser::cast_node(std::shared_ptr<node> node_)
 	return cast_node_;
 }
 
-/*
-void parser::makeNode(nodeType node_type, filePosition file_position)
-{
-	std::shared_ptr < node > n;
-	if (node::isValidExpressionType(node_type))
-	{
-		n = std::make_shared <nodeExpresssion > (node_type, file_position);
-		pushNode(n);
-		return;
-	}
-}
-*/
 void parser::parseTokens()
 {
 	while (!m_tokens.empty())
@@ -139,9 +136,9 @@ void parser::parseOperand()
 
 void parser::parseNormalExpression()
 {
-	// 50 * 30 + 20 
+	// 50 + 30 * 20 
 	std::shared_ptr < node > left_node = peekLastNode(); //50  
-	std::shared_ptr <token> operatort_token = peekToken(); // *
+	std::shared_ptr <token> operatort_token = peekToken(); // +
 	//std::string operator_ = operatort_token->getStringValue();
 
 	if (!left_node || !left_node->isValidExpressionType())
@@ -152,13 +149,14 @@ void parser::parseNormalExpression()
 		//cwarning("left node in expression %i is not allowed in expression", left_node->getNodeType());
 		return;
 	}
-	nextToken(); // operator token popped '*'
+	nextToken(); // operator token popped '+'
 	popLastNode();  // 50
-	parseExpression(); // parse 30 + 20
-	std::shared_ptr < node > right_node = popLastNode(); // + (20) (30)
-	std::shared_ptr < nodeExpresssion > expression_node = std::make_shared<nodeExpresssion>(nodeType::NODE_TYPE_EXPRESSION, operatort_token->getFilePosition(), left_node, right_node);
-	//perform reordering
-	// 		
+	parseExpression(); // parse 30 * 20
+	std::shared_ptr < node > right_node = popLastNode(); // * (20) (30)
+	std::shared_ptr < nodeExpresssion > expression_node = makeExpressionNode(operatort_token->getFilePosition(), operatort_token->getStringValue(), left_node, right_node);
+	
+	expression_node->reorderExpression();
+
 	pushNode(expression_node);
 }
 
@@ -173,4 +171,3 @@ void parser::_assert_(bool condition, std::string message)
 	}
 	assert(condition);
 };
-
