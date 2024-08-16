@@ -481,3 +481,15 @@ std::shared_ptr < token > lexer::handle_whitespace()
 	nextChar();
 	return readNextToken();
 }
+
+void lexer::_assert_(bool condition, std::string message)
+{
+	if (!condition)
+	{
+		if (!message.empty())
+		{
+			cerror(message.c_str());
+		}
+	}
+	assert(condition);
+};

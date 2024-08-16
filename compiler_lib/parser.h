@@ -29,5 +29,9 @@ private:
 private:
 	std::list < std::shared_ptr < node > > m_nodes;
 	std::list < std::shared_ptr < token > > m_tokens;
+
+	void _assert_(bool condition, std::string message);
+
+
 };
 

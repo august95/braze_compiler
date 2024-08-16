@@ -54,3 +54,15 @@ int parser::parseExpressionOperatorOrOperand()
 	return 0;
 }
 
+void parser::_assert_(bool condition, std::string message)
+{
+	if (!condition)
+	{
+		if (!message.empty())
+		{
+			cerror(message.c_str());
+		}
+	}
+	assert(condition);
+};
+

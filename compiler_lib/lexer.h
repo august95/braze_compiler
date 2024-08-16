@@ -60,5 +60,9 @@ private:
 
 	//list of tokens that has been lexed. Will be handed over to the parser
 	std::list < std::shared_ptr < token > > tokens;
+
+
+	void _assert_(bool condition, std::string message);
+
 };
 
