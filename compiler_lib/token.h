@@ -21,13 +21,14 @@ class token
 {
 public:
 	token();
-	token(tokenType token_type, filePosition file_position, unsigned int value);
+	token(tokenType token_type, filePosition file_position, unsigned long value);
 	token(tokenType token_type, filePosition file_position, std::string string_value);
 
 
 	unsigned long getNumberValue() { return m_number_value; }
 	std::string getStringValue() { return m_string_value; }
 	char getCharValue() { return m_char_value; }
+	filePosition getFilePosition() { return m_file_position; }
 
 private:
 	tokenType m_token_tyoe;
@@ -42,15 +43,15 @@ private:
 
 public:
 
-	// FIXME: arghh... do not want to use tokenType outside of lexer and this class! Can I fix this in another way?
-	bool isTokenTypeNone() { return m_token_tyoe == tokenType::TOKEN_TYPE_NONE; }
-	bool isTokenTypeIdentifier() { return m_token_tyoe == tokenType::TOKEN_TYPE_IDENTIFIER; }
-	bool isTokenTypeKeyword() { return m_token_tyoe == tokenType::TOKEN_TYPE_KEYWORD; }
-	bool isTokenTypeOperator() { return m_token_tyoe == tokenType::TOKEN_TYPE_OPERATOR; }
-	bool isTokenTypeSymbol() { return m_token_tyoe == tokenType::TOKEN_TYPE_SYMBOL; }
-	bool isTokenTypeNumber() { return m_token_tyoe == tokenType::TOKEN_TYPE_NUMBER; }
-	bool isTokenTypeString() { return m_token_tyoe == tokenType::TOKEN_TYPE_STRING; }
-	bool isTokenTypeComment() { return m_token_tyoe == tokenType::TOKEN_TYPE_COMMENT; }
-	bool isTokenTypeNewLine() { return m_token_tyoe == tokenType::TOKEN_TYPE_NEWLINE; }
+	//called by the parser
+	bool isTokenTypeNone()			{ return m_token_tyoe == tokenType::TOKEN_TYPE_NONE; }
+	bool isTokenTypeIdentifier()	{ return m_token_tyoe == tokenType::TOKEN_TYPE_IDENTIFIER; }
+	bool isTokenTypeKeyword()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_KEYWORD; }
+	bool isTokenTypeOperator()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_OPERATOR; }
+	bool isTokenTypeSymbol()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_SYMBOL; }
+	bool isTokenTypeNumber()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_NUMBER; }
+	bool isTokenTypeString()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_STRING; }
+	bool isTokenTypeComment()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_COMMENT; }
+	bool isTokenTypeNewLine()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_NEWLINE; }
 };
 

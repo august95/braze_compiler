@@ -11,7 +11,7 @@ token::token()
 
 }
 
-token::token(tokenType token_type, filePosition file_position, unsigned int number_value)
+token::token(tokenType token_type, filePosition file_position, unsigned long number_value)
 	: m_token_tyoe(token_type),
 	m_file_position(file_position),
 	m_number_value(number_value),
