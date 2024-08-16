@@ -1,3 +1,7 @@
+#ifndef _precedence_
+#define _precedence_
+
+
 #include <string>
 #include <vector>
 namespace precedence
@@ -17,7 +21,7 @@ struct precedenceGroup
 	
 };
 
-std::vector<std::vector<std::string>> op_precedence = {
+extern std::vector<std::vector<std::string>> op_precedence = {
 	{"++", "--", "()", "[]", "(", "[", ".", "->"}, // ASSOCIATIVITY_LEFT_TO_RIGHT
 	{"*", "/", "%"}, // ASSOCIATIVITY_LEFT_TO_RIGHT
 	{"+", "-"}, // ASSOCIATIVITY_LEFT_TO_RIGHT
@@ -74,25 +78,7 @@ bool leftOperatorHasPriority(std::string operator_left, std::string operator_rig
 
 
 
-/*
-	ExpressionableOperatorPrecedence()
-		: data{
-			{{"++", "--", "()", "[]", "(", "[", ".", "->"}, ASSOCIATIVITY_LEFT_TO_RIGHT},
-			{{"*", "/", "%"}, ASSOCIATIVITY_LEFT_TO_RIGHT},
-			{{"+", "-"}, ASSOCIATIVITY_LEFT_TO_RIGHT},
-			{{"<<", ">>"}, ASSOCIATIVITY_LEFT_TO_RIGHT},
-			{{"<", ">", "<=", ">="}, ASSOCIATIVITY_LEFT_TO_RIGHT},
-			{{"==", "!="}, ASSOCIATIVITY_LEFT_TO_RIGHT},
-			{{"&"}, ASSOCIATIVITY_LEFT_TO_RIGHT},
-			{{"^"}, ASSOCIATIVITY_LEFT_TO_RIGHT},
-			{{"|"}, ASSOCIATIVITY_LEFT_TO_RIGHT},
-			{{"&&"}, ASSOCIATIVITY_LEFT_TO_RIGHT},
-			{{"||"}, ASSOCIATIVITY_LEFT_TO_RIGHT},
-			{{"?", ":"}, ASSOCIATIVITY_RIGHT_TO_LEFT},
-			{{"=", "+=", "-=", "*=", "/=", "%=", "<<=", ">>=", "&=", "^=", "|="}, ASSOCIATIVITY_RIGHT_TO_LEFT},
-			{",", ASSOCIATIVITY_LEFT_TO_RIGHT}
-		}
-	{
-*/
+
 
 }
+#endif // !_precedence_
