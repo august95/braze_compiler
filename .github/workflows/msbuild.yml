@@ -9,6 +9,7 @@ on:
 env:
   # Configuration type to build.
   BUILD_CONFIGURATION: Release
+  PLATFORM: x64  # Ensure this matches your build platform
 
 permissions:
   contents: read
@@ -27,7 +28,7 @@ jobs:
       run: nuget restore braze_compiler.sln  # Ensure this path is correct
 
     - name: Build braze_compiler Static Library
-      run: msbuild braze_compiler/braze_compiler.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }}
+      run: msbuild braze_compiler/braze_compiler.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /verbosity:diagnostic
 
   build-unit_test:
     runs-on: windows-latest
@@ -43,4 +44,4 @@ jobs:
       run: nuget restore braze_compiler.sln  # Ensure this path is correct
 
     - name: Build unit_test Project
-      run: msbuild unit_test/unit_test.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }}
+      run: msbuild unit_test/unit_test.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /verbosity:diagnostic
