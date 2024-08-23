@@ -136,9 +136,9 @@ void parser::parseOperand()
 
 void parser::parseNormalExpression()
 {
-	// 50 + 30 * 20 
+	// 50 * 30 + 20 
 	std::shared_ptr < node > left_node = peekLastNode(); //50  
-	std::shared_ptr <token> operatort_token = peekToken(); // +
+	std::shared_ptr <token> operatort_token = peekToken(); // *
 	//std::string operator_ = operatort_token->getStringValue();
 
 	if (!left_node || !left_node->isValidExpressionType())
@@ -149,10 +149,10 @@ void parser::parseNormalExpression()
 		//cwarning("left node in expression %i is not allowed in expression", left_node->getNodeType());
 		return;
 	}
-	nextToken(); // operator token popped '+'
+	nextToken(); // operator token popped '*'
 	popLastNode();  // 50
-	parseExpression(); // parse 30 * 20
-	std::shared_ptr < node > right_node = popLastNode(); // * (20) (30)
+	parseExpression(); // parse 30 + 20
+	std::shared_ptr < node > right_node = popLastNode(); // + L(30) R(20)
 	std::shared_ptr < nodeExpresssion > expression_node = makeExpressionNode(operatort_token->getFilePosition(), operatort_token->getStringValue(), left_node, right_node);
 	
 	expression_node->reorderExpression();
