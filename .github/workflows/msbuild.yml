@@ -7,7 +7,6 @@ on:
     branches: [ "main" ]
 
 env:
-  # Configuration type to build.
   BUILD_CONFIGURATION: Release
   PLATFORM: x64  # Ensure this matches your build platform
 
@@ -25,14 +24,14 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Restore NuGet packages
-      run: nuget restore braze_compiler.sln  # Ensure this path is correct
+      run: nuget restore braze_compiler.sln
 
     - name: Build braze_compiler Static Library
-      run: msbuild braze_compiler/braze_compiler.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /verbosity:diagnostic
+      run: msbuild braze_compiler/braze_compiler.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} /verbosity:diagnostic
 
   build-unit_test:
     runs-on: windows-latest
-    needs: build-braze_compiler  # Ensure this job runs after the braze_compiler static library is built
+    needs: build-braze_compiler
 
     steps:
     - uses: actions/checkout@v4
@@ -41,7 +40,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Restore NuGet packages
-      run: nuget restore braze_compiler.sln  # Ensure this path is correct
+      run: nuget restore braze_compiler.sln
 
     - name: Build unit_test Project
-      run: msbuild unit_test/unit_test.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /verbosity:diagnostic
+      run: msbuild unit_test/unit_test.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} /verbosity:diagnostic
