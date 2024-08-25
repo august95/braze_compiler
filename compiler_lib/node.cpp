@@ -22,16 +22,26 @@ node::node(nodeType node_type, filePosition file_position)
 }
 
 node::node(nodeType node_type, filePosition file_position, std::string string_value)
+	:m_node_type(node_type),
+	m_file_position(file_position),
+	m_string_value(string_value)
 {
 
 }
 
 node::node(nodeType node_type, filePosition file_position, unsigned long number_value)
+	:m_node_type(node_type),
+	m_file_position(file_position),
+	m_number_val(number_value)
 {
 
 }
 
 node::node(nodeType node_type, filePosition file_position, std::shared_ptr < node > left_node, std::shared_ptr < node > right_node)
+	:m_node_type(node_type),
+	m_file_position(file_position),
+	m_left_node(left_node),
+	m_right_node(right_node)
 {
 
 }

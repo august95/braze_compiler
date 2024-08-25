@@ -43,6 +43,7 @@ std::shared_ptr < node > parser::peekLastNodeExpect(nodeType node_type)
 
 std::shared_ptr < node > parser::makeExpressionNode(filePosition file_position, std::string operator_, std::shared_ptr < node > left_node, std::shared_ptr < node > right_node)
 {
+
 	std::shared_ptr < node > expression_node = std::make_shared<node>(NODE_TYPE_EXPRESSION, file_position, left_node, right_node);
 	expression_node->setStringValue(operator_);
 	return expression_node;
