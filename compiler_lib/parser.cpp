@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "parser.h"
 #include "braze_compiler.h"
-#include "nodeExpresssion.h"
 #include <memory>
 
 
@@ -42,11 +41,9 @@ std::shared_ptr < node > parser::peekLastNodeExpect(nodeType node_type)
 	return node;
 }
 
-std::shared_ptr < nodeExpresssion > parser::makeExpressionNode(filePosition file_position, std::string operator_, std::shared_ptr < node > left_node, std::shared_ptr < node > right_node)
+std::shared_ptr < node > parser::makeExpressionNode(filePosition file_position, std::string operator_, std::shared_ptr < node > left_node, std::shared_ptr < node > right_node)
 {
-	std::shared_ptr < nodeExpresssion > left_exp_node = cast_node<nodeExpresssion>(left_node);
-	std::shared_ptr < nodeExpresssion > right_exp_node = cast_node<nodeExpresssion>(right_node);
-	std::shared_ptr < nodeExpresssion > expression_node = std::make_shared<nodeExpresssion>(NODE_TYPE_EXPRESSION, file_position, left_exp_node, right_exp_node);
+	std::shared_ptr < node > expression_node = std::make_shared<node>(NODE_TYPE_EXPRESSION, file_position, left_node, right_node);
 	expression_node->setStringValue(operator_);
 	return expression_node;
 }
@@ -116,15 +113,15 @@ void parser::parseSingleTokenToExpresssionNode()
 
 	if (t->isTokenTypeNumber())
 	{
-		n = std::make_shared<nodeExpresssion>(nodeType::NODE_TYPE_NUMBER, t->getFilePosition(), t->getNumberValue());
+		n = std::make_shared<node>(nodeType::NODE_TYPE_NUMBER, t->getFilePosition(), t->getNumberValue());
 	}
 	else if (t->isTokenTypeIdentifier())
 	{
-		n = std::make_shared<nodeExpresssion>(nodeType::NODE_TYPE_IDENTIFIER, t->getFilePosition(), t->getStringValue());
+		n = std::make_shared<node>(nodeType::NODE_TYPE_IDENTIFIER, t->getFilePosition(), t->getStringValue());
 	}
 	else if (t->isTokenTypeString())
 	{
-		n = std::make_shared<nodeExpresssion>(nodeType::NODE_TYPE_STRING, t->getFilePosition(), t->getStringValue());
+		n = std::make_shared<node>(nodeType::NODE_TYPE_STRING, t->getFilePosition(), t->getStringValue());
 	}	
 	pushNode(n);	
 }
@@ -153,7 +150,7 @@ void parser::parseNormalExpression()
 	popLastNode();  // 50
 	parseExpression(); // parse 30 + 20
 	std::shared_ptr < node > right_node = popLastNode(); // + L(30) R(20)
-	std::shared_ptr < nodeExpresssion > expression_node = makeExpressionNode(operatort_token->getFilePosition(), operatort_token->getStringValue(), left_node, right_node);
+	std::shared_ptr < node > expression_node = makeExpressionNode(operatort_token->getFilePosition(), operatort_token->getStringValue(), left_node, right_node);
 	
 	expression_node->reorderExpression();
 
