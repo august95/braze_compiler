@@ -565,18 +565,28 @@ TEST(lexer, ordinaryCFile) {
 
 
 
-TEST(parser, precedence) {
+TEST(parser, expression) {
 
 	std::string file_name = "test_parser_test.c";
 	/*
 	* File Content
 	*
-	*  504 + 3
+	*  a = 50 * 30 + 20
 	*/
 	const int num_of_tokens = 5;
 
 	compileProcess process;
 	process.initialize(file_path + file_name);
 	process.startCompiler();
+
+	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+	std::shared_ptr < node > node = ast.front();
+	EXPECT_EQ( node->getStringValue(), "=");
+	EXPECT_EQ(node->getLeftNode()->getStringValue(), "a");
+	EXPECT_EQ(node->getRightNode()->getStringValue(), "+");
+	EXPECT_EQ(node->getRightNode()->getRightNode()->getNumberValue(), 20);
+	EXPECT_EQ(node->getRightNode()->getLeftNode()->getStringValue(), "*");
+	EXPECT_EQ(node->getRightNode()->getLeftNode()->getRightNode()->getNumberValue(), 30);
+	EXPECT_EQ(node->getRightNode()->getLeftNode()->getLeftNode()->getNumberValue(), 50);
 
 }

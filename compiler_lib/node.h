@@ -56,10 +56,11 @@ public:
 	filePosition getFilePosition() { return m_file_position; }
 	void reorderExpression();
 	void setStringValue(std::string string_value) { m_string_value = string_value; }
-private:
 	std::shared_ptr < node > getLeftNode() { return m_left_node; }
 	std::shared_ptr < node > getRightNode() { return m_right_node; }
 	std::string getStringValue() { return m_string_value; }
+	unsigned long getNumberValue() { return m_number_val; }
+private:
 	void setRightNode(std::shared_ptr < node > right_node) { m_right_node = right_node; }
 	void setLeftNode(std::shared_ptr < node > left_node) { m_left_node = left_node; }
 	void shiftChildrenLeft();

@@ -15,6 +15,7 @@ public:
 
 	void setTokenList(std::list < std::shared_ptr < token > > tokens) { m_tokens = tokens; };
 	void startParser();
+	std::list < std::shared_ptr < node > > getAbstractSyntaxTree() { return m_nodes; }
 
 private:
 	std::shared_ptr < token > nextToken();
