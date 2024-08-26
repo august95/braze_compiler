@@ -31,9 +31,6 @@
 *.out
 *.app
 
-#visual studio files
-*.vcxproj
-*.vcxproj.filters
 
 #folders
 .vs/
