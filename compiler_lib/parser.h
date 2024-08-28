@@ -35,7 +35,7 @@ private:
 	
 
 	void parseExpression();
-	int parseExpressionOperatorOrOperand();
+	int parseExpressionable();
 	void parseSingleTokenToExpresssionNode();
 	void parseOperand();
 	void parseNormalExpression();
