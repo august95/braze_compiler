@@ -4,8 +4,7 @@
 #include <iostream>
 #include <assert.h>
 
-#define STRINGS_EQUAL(str, str2) \
-    (str && str2 && (strcmp(str, str2) == 0))
+
 
 #define CASE_NUMERIC \
     case '0':        \
