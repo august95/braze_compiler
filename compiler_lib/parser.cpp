@@ -74,6 +74,10 @@ void parser::parseNextToken()
 	{
 		parseExpression();
 	}
+	if (token->isTokenTypeKeyword())
+	{
+		parseGlobalKeyword();
+	}
 }
 
 void parser::parseExpression()
@@ -157,6 +161,87 @@ void parser::parseNormalExpression()
 
 	pushNode(expression_node);
 }
+
+void parser::parseKeyword()
+{
+	std::shared_ptr<token> token = peekToken();
+
+	if (datatype::isKeywordVariableModifier(token->getStringValue()) || datatype::IsKeywordDatatype(token->getStringValue()))
+	{
+		//static const int func_or_variable ...
+		parseVariableOrFunction();
+
+	}
+}
+
+void parser::parseGlobalKeyword()
+{
+	//FIXME: add symbol resolver
+
+	parseKeyword();
+	nextToken();
+}
+
+void parser::parseVariableOrFunction()
+{
+	//to parse: static const long long*** var_name or  int function_name()
+
+	std::shared_ptr<datatype> datatype = parseDatatype();
+
+	if (datatype->isStruct() || datatype->isUnion())
+	{
+		//FIXME: implement parsing of structs and unions
+	}
+
+	std::shared_ptr<token> token = nextToken();
+
+	//to parse: var_name or function_name
+	assert(token->isTokenTypeIdentifier() && "expected variable name or function name");
+	std::string name = token->getStringValue();
+	
+	token = peekToken();
+	if (token->isTokenTypeSymbol() && (token->getCharValue() == ';'))
+	{
+		// undeclared variable int a;
+	}
+
+	//fixme VARIABLE: parse variable name and value/body (if struct)
+
+	//fixme FUNCTION: parse function body
+}
+
+std::shared_ptr<datatype> parser::parseDatatype()
+{
+	//to parse: static const long long*** name....
+	std::shared_ptr<token> token = peekToken();
+	std::shared_ptr<datatype> dtype = std::make_shared < datatype > ();
+
+	//static const
+	while (datatype::isKeywordVariableModifier(token->getStringValue()))
+	{
+		token = nextToken();
+		dtype->setKeyVariableModifier(token->getStringValue());
+		token = peekToken();
+	}
+
+	//long long
+	while (datatype::IsKeywordDatatype(token->getStringValue()))
+	{
+		token = nextToken();
+		dtype->setDataType(token->getStringValue());
+		token = peekToken();
+	}
+
+	while (token->isTokenTypeOperator() && STRINGS_EQUAL(token->getStringValue().c_str(), "*"))
+	{
+		token = nextToken();
+		dtype->incrementPointerDepth();
+		token = peekToken();
+	}
+
+	return dtype;
+}
+
 
 void parser::_assert_(bool condition, std::string message)
 {

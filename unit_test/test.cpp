@@ -590,3 +590,23 @@ TEST(parser, expression) {
 	EXPECT_EQ(node->getRightNode()->getLeftNode()->getLeftNode()->getNumberValue(), 50);
 
 }
+
+
+TEST(parser, keyword) {
+
+	std::string file_name = "test_parser_keyword.c";
+	/*
+	* File Content
+	*
+	*  a = 50 * 30 + 20
+	*/
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+
+	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+	std::shared_ptr < node > node = ast.front();	
+
+}

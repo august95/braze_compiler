@@ -4,6 +4,7 @@
 
 #include "token.h"
 #include "node.h"
+#include "datatype.h"
 #include <list>
 #include <iostream>
 
@@ -39,6 +40,12 @@ private:
 	void parseSingleTokenToExpresssionNode();
 	void parseOperand();
 	void parseNormalExpression();
+	void parseKeyword();
+	void parseGlobalKeyword();
+	void parseVariableOrFunction();
+
+	std::shared_ptr < datatype > parseDatatype();
+
 
 private:
 	std::list < std::shared_ptr < node > > m_nodes;
