@@ -266,13 +266,13 @@ std::shared_ptr < token > lexer::makeOperatorTokenOrIncludeString()
 
 std::string lexer::getOperatorString()
 {
-	//operator might be a single char then something else '+' 5, or two chars "+="
+	//operator might be a single char '+' then something else 5, or two chars "+=" then 5
 	char first_op = nextChar(); //'+'
 	std::string operator_string("");
 	operator_string += first_op;
 	_assert_(isOperatorValid(operator_string),("'%s' is not a valid operator", operator_string.c_str()));
-	operator_string += peekChar(); //'=' or 5
-	if (isOperatorValid(operator_string)) //'+='
+	operator_string += peekChar(); //add '+' or 5
+	if (isOperatorValid(operator_string)) // test if dual char operator: '+='
 	{
 		nextChar();
 		return operator_string;
