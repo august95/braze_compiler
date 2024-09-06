@@ -1,1 +1,1 @@
-test
+static const long long*** var_name;
