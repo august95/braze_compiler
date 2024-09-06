@@ -83,13 +83,13 @@ void parser::parseNextToken()
 void parser::parseExpression()
 {
 	//parse all the tokens in the expression until the ';'. Example :a = b + 5;
- 	while (parseExpressionable() == 0)
+ 	while (parseExpressionOperatorOrOperand() == 0)
 	{
 
 	}
 }
 
-int parser::parseExpressionable()
+int parser::parseExpressionOperatorOrOperand()
 {
 	std::shared_ptr < token > token = peekToken();
 	if (!token)
