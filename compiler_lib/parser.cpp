@@ -190,17 +190,16 @@ void parser::parseVariableOrFunction()
 
 	if (datatype->isStruct() || datatype->isUnion())
 	{
-		//FIXME: implement parsing of structs and unions
+		//#warning "struct not implemented"
 	}
 
 	std::shared_ptr<token> token = nextToken();
-
-	//to parse: var_name or function_name
 	assert(token->isTokenTypeIdentifier() && "expected variable name or function name");
-	std::string name = token->getStringValue();
-	
-	token = peekToken();
-	if (token->isTokenTypeSymbol() && (token->getCharValue() == ';'))
+	std::shared_ptr < node > _node = std::make_shared < node >(token->getFilePosition());
+	std::string variable_or_function_name = token->getStringValue();
+	_node->setStringValue(variable_or_function_name);
+
+	token = nextToken();
 	{
 		// undeclared variable int a;
 	}

@@ -17,6 +17,20 @@ datatype::datatype()
 {
 }
 
+datatype::datatype(filePosition file_position)
+  :m_first(primitiveType::DATA_TYPE_NONE),
+  m_second(primitiveType::DATA_TYPE_NONE),
+  m_unsigned(0),
+  m_signed(0),
+  m_static(0),
+  m_const(0),
+  m_extern(0),
+  m_has_secondary_primitive_type(0),
+  m_pointer_depth(0),
+  m_file_position(file_position)
+{
+}
+
 void datatype::setKeyVariableModifier(std::string modifier)
 {
   if (STRINGS_EQUAL(modifier.c_str(), "unsigned"))

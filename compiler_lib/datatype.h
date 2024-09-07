@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "filePosition.h"
 
 enum primitiveType
 {
@@ -21,7 +22,7 @@ class datatype
 {
 public:
   datatype();
-
+  datatype(filePosition file_position);
 
 
   void setKeyVariableModifier(std::string modifier);
@@ -54,5 +55,6 @@ private:
   bool m_const;
   bool m_extern;
   unsigned int m_pointer_depth;
+  filePosition m_file_position;
 
 };

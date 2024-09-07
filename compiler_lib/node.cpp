@@ -8,6 +8,11 @@ node::node()
 
 }
 
+node::node(filePosition file_position)
+	:m_file_position(file_position)
+{
+}
+
 node::node(nodeType node_type)
 	:m_node_type(node_type)
 {
@@ -108,7 +113,6 @@ void node::reorderExpression()
 			shiftChildrenLeft();
 		}
 	}
-
 
 }
 

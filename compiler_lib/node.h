@@ -45,6 +45,7 @@ class node
 {
 public:
 	node();
+	node(filePosition file_position);
 	node(nodeType node_type);
 	node(nodeType node_type, filePosition file_position);
 	nodeType getNodeType() { return m_node_type;	}
