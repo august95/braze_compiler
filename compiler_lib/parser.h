@@ -43,6 +43,8 @@ private:
 	void parseKeyword();
 	void parseGlobalKeyword();
 	void parseVariableOrFunction();
+	void parseBody();
+	void parseStatement();
 
 	std::shared_ptr < datatype > parseDatatype();
 

@@ -191,10 +191,9 @@ void parser::parseVariableOrFunction()
 	if (datatype->isStruct() || datatype->isUnion())
 	{
 		//#warning "struct not implemented"
-		//If global scope, parse struct declaration
+		//If global scope, parse struct declaration or function with struct return type
 		//If inside statement, parse struct variable'
-		//todo: move this logic to parser::parseKeyword, 
-		//even if a variable instance of an struct has logic similar to this function
+		//
 	}
 
 
@@ -223,6 +222,7 @@ void parser::parseVariableOrFunction()
 	{
 		//parsing function int a(){}                
 		_node->setNodeType(nodeType::NODE_TYPE_FUNCTION);
+		parseBody();
 	}
 	else
 	{
@@ -230,6 +230,29 @@ void parser::parseVariableOrFunction()
 		assert(false);
 	}
 
+}
+
+void parser::parseBody()
+{
+	//create new scope
+
+	//pop '{'
+	
+	//parse all statements
+
+	//pop '}'
+
+	//end scopes
+}
+
+void parser::parseStatement()
+{
+	
+	//pop token
+
+	// case token type number, token type identifier, if, else, switch, return, goto, for, while....
+	
+	//pop ';'
 }
 
 std::shared_ptr<datatype> parser::parseDatatype()
