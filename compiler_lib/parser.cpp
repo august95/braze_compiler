@@ -191,7 +191,12 @@ void parser::parseVariableOrFunction()
 	if (datatype->isStruct() || datatype->isUnion())
 	{
 		//#warning "struct not implemented"
+		//If global scope, parse struct declaration
+		//If inside statement, parse struct variable'
+		//todo: move this logic to parser::parseKeyword, 
+		//even if a variable instance of an struct has logic similar to this function
 	}
+
 
 	std::shared_ptr<token> token = nextToken();
 	assert(token->isTokenTypeIdentifier() && "expected variable name or function name");
