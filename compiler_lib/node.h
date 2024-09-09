@@ -3,6 +3,7 @@
 
 #include <string>
 #include "filePosition.h"
+#include "datatype.h"
 #include <iostream>
 
 enum nodeType
@@ -48,27 +49,39 @@ public:
 	node(filePosition file_position);
 	node(nodeType node_type);
 	node(nodeType node_type, filePosition file_position);
-	nodeType getNodeType() { return m_node_type;	}
 	node(nodeType node_type, filePosition file_position, std::string string_value);
 	node(nodeType node_type, filePosition file_position, unsigned long number_value);
 	node(nodeType node_type, filePosition file_position, std::shared_ptr < node > left_node, std::shared_ptr < node > right_node);
 
-	bool isValidExpressionType();
-	filePosition getFilePosition() { return m_file_position; }
 	void reorderExpression();
-	void setStringValue(std::string string_value) { m_string_value = string_value; }
+	bool isValidExpressionType();
+
+	nodeType getNodeType() { return m_node_type;	}
+	void setNodeType(nodeType node_type) { m_node_type = node_type; }
+	filePosition getFilePosition() { return m_file_position; }
 	std::shared_ptr < node > getLeftNode() { return m_left_node; }
 	std::shared_ptr < node > getRightNode() { return m_right_node; }
+	void setValueNode(std::shared_ptr < node > val_node) { m_value_node = val_node; }
+	std::shared_ptr < node > getValueNode() { return m_value_node; }
+	void setDatatype(std::shared_ptr < datatype > dtype) { m_datatype = dtype; }
+
+	void setStringValue(std::string string_value) { m_string_value = string_value; }
 	std::string getStringValue() { return m_string_value; }
 	unsigned long getNumberValue() { return m_number_val; }
+
 private:
 	void setRightNode(std::shared_ptr < node > right_node) { m_right_node = right_node; }
 	void setLeftNode(std::shared_ptr < node > left_node) { m_left_node = left_node; }
 	void shiftChildrenLeft();
 
 protected:
-	std::shared_ptr < node > m_left_node;
+	//for expression nodes
+	std::shared_ptr < node > m_left_node; 
 	std::shared_ptr < node > m_right_node;
+
+	//used by: variable nodes
+	std::shared_ptr < node > m_value_node;
+	std::shared_ptr < datatype > m_datatype;
 
 	nodeType m_node_type;
 	filePosition m_file_position;

@@ -1,1 +1,1 @@
-static const long long*** var_name;
+static const long long*** var_name = 50 * 30 + 20;

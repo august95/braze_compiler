@@ -200,20 +200,38 @@ void parser::parseVariableOrFunction()
 	_node->setStringValue(variable_or_function_name);
 
 	token = nextToken();
+	if (token->isTokenTypeSymbol() && (token->getCharValue() == ';')) 
 	{
 		// undeclared variable int a;
+		_node->setNodeType(nodeType::NODE_TYPE_VARIABLE);
+		_node->setDatatype(datatype);
+	}
+	else if (token->isTokenTypeOperator() && (token->getStringValue() == "="))
+	{
+		//declared variable int a = 50;
+		_node->setNodeType(nodeType::NODE_TYPE_VARIABLE);
+		_node->setDatatype(datatype);
+		parseExpression();
+		_node->setValueNode(popLastNode());
+	}
+	else if (token->isTokenTypeOperator() && (token->getStringValue() == "("))
+	{
+		//parsing function int a(){}                
+		_node->setNodeType(nodeType::NODE_TYPE_FUNCTION);
+	}
+	else
+	{
+		cerror("expected function or variable delcaration");
+		assert(false);
 	}
 
-	//fixme VARIABLE: parse variable name and value/body (if struct)
-
-	//fixme FUNCTION: parse function body
 }
 
 std::shared_ptr<datatype> parser::parseDatatype()
 {
 	//to parse: static const long long*** name....
 	std::shared_ptr<token> token = peekToken();
-	std::shared_ptr<datatype> dtype = std::make_shared < datatype > ();
+	std::shared_ptr<datatype> dtype = std::make_shared < datatype > (token->getFilePosition());
 
 	//static const
 	while (datatype::isKeywordVariableModifier(token->getStringValue()))
