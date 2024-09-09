@@ -8,6 +8,11 @@
 #include <list>
 #include <iostream>
 
+/*
+* FIXME: 
+* Add parsing of unary operator in parseNormalExpression.
+* Add rules for parsing expressions with [, (, ?, ','. And reorder expression if needed.* 
+*/
 
 class parser
 {
