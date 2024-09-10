@@ -64,6 +64,7 @@ public:
 	void setValueNode(std::shared_ptr < node > val_node) { m_value_node = val_node; }
 	std::shared_ptr < node > getValueNode() { return m_value_node; }
 	void setDatatype(std::shared_ptr < datatype > dtype) { m_datatype = dtype; }
+	std::shared_ptr < datatype > getDatatype() {return m_datatype; }
 
 	void setStringValue(std::string string_value) { m_string_value = string_value; }
 	std::string getStringValue() { return m_string_value; }
