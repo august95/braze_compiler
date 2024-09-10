@@ -615,6 +615,8 @@ TEST(parser, keyword) {
 	EXPECT_EQ(dtype->getPrimitiveType(), primitiveType::DATA_TYPE_LONG);
 	EXPECT_EQ(dtype->getSecondPrimitiveType(), primitiveType::DATA_TYPE_LONG);
 
+	EXPECT_EQ(_node->getStringValue(), "var_name");
+
 	std::shared_ptr < node > val_node = _node->getValueNode();
 	EXPECT_EQ(val_node->getStringValue(), "+");
 	EXPECT_EQ(val_node->getRightNode()->getNumberValue(), 20);
