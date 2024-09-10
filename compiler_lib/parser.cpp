@@ -229,7 +229,7 @@ void parser::parseVariableOrFunction()
 		cerror("expected function or variable delcaration");
 		assert(false);
 	}
-	m_nodes.push_back(_node);
+	pushNode(_node);
 
 }
 
@@ -250,6 +250,11 @@ void parser::parseStatement()
 {
 	
 	//pop token
+
+		//parse keyword
+		//parse expression
+		//parse symbol ('{' new scope or ':' label)
+		//no other token types is expected as the first token in the statement
 
 	// case token type number, token type identifier, if, else, switch, return, goto, for, while....
 	
@@ -277,7 +282,7 @@ std::shared_ptr<datatype> parser::parseDatatype()
 		dtype->setDataType(token->getStringValue());
 		token = peekToken();
 	}
-
+	//***
 	while (token->isTokenTypeOperator() && STRINGS_EQUAL(token->getStringValue().c_str(), "*"))
 	{
 		token = nextToken();
