@@ -206,7 +206,7 @@ void parser::parseVariableOrFunction()
 	token = nextToken();
 	if (token->isTokenTypeSymbol() && (token->getCharValue() == ';')) 
 	{
-		// undeclared variable int a;
+		// unassigned variable int a;
 		_node->setNodeType(nodeType::NODE_TYPE_VARIABLE);
 		_node->setDatatype(datatype);
 	}
@@ -229,6 +229,7 @@ void parser::parseVariableOrFunction()
 		cerror("expected function or variable delcaration");
 		assert(false);
 	}
+	m_nodes.push_back(_node);
 
 }
 

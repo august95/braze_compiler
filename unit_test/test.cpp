@@ -607,6 +607,20 @@ TEST(parser, keyword) {
 	process.startCompiler();
 
 	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
-	std::shared_ptr < node > node = ast.front();	
+	std::shared_ptr < node > _node = ast.front();	
+	std::shared_ptr < datatype > dtype = _node->getDatatype();
+	EXPECT_TRUE(dtype->isStatic());
+	EXPECT_TRUE(dtype->isConst());
+	EXPECT_TRUE(dtype->secondaryPrimitiveType());
+	EXPECT_EQ(dtype->getPrimitiveType(), primitiveType::DATA_TYPE_LONG);
+	EXPECT_EQ(dtype->getSecondPrimitiveType(), primitiveType::DATA_TYPE_LONG);
+
+	std::shared_ptr < node > val_node = _node->getValueNode();
+	EXPECT_EQ(val_node->getStringValue(), "+");
+	EXPECT_EQ(val_node->getRightNode()->getNumberValue(), 20);
+	EXPECT_EQ(val_node->getLeftNode()->getStringValue(), "*");
+	EXPECT_EQ(val_node->getLeftNode()->getRightNode()->getNumberValue(), 30);
+	EXPECT_EQ(val_node->getLeftNode()->getLeftNode()->getNumberValue(), 50);
+
 
 }
