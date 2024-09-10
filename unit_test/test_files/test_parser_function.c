@@ -1,0 +1,1 @@
+int main(){	int var_val;}

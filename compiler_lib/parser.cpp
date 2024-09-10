@@ -222,6 +222,7 @@ void parser::parseVariableOrFunction()
 	{
 		//parsing function int a(){}                
 		_node->setNodeType(nodeType::NODE_TYPE_FUNCTION);
+		parseFunction();
 		parseBody();
 	}
 	else
@@ -233,17 +234,34 @@ void parser::parseVariableOrFunction()
 
 }
 
+void parser::parseFunction()
+{
+	//deal with parameters
+
+	std::shared_ptr<token> token = nextToken(); // ')'
+	
+}
+
 void parser::parseBody()
 {
 	//create new scope
-
-	//pop '{'
+	std::shared_ptr<token> token = nextToken(); // '{'
+	if (!token->isTokenTypeSymbol() || token->getCharValue() != '{')
+	{
+		cerror("expected symbol '{' at beginning of body");
+	}
 	
 	//parse all statements
 
-	//pop '}'
+	token = nextToken(); // '}'
+	if (!token->isTokenTypeSymbol() || token->getCharValue() != '{')
+	{
+		cerror("expected symbol '}' at ending of body");
+	}
 
 	//end scopes
+
+
 }
 
 void parser::parseStatement()

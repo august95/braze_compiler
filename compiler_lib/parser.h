@@ -48,6 +48,7 @@ private:
 	void parseKeyword();
 	void parseGlobalKeyword();
 	void parseVariableOrFunction();
+	void parseFunction();
 	void parseBody();
 	void parseStatement();
 	void parseSymbol();

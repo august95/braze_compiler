@@ -626,3 +626,24 @@ TEST(parser, keyword) {
 
 
 }
+
+
+TEST(parser, function) {
+
+	std::string file_name = "test_parser_function.c";
+	/*
+	* File Content
+	*
+	*  a = 50 * 30 + 20
+	*/
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+
+	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+
+
+}
+
