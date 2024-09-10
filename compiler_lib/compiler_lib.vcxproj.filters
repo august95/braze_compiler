@@ -48,6 +48,9 @@
     <ClInclude Include="datatype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="scope.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="compiler_lib.cpp">
@@ -78,6 +81,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="datatype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scope.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
