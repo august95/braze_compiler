@@ -261,6 +261,13 @@ void parser::parseStatement()
 	//pop ';'
 }
 
+void parser::parseSymbol()
+{
+	//parse '{' new scope
+
+	//parse ':' label
+}
+
 std::shared_ptr<datatype> parser::parseDatatype()
 {
 	//to parse: static const long long*** name....

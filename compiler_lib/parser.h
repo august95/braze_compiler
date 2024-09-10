@@ -50,6 +50,7 @@ private:
 	void parseVariableOrFunction();
 	void parseBody();
 	void parseStatement();
+	void parseSymbol();
 
 	std::shared_ptr < datatype > parseDatatype();
 
