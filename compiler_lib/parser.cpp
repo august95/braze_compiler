@@ -49,7 +49,7 @@ std::shared_ptr < node > parser::makeExpressionNode(filePosition file_position, 
 	return expression_node;
 }
 
-/*
+
 template <class nodeType>
 std::shared_ptr<nodeType> parser::cast_node(std::shared_ptr<node> node_)
 {
@@ -59,7 +59,7 @@ std::shared_ptr<nodeType> parser::cast_node(std::shared_ptr<node> node_)
 	std::shared_ptr<nodeType> cast_node_ = std::static_pointer_cast<nodeType>(node_);
 	return cast_node_;
 }
-*/
+
 
 void parser::parseTokens()
 {
@@ -278,7 +278,6 @@ void parser::parseBody()
 		cerror("expected symbol '}' at ending of body");
 	}
 
-
 	pushNode(body_node);
 	//end scopes
 
@@ -287,18 +286,23 @@ void parser::parseBody()
 
 void parser::parseStatement()
 {
-	nextToken();
-	//pop token
+	std::shared_ptr<token> token = peekToken();
+	if (token->isTokenTypeKeyword())
+	{
+		parseKeyword();
+		return;
+	}
 
-		//parse keyword
-		//parse expression
-		//parse symbol ('{' new scope or ':' label)
-		//no other token types is expected as the first token in the statement
-
-	// case token type number, token type identifier, if, else, switch, return, goto, for, while....
+	parseExpression();
 	
-	//pop ';'
-	pushNode(std::make_shared<node>());
+	//parse symbol ('{' new scope or ':' label)
+	//no other token types is expected as the first token in the statement
+
+	token = nextToken();
+	if ((!token->isTokenTypeSymbol()) || token->getCharValue() != ';')
+	{
+		cerror("expected ';' at ending of statement");
+	}
 }
 
 void parser::parseSymbol()
