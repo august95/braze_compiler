@@ -49,6 +49,7 @@ std::shared_ptr < node > parser::makeExpressionNode(filePosition file_position, 
 	return expression_node;
 }
 
+/*
 template <class nodeType>
 std::shared_ptr<nodeType> parser::cast_node(std::shared_ptr<node> node_)
 {
@@ -58,6 +59,7 @@ std::shared_ptr<nodeType> parser::cast_node(std::shared_ptr<node> node_)
 	std::shared_ptr<nodeType> cast_node_ = std::static_pointer_cast<nodeType>(node_);
 	return cast_node_;
 }
+*/
 
 void parser::parseTokens()
 {
@@ -222,8 +224,8 @@ void parser::parseVariableOrFunction()
 	{
 		//parsing function int a(){}                
 		_node->setNodeType(nodeType::NODE_TYPE_FUNCTION);
+		pushNode(_node); //_node is popped inside parseFunction
 		parseFunction();
-		parseBody();
 	}
 	else
 	{
@@ -238,27 +240,46 @@ void parser::parseFunction()
 {
 	//deal with parameters
 
-	std::shared_ptr<token> token = nextToken(); // ')'
-	
+	std::shared_ptr<token> token = nextToken(); //pop ')'
+	std::shared_ptr < node > function_node = popLastNode();
+	parseBody();
+	std::shared_ptr < node > body_node = popLastNode();
+	function_node->setBodyNode(body_node);
+	pushNode(function_node);	
 }
 
 void parser::parseBody()
 {
 	//create new scope
 	std::shared_ptr<token> token = nextToken(); // '{'
+	std::list < std::shared_ptr < node > > statements;
+	std::shared_ptr < node > body_node = std::make_shared < node >(nodeType::NODE_TYPE_BODY, token->getFilePosition());
+
 	if (!token->isTokenTypeSymbol() || token->getCharValue() != '{')
 	{
 		cerror("expected symbol '{' at beginning of body");
 	}
+
+	token = peekToken();
 	
-	//parse all statements
+	while (!token->isTokenTypeSymbol() || (token->getCharValue() != '}'))
+	{
+		parseStatement();
+		std::shared_ptr < node > statement_node = popLastNode();
+		statements.push_back(statement_node);
+		token = peekToken();
+
+	}
+	body_node->setStatements(statements);
 
 	token = nextToken(); // '}'
-	if (!token->isTokenTypeSymbol() || token->getCharValue() != '{')
+	if (!token->isTokenTypeSymbol() || token->getCharValue() != '}')
 	{
 		cerror("expected symbol '}' at ending of body");
 	}
 
+
+	pushNode(body_node);
 	//end scopes
 
 
@@ -266,7 +287,7 @@ void parser::parseBody()
 
 void parser::parseStatement()
 {
-	
+	nextToken();
 	//pop token
 
 		//parse keyword
@@ -277,6 +298,7 @@ void parser::parseStatement()
 	// case token type number, token type identifier, if, else, switch, return, goto, for, while....
 	
 	//pop ';'
+	pushNode(std::make_shared<node>());
 }
 
 void parser::parseSymbol()

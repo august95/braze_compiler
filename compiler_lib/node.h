@@ -5,6 +5,7 @@
 #include "filePosition.h"
 #include "datatype.h"
 #include <iostream>
+#include <list>
 
 enum nodeType
 {
@@ -59,12 +60,18 @@ public:
 	nodeType getNodeType() { return m_node_type;	}
 	void setNodeType(nodeType node_type) { m_node_type = node_type; }
 	filePosition getFilePosition() { return m_file_position; }
+
 	std::shared_ptr < node > getLeftNode() { return m_left_node; }
 	std::shared_ptr < node > getRightNode() { return m_right_node; }
 	void setValueNode(std::shared_ptr < node > val_node) { m_value_node = val_node; }
 	std::shared_ptr < node > getValueNode() { return m_value_node; }
+	void setBodyNode(std::shared_ptr < node > body_node) { m_body_node = body_node; }
+	std::shared_ptr < node > getBodyNode() { return m_body_node; }
+
 	void setDatatype(std::shared_ptr < datatype > dtype) { m_datatype = dtype; }
 	std::shared_ptr < datatype > getDatatype() {return m_datatype; }
+	void setStatements(std::list < std::shared_ptr < node > > statements) { m_statements = statements; }
+	std::list < std::shared_ptr < node > > getStatements() { return m_statements; }
 
 	void setStringValue(std::string string_value) { m_string_value = string_value; }
 	std::string getStringValue() { return m_string_value; }
@@ -83,6 +90,12 @@ protected:
 	//used by: variable nodes
 	std::shared_ptr < node > m_value_node;
 	std::shared_ptr < datatype > m_datatype;
+
+	//used by: body nodes
+	std::list < std::shared_ptr < node > > m_statements;
+
+	//used by: function nodes
+	std::shared_ptr < node > m_body_node;
 
 	nodeType m_node_type;
 	filePosition m_file_position;
