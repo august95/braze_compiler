@@ -1,8 +1,8 @@
 name: MSBuild
 
 on:
-#  push:
-#    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  build-braze_compiler:
+  build-compiler_lib:
     runs-on: windows-latest
 
     steps:
@@ -27,6 +27,21 @@ jobs:
       run: nuget restore braze_compiler.sln
 
     - name: Build braze_compiler Static Library
+      run: msbuild compiler_lib/compiler_lib.vcxproj.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} /verbosity:diagnostic
+
+  build-braze_compiler:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Restore NuGet packages
+      run: nuget restore braze_compiler.sln
+
+    - name: Build braze_compiler executable
       run: msbuild braze_compiler/braze_compiler.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} /verbosity:diagnostic
 
   build-unit_test:
