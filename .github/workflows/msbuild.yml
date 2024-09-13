@@ -62,4 +62,4 @@ jobs:
       run: msbuild unit_test/unit_test.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} /verbosity:diagnostic
 
     - name: Run Unit Tests
-      run: x64\Debug\unit_test.exe
+      run: x64/Debug/unit_test.exe
