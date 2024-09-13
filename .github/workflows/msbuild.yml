@@ -62,4 +62,4 @@ jobs:
       run: msbuild unit_test/unit_test.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} /verbosity:diagnostic
 
     - name: Run Unit Tests
-      run: ./"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" unit_test\bin\${{ env.BUILD_CONFIGURATION }}\${{ env.PLATFORM }}\unit_test.dll
+      run: ./x64/Debug/unit_test.exe
