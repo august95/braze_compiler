@@ -27,7 +27,7 @@ jobs:
       run: nuget restore braze_compiler.sln
 
     - name: Build braze_compiler Static Library
-      run: msbuild compiler_lib/compiler_lib.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} /verbosity:diagnostic
+      run: msbuild compiler_lib/compiler_lib.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }}
 
 #  build-braze_compiler:
 #    runs-on: windows-latest
@@ -59,7 +59,7 @@ jobs:
       run: nuget restore braze_compiler.sln
 
     - name: Build unit_test Project
-      run: msbuild unit_test/unit_test.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} /verbosity:diagnostic
+      run: msbuild unit_test/unit_test.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }}
 
     - name: Run Unit Tests
-      run: .\x64\Debug\unit_test.exe
+      run: D:\a\braze_compiler\x64\Debug\unit_test.exe
