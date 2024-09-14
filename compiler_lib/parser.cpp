@@ -294,12 +294,27 @@ void parser::parseStatement()
 		return;
 	}
 
-	parseExpression();
+	parseExpression(); //if symbol, no tokens are popped
 	
-	//parse symbol ('{' new scope or ':' label)
-	//no other token types is expected as the first token in the statement
+	token = peekToken();
+
+	if (token->isTokenTypeSymbol() && token->getCharValue() == '{')
+	{
+		parseSymbol();
+		nextToken(); //pop off '}'
+		/*
+		* Nested scope, return because ';' is not expected
+		* 
+		* {
+		*		{
+		*		}
+		* }
+		*/
+		return;
+	}
 
 	token = nextToken();
+
 	if ((!token->isTokenTypeSymbol()) || token->getCharValue() != ';')
 	{
 		cerror("expected ';' at ending of statement");
@@ -309,7 +324,11 @@ void parser::parseStatement()
 void parser::parseSymbol()
 {
 	//parse '{' new scope
-
+	std::shared_ptr<token> token = peekToken();
+	if (token->isTokenTypeSymbol() && token->getCharValue() == '{')
+	{
+		parseBody();
+	}
 	//parse ':' label
 }
 

@@ -90,6 +90,11 @@ int node::getStackSize()
 		}
 	}
 
+	else if (m_node_type == NODE_TYPE_BODY)
+	{
+		return m_body_size;
+	}
+
 	return 0;
 }
 

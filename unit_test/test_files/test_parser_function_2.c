@@ -1,0 +1,1 @@
+int main() { int var_a; { int var_val; var_val + 50; int var_b;  } }

@@ -68,6 +68,7 @@ public:
 	std::shared_ptr < node > getValueNode() { return m_value_node; }
 	void setBodyNode(std::shared_ptr < node > body_node) { m_body_node = body_node; }
 	std::shared_ptr < node > getBodyNode() { return m_body_node; }
+	int getBodySize() { return m_body_size; }
 
 	void setDatatype(std::shared_ptr < datatype > dtype) { m_datatype = dtype; }
 	std::shared_ptr < datatype > getDatatype() {return m_datatype; }

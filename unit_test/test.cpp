@@ -635,7 +635,7 @@ TEST(parser, function) {
 	/*
 	* File Content
 	*
-	*  a = 50 * 30 + 20
+	*  int main(){	int var_val; var_val + 50;}
 	*/
 	const int num_of_tokens = 5;
 
@@ -644,7 +644,48 @@ TEST(parser, function) {
 	process.startCompiler();
 
 	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+	std::shared_ptr < node > _node = ast.front();
 
+	EXPECT_EQ(_node->getStringValue(), "main");
+	EXPECT_EQ(_node->getBodyNode()->getBodySize(), 4 );
+	std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
+	EXPECT_EQ(statements.size(), 2 );
+	statements.pop_back();
+	EXPECT_EQ(statements.back()->getStackSize(), 4); //int var_val;
+
+}
+
+
+
+TEST(parser, functionWithSecondScope) {
+
+	std::string file_name = "test_parser_function_2.c";
+	/*
+	* File Content
+	*
+	*  int main() { int var_a; { int var_val; var_val + 50; int var_b;  } }
+	*/
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+
+	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+	std::shared_ptr < node > _node = ast.front();
+
+	EXPECT_EQ(_node->getStringValue(), "main");
+	EXPECT_EQ(_node->getBodyNode()->getBodySize(), 12);
+	std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
+	EXPECT_EQ(statements.size(), 2);
+	
+	std::shared_ptr < node > nested_body_node = statements.back(); // { int var_val; var_val + 50; int var_b;  }
+	statements.pop_back();
+	EXPECT_EQ(statements.back()->getStackSize(), 4); //int var_val;
+
+	EXPECT_EQ(nested_body_node->getBodySize(), 8);
+	std::list < std::shared_ptr < node > > nested_statements = nested_body_node->getStatements();
+	EXPECT_EQ(nested_statements.size(), 3);
 
 }
 
