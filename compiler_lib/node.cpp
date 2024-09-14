@@ -4,24 +4,34 @@
 #include "ExpressionableOperatorPrecedence.h"
 
 node::node()
+	:m_body_size(0),
+	m_node_type(nodeType::NODE_TYPE_BLANK),
+	m_number_val(0)
 {
 
 }
 
 node::node(filePosition file_position)
-	:m_file_position(file_position)
+	:m_file_position(file_position),
+	m_node_type(nodeType::NODE_TYPE_BLANK),
+	m_body_size(0),
+	m_number_val(0)
 {
 }
 
 node::node(nodeType node_type)
-	:m_node_type(node_type)
+	:m_node_type(node_type),
+	m_body_size(0),
+	m_number_val(0)
 {
 
 }
 
 node::node(nodeType node_type, filePosition file_position)
 	:m_node_type(node_type),
-	m_file_position(file_position)
+	m_file_position(file_position),
+	m_body_size(0),
+	m_number_val(0)
 {
 
 }
@@ -29,7 +39,9 @@ node::node(nodeType node_type, filePosition file_position)
 node::node(nodeType node_type, filePosition file_position, std::string string_value)
 	:m_node_type(node_type),
 	m_file_position(file_position),
-	m_string_value(string_value)
+	m_string_value(string_value),
+	m_body_size(0),
+	m_number_val(0)
 {
 
 }
@@ -37,7 +49,8 @@ node::node(nodeType node_type, filePosition file_position, std::string string_va
 node::node(nodeType node_type, filePosition file_position, unsigned long number_value)
 	:m_node_type(node_type),
 	m_file_position(file_position),
-	m_number_val(number_value)
+	m_number_val(number_value),
+	m_body_size(0)
 {
 
 }
@@ -46,7 +59,9 @@ node::node(nodeType node_type, filePosition file_position, std::shared_ptr < nod
 	:m_node_type(node_type),
 	m_file_position(file_position),
 	m_left_node(left_node),
-	m_right_node(right_node)
+	m_right_node(right_node),
+	m_body_size(0),
+	m_number_val(0)
 {
 
 }
@@ -59,6 +74,23 @@ bool node::isValidExpressionType()
 		m_node_type == NODE_TYPE_UNARY ||
 		m_node_type == NODE_TYPE_NUMBER ||
 		m_node_type == NODE_TYPE_STRING;
+}
+
+int node::getStackSize()
+{
+	//local variables in the scope increment the stack size of that scope,
+	//function parameters is not yet parsed by the parser. The parameters
+	//will be located above the previous base pointer on the stack. Will 
+	//probably require an own stack size function
+	if (m_node_type == NODE_TYPE_VARIABLE)
+	{
+		if (m_datatype)
+		{
+			return m_datatype->getDatatypeSize();
+		}
+	}
+
+	return 0;
 }
 
 

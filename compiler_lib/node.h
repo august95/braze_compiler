@@ -56,6 +56,7 @@ public:
 
 	void reorderExpression();
 	bool isValidExpressionType();
+	int getStackSize();
 
 	nodeType getNodeType() { return m_node_type;	}
 	void setNodeType(nodeType node_type) { m_node_type = node_type; }
@@ -93,6 +94,7 @@ protected:
 
 	//used by: body nodes
 	std::list < std::shared_ptr < node > > m_statements;
+	int m_body_size;
 
 	//used by: function nodes
 	std::shared_ptr < node > m_body_node;
