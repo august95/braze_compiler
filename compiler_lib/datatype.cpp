@@ -126,6 +126,12 @@ void datatype::setDataType(std::string data_type)
 
 }
 
+void datatype::incrementPointerDepth()
+{ 
+  m_pointer_depth++; 
+  calcualteDatatypeSize();
+}
+
 void datatype::calcualteDatatypeSize()
 {
   m_datatype_size = getPrimitiveTypeSize(m_first);

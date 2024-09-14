@@ -71,7 +71,8 @@ public:
 
 	void setDatatype(std::shared_ptr < datatype > dtype) { m_datatype = dtype; }
 	std::shared_ptr < datatype > getDatatype() {return m_datatype; }
-	void setStatements(std::list < std::shared_ptr < node > > statements) { m_statements = statements; }
+	void addStatement(std::shared_ptr<node> statement);
+//	void setStatements(std::list < std::shared_ptr < node > > statements);
 	std::list < std::shared_ptr < node > > getStatements() { return m_statements; }
 
 	void setStringValue(std::string string_value) { m_string_value = string_value; }

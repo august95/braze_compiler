@@ -226,6 +226,7 @@ void parser::parseVariableOrFunction()
 		_node->setNodeType(nodeType::NODE_TYPE_FUNCTION);
 		pushNode(_node); //_node is popped inside parseFunction
 		parseFunction();
+		return; //function node allready pushed
 	}
 	else
 	{
@@ -254,6 +255,7 @@ void parser::parseBody()
 	std::shared_ptr<token> token = nextToken(); // '{'
 	std::list < std::shared_ptr < node > > statements;
 	std::shared_ptr < node > body_node = std::make_shared < node >(nodeType::NODE_TYPE_BODY, token->getFilePosition());
+	int stack_size = 0;
 
 	if (!token->isTokenTypeSymbol() || token->getCharValue() != '{')
 	{
@@ -266,11 +268,10 @@ void parser::parseBody()
 	{
 		parseStatement();
 		std::shared_ptr < node > statement_node = popLastNode();
-		statements.push_back(statement_node);
+		body_node->addStatement(statement_node);
 		token = peekToken();
 
 	}
-	body_node->setStatements(statements);
 
 	token = peekToken(); // '}', parseGlobalKeyword will pop this symbol
 	if (!token->isTokenTypeSymbol() || token->getCharValue() != '}')

@@ -34,7 +34,7 @@ public:
   bool isConst() { return m_const; }
   bool isExtern() { return m_extern; }
   bool secondaryPrimitiveType() { return m_has_secondary_primitive_type; }
-  void incrementPointerDepth() { m_pointer_depth++; }
+  void incrementPointerDepth();
   bool isUnion() { return m_first == primitiveType::DATA_TYPE_UNION; }
   bool isStruct() { return m_first == primitiveType::DATA_TYPE_STRUCT; }
   primitiveType getPrimitiveType() { return m_first; }

@@ -614,6 +614,7 @@ TEST(parser, keyword) {
 	EXPECT_TRUE(dtype->secondaryPrimitiveType());
 	EXPECT_EQ(dtype->getPrimitiveType(), primitiveType::DATA_TYPE_LONG);
 	EXPECT_EQ(dtype->getSecondPrimitiveType(), primitiveType::DATA_TYPE_LONG);
+	EXPECT_EQ(dtype->getDatatypeSize(), 4);
 
 	EXPECT_EQ(_node->getStringValue(), "var_name");
 
@@ -639,10 +640,10 @@ TEST(parser, function) {
 	const int num_of_tokens = 5;
 
 	compileProcess process;
-	//process.initialize(file_path + file_name);
-	//process.startCompiler();
+	process.initialize(file_path + file_name);
+	process.startCompiler();
 
-//	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
 
 
 }

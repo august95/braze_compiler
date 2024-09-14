@@ -148,6 +148,12 @@ void node::reorderExpression()
 
 }
 
+void node::addStatement(std::shared_ptr<node> statement)
+{
+	m_statements.push_back(statement);
+	m_body_size += statement->getStackSize();
+}
+
 void node::shiftChildrenLeft()
 {
 	std::string right_operator = getRightNode()->getStringValue();
