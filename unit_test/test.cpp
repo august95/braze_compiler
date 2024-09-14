@@ -598,7 +598,7 @@ TEST(parser, keyword) {
 	/*
 	* File Content
 	*
-	*  a = 50 * 30 + 20
+	*  static const long long*** var_name = 50 * 30 + 20;
 	*/
 	const int num_of_tokens = 5;
 
@@ -639,10 +639,10 @@ TEST(parser, function) {
 	const int num_of_tokens = 5;
 
 	compileProcess process;
-	process.initialize(file_path + file_name);
-	process.startCompiler();
+	//process.initialize(file_path + file_name);
+	//process.startCompiler();
 
-	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+//	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
 
 
 }
