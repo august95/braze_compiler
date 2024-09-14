@@ -272,7 +272,7 @@ void parser::parseBody()
 	}
 	body_node->setStatements(statements);
 
-	token = nextToken(); // '}'
+	token = peekToken(); // '}', parseGlobalKeyword will pop this symbol
 	if (!token->isTokenTypeSymbol() || token->getCharValue() != '}')
 	{
 		cerror("expected symbol '}' at ending of body");
