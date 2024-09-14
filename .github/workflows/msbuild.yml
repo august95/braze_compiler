@@ -1,8 +1,8 @@
 name: MSBuild
 
 on:
-#  push:
-#    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  build-braze_compiler:
+  build-compiler_lib:
     runs-on: windows-latest
 
     steps:
@@ -27,11 +27,27 @@ jobs:
       run: nuget restore braze_compiler.sln
 
     - name: Build braze_compiler Static Library
-      run: msbuild braze_compiler/braze_compiler.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} /verbosity:diagnostic
+      run: msbuild compiler_lib/compiler_lib.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }}
+
+#  build-braze_compiler:
+#    runs-on: windows-latest
+#    needs: build-compiler_lib
+#
+#    steps:
+#    - uses: actions/checkout@v4
+#
+#    - name: Add MSBuild to PATH
+#      uses: microsoft/setup-msbuild@v1.0.2
+#
+#    - name: Restore NuGet packages
+#      run: nuget restore braze_compiler.sln
+#
+#    - name: Build braze_compiler executable
+#      run: msbuild braze_compiler/braze_compiler.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} /verbosity:diagnostic
 
   build-unit_test:
     runs-on: windows-latest
-    needs: build-braze_compiler
+    needs: build-compiler_lib
 
     steps:
     - uses: actions/checkout@v4
@@ -43,4 +59,9 @@ jobs:
       run: nuget restore braze_compiler.sln
 
     - name: Build unit_test Project
-      run: msbuild unit_test/unit_test.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} /verbosity:diagnostic
+      run: msbuild unit_test/unit_test.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }}
+
+    - name: Copy test files
+      run: xcopy  D:\a\braze_compiler\braze_compiler\unit_test\test_files D:\a\braze_compiler\braze_compiler\unit_test\x64\Release /E /I /H /C /Y
+    - name: Run Unit Tests
+      run: D:\a\braze_compiler\braze_compiler\unit_test\x64\Release\unit_test.exe
