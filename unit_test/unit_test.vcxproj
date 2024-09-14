@@ -107,6 +107,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="test_files\test_lexer_identifiers_symbols.c" />
+    <ClCompile Include="test_files\test_lexer_numbers.c" />
+    <ClCompile Include="test_files\test_lexer_operators.c" />
+    <ClCompile Include="test_files\test_lexer_ordinary_c_file.c" />
+    <ClCompile Include="test_files\test_lexer_quote.c" />
+    <ClCompile Include="test_files\test_lexer_string_and_include_strings.c" />
+    <ClCompile Include="test_files\test_lexer_symbol.c" />
+    <ClCompile Include="test_files\test_parser_function.c" />
+    <ClCompile Include="test_files\test_parser_keyword.c" />
+    <ClCompile Include="test_files\test_parser_test.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\compiler_lib\compiler_lib.vcxproj">
