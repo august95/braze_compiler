@@ -39,6 +39,9 @@ public:
   bool isStruct() { return m_first == primitiveType::DATA_TYPE_STRUCT; }
   primitiveType getPrimitiveType() { return m_first; }
   primitiveType getSecondPrimitiveType() { return m_second; }
+  void calcualteDatatypeSize();
+  static int getPrimitiveTypeSize(primitiveType primitive_type);
+  int getDatatypeSize() { return m_datatype_size; }
 
 
   static bool IsKeywordDatatype(std::string val);
@@ -58,5 +61,6 @@ private:
   bool m_extern;
   unsigned int m_pointer_depth;
   filePosition m_file_position;
+  int m_datatype_size; //in bytes
 
 };

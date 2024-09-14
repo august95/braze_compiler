@@ -13,7 +13,8 @@ datatype::datatype()
   m_const(0),
   m_extern(0),
   m_has_secondary_primitive_type(0),
-  m_pointer_depth(0)
+  m_pointer_depth(0),
+  m_datatype_size(0)
 {
 }
 
@@ -27,7 +28,8 @@ datatype::datatype(filePosition file_position)
   m_extern(0),
   m_has_secondary_primitive_type(0),
   m_pointer_depth(0),
-  m_file_position(file_position)
+  m_file_position(file_position), 
+  m_datatype_size(0)
 {
 }
 
@@ -113,14 +115,76 @@ void datatype::setDataType(std::string data_type)
   if (m_first == primitiveType::DATA_TYPE_NONE)
   {
     m_first = primitive_type;
+    calcualteDatatypeSize();
     return;
   }
   m_second = primitive_type;
   m_has_secondary_primitive_type = true;
+  calcualteDatatypeSize();
 
   //FIXME: perform validation?
 
 }
+
+void datatype::calcualteDatatypeSize()
+{
+  m_datatype_size = getPrimitiveTypeSize(m_first);
+  if (m_has_secondary_primitive_type)
+  {
+    m_datatype_size += getPrimitiveTypeSize(m_second);
+  }
+  if (m_pointer_depth > 0)
+  {
+    m_datatype_size = 4;  //Fixme: for now 32 bit architecture, pointer size is 4 bytes
+  }
+}
+
+int datatype::getPrimitiveTypeSize(primitiveType primitive_type)
+{
+  int size = 0;
+
+  switch (primitive_type)
+  {
+  case primitiveType::DATA_TYPE_NONE:
+    size = 0;
+    break;
+
+  case primitiveType::DATA_TYPE_VOID:
+    size = 0;
+    break;
+
+  case primitiveType::DATA_TYPE_CHAR:
+    size = 1;
+    break;
+
+  case primitiveType::DATA_TYPE_SHORT:
+    size = 2;
+    break;
+
+  case primitiveType::DATA_TYPE_INTEGER:
+    size = 4;
+    break;
+
+  case primitiveType::DATA_TYPE_LONG:
+    size = 4;
+    break;
+
+  case primitiveType::DATA_TYPE_FLOAT:
+    size = 4;
+    break;
+
+  case primitiveType::DATA_TYPE_DOUBLE:
+    size = 4;
+    break;
+
+  case primitiveType::DATA_TYPE_UNKNOWN:
+    size = 0;
+    break;
+  
+  }
+  return size;
+}
+
 
 bool datatype::IsKeywordDatatype(std::string val)
 {
