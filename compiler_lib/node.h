@@ -72,6 +72,8 @@ public:
 
 	void setDatatype(std::shared_ptr < datatype > dtype) { m_datatype = dtype; }
 	std::shared_ptr < datatype > getDatatype() {return m_datatype; }
+	void setReturnDatatype(std::shared_ptr < datatype > dtype) { m_return_datatype = dtype; }
+	std::shared_ptr < datatype > getReturnDatatype() {return m_return_datatype; }
 	void addStatement(std::shared_ptr<node> statement);
 //	void setStatements(std::list < std::shared_ptr < node > > statements);
 	std::list < std::shared_ptr < node > > getStatements() { return m_statements; }
@@ -100,6 +102,7 @@ protected:
 
 	//used by: function nodes
 	std::shared_ptr < node > m_body_node;
+	std::shared_ptr < datatype > m_return_datatype;
 
 	nodeType m_node_type;
 	filePosition m_file_position;

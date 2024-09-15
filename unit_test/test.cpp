@@ -676,8 +676,12 @@ TEST(parser, functionWithSecondScope) {
 
 	EXPECT_EQ(_node->getStringValue(), "main");
 	EXPECT_EQ(_node->getBodyNode()->getBodySize(), 12);
+	EXPECT_EQ(_node->getReturnDatatype()->getDatatypeSize(), 4);
+	EXPECT_EQ(_node->getReturnDatatype()->getPrimitiveType(), primitiveType::DATA_TYPE_INTEGER);
+	
 	std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
 	EXPECT_EQ(statements.size(), 2);
+
 	
 	std::shared_ptr < node > nested_body_node = statements.back(); // { int var_val; var_val + 50; int var_b;  }
 	statements.pop_back();
@@ -686,6 +690,7 @@ TEST(parser, functionWithSecondScope) {
 	EXPECT_EQ(nested_body_node->getBodySize(), 8);
 	std::list < std::shared_ptr < node > > nested_statements = nested_body_node->getStatements();
 	EXPECT_EQ(nested_statements.size(), 3);
+
 
 }
 

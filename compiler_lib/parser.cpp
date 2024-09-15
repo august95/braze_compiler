@@ -224,6 +224,7 @@ void parser::parseVariableOrFunction()
 	{
 		//parsing function int a(){}                
 		_node->setNodeType(nodeType::NODE_TYPE_FUNCTION);
+		_node->setReturnDatatype(datatype);
 		pushNode(_node); //_node is popped inside parseFunction
 		parseFunction();
 		return; //function node allready pushed
