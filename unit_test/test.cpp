@@ -12,13 +12,13 @@ std::string file_path = "test_files/";
 TEST(lexer, template) {
 
 	std::string file_name = "test_test.c";
-	/*
-	* File Content
-	*
-	* 01234 0x1af34 0b0101
-	*/
+	//
+	// File Content
+	//
+	//01234 0x1af34 0b0101
+	//
 
-/*
+
 
 	const int num_of_tokens = 3;
 
@@ -46,11 +46,11 @@ TEST(lexer, template) {
 TEST(lexer, symbols) {
 
 	std::string file_name = "test_lexer_symbol.c";
-	/*
-	* File Content
-	*
-	* \ { } # )
-	*/
+	//
+	// File Content
+	//
+	//\ { } # )
+	//
 
 
 
@@ -95,11 +95,11 @@ TEST(lexer, symbols) {
 TEST(lexer, quote) {
 
 	std::string file_name = "test_lexer_quote.c";
-	/*
-	* File Content
-	*
-	* 'a' 'x' '\n' '\\' 
-	*/
+	//
+	// File Content
+	//
+	//'a' 'x' '\n' '\\' 
+	//
 
 
 
@@ -142,11 +142,11 @@ TEST(lexer, quote) {
 TEST(lexer, stringsAndIncludeStrings) {
 
 	std::string file_name = "test_lexer_string_and_include_strings.c";
-	/*
-	* File Content
-	*
-	* "braze" include <test_file.c> include "test.c" "test_string"
-	*/
+	//
+	// File Content
+	//
+	//"braze" include <test_file.c> include "test.c" "test_string"
+	//
 
 
 
@@ -202,11 +202,11 @@ TEST(lexer, stringsAndIncludeStrings) {
 TEST(lexer, identifierOrKeyword) {
 
 	std::string file_name = "test_lexer_identifiers_symbols.c";
-	/*
-	* File Content
-	*
-	* testClass  return void  avxname ___braze
-	*/
+	//
+	// File Content
+	//
+	//testClass  return void  avxname ___braze
+	//
 
 		const int num_of_tokens = 5;
 
@@ -258,11 +258,11 @@ TEST(lexer, operators)
 {
 
 	std::string file_name = "test_lexer_operators.c";
-	/*
-	* File Content
-	*
-	* + -  +=  == ... ^
-	*/
+	//
+	// File Content
+	//
+	//+ -  +=  == ... ^
+	//
 
 
 
@@ -306,11 +306,11 @@ TEST(lexer, operators)
 TEST(lexer, numbers) {
 
   std::string file_name = "test_lexer_numbers.c";
-  /*
-  * File Content
-  * 
-  * 01234 0x1af34 0b0101
-  */ 
+	//
+	// File Content
+	//
+  //01234 0x1af34 0b0101
+  // 
 
 
   const int num_of_tokens = 3;
@@ -338,21 +338,21 @@ TEST(lexer, numbers) {
 TEST(lexer, ordinaryCFile) {
 
 	std::string file_name = "test_lexer_ordinary_c_file.c";
-	/*
-	* File Content
-	*
-	* #include <iostram>
-	*
-	* int main()
-	* {
-	* 	string a = "abc";
-	* 	bool var = true;
-	* 	if (!var)
-	* 	{
-	* 		return 0xf;
-	* 	}
-	* }
-	*/
+	//
+	// File Content
+	//
+	//#include <iostram>
+  //
+	//int main()
+	//{
+	//	string a = "abc";
+	//	bool var = true;
+	// 	if (!var)
+	//	{
+	//		return 0xf;
+	//	}
+	//}
+	//
 
 
 
@@ -568,11 +568,11 @@ TEST(lexer, ordinaryCFile) {
 TEST(parser, expression) {
 
 	std::string file_name = "test_parser_test.c";
-	/*
-	* File Content
-	*
-	*  a = 50 * 30 + 20
-	*/
+	//
+	// File Content
+	//
+	// a = 50 * 30 + 20
+	//
 	const int num_of_tokens = 5;
 
 	compileProcess process;
@@ -595,11 +595,11 @@ TEST(parser, expression) {
 TEST(parser, keyword) {
 
 	std::string file_name = "test_parser_keyword.c";
-	/*
-	* File Content
-	*
-	*  static const long long*** var_name = 50 * 30 + 20;
-	*/
+	//
+	// File Content
+	//
+	//  static const long long*** var_name = 50 * 30 + 20;
+	//
 	const int num_of_tokens = 5;
 
 	compileProcess process;
@@ -632,11 +632,11 @@ TEST(parser, keyword) {
 TEST(parser, function) {
 
 	std::string file_name = "test_parser_function.c";
-	/*
-	* File Content
-	*
-	*  int main(){	int var_val; var_val + 50;}
-	*/
+	//
+  // File Content
+  //
+	//  int main(){	int var_val; var_val + 50;}
+	//
 	const int num_of_tokens = 5;
 
 	compileProcess process;
@@ -660,11 +660,11 @@ TEST(parser, function) {
 TEST(parser, functionWithSecondScope) {
 
 	std::string file_name = "test_parser_function_2.c";
-	/*
-	* File Content
-	*
-	*  int main() { int var_a; { int var_val; var_val + 50; int var_b;  } }
-	*/
+	//
+	// File Content
+	//
+	//  int main() { int var_a; { int var_val; var_val + 50; int var_b;  } }
+	//
 	const int num_of_tokens = 5;
 
 	compileProcess process;
@@ -690,7 +690,5 @@ TEST(parser, functionWithSecondScope) {
 	EXPECT_EQ(nested_body_node->getBodySize(), 8);
 	std::list < std::shared_ptr < node > > nested_statements = nested_body_node->getStatements();
 	EXPECT_EQ(nested_statements.size(), 3);
-
-
 }
 
