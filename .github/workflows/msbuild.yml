@@ -60,21 +60,6 @@ jobs:
 
     - name: Build unit_test Project
       run: msbuild unit_test/unit_test.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }}
-
-#    - name: Copy test files
-#      run: xcopy  D:\a\braze_compiler\braze_compiler\unit_test\test_files D:\a\braze_compiler\braze_compiler\unit_test\x64\Release /E /I /H /C /Y
-    - name: List repository files
-      run: dir -R  D:\a\braze_compiler\braze_compiler\unit_test\x64\Release\
-
-    - name: List repository files
-      run: dir -R
-      
-    - name: List repository files
-      run: dir -R  D:\a\braze_compiler\braze_compiler\unit_test\
-      
-    - name: List repository files
-      run: dir -R D:\a\braze_compiler\braze_compiler\unit_test\test_files\
-
     
     - name: Run Unit Tests
       run: D:\a\braze_compiler\braze_compiler\unit_test\x64\Release\unit_test.exe
