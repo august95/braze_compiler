@@ -157,6 +157,8 @@ void node::addStatement(std::shared_ptr<node> statement)
 {
 	m_statements.push_back(statement);
 	m_body_size += statement->getStackSize();
+	//TODO: add code for padding and allignemt?
+	//x86 acquire minimum 16 byte stack size
 }
 
 void node::shiftChildrenLeft()

@@ -6,7 +6,7 @@
 #include <list>
 //#include "../compiler_lib/ExpressionableOperatorPrecedence.h"
 
-std::string file_path = "../../../test_files/";
+std::string file_path = "D:/a/braze_compiler/braze_compiler/unit_test/test_files/";
 
 /*
 TEST(lexer, template) {
