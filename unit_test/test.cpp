@@ -4,43 +4,12 @@
 #include "../compiler_lib/compilerProcess.h"
 #include <string>
 #include <list>
-//#include "../compiler_lib/ExpressionableOperatorPrecedence.h"
 
+#ifdef __GITHUB_ACTION__
 std::string file_path = "D:/a/braze_compiler/braze_compiler/unit_test/test_files/";
-
-/*
-TEST(lexer, template) {
-
-	std::string file_name = "test_test.c";
-	//
-	// File Content
-	//
-	//01234 0x1af34 0b0101
-	//
-
-
-
-	const int num_of_tokens = 3;
-
-	lexer lexer;
-	lexer.initialize(file_path + file_name);
-	lexer.startLexer();
-
-	std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
-	EXPECT_EQ(tokens.size(), num_of_tokens);
-
-	std::shared_ptr < token > token = tokens.front();
-	// perform test
-	EXPECT_EQ();
-	tokens.pop_front();
-
-	token = tokens.front();
-	// perform test
-	EXPECT_EQ();
-	tokens.pop_front();
-}
-
-*/
+#else
+std::string file_path = "test_files/";
+#endif // __GITHUB_ACTION__
 
 
 TEST(lexer, symbols) {
