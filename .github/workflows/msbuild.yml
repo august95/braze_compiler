@@ -59,7 +59,7 @@ jobs:
       run: nuget restore braze_compiler.sln
 
     - name: Build unit_test Project
-      run: msbuild unit_test/unit_test.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} /p:AdditionalOptions="/D__GITHUB_ACTION__ %(AdditionalOptions)"
+      run: msbuild unit_test/unit_test.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }}
 
     - name: Run Unit Tests
       run: D:\a\braze_compiler\braze_compiler\unit_test\x64\Release\unit_test.exe

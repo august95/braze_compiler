@@ -5,11 +5,11 @@
 #include <string>
 #include <list>
 
-#ifdef __GITHUB_ACTION__
-std::string file_path = "D:/a/braze_compiler/braze_compiler/unit_test/test_files/";
-#else
+#ifdef __LOCAL__
 std::string file_path = "test_files/";
-#endif // __GITHUB_ACTION__
+#else
+std::string file_path = "D:/a/braze_compiler/braze_compiler/unit_test/test_files/";
+#endif // __LOCAL__
 
 
 TEST(lexer, symbols) {
