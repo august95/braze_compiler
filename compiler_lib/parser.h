@@ -53,7 +53,9 @@ private:
 	void parseFunction();
 	void parseBody();
 	void parseStatement();
+	void parseFunctionParameters();
 	void parseSymbol();
+	void parseUnary();
 
 	std::shared_ptr < datatype > parseDatatype();
 

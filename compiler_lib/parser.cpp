@@ -161,14 +161,16 @@ void parser::parseNormalExpression()
 	std::shared_ptr <token> operatort_token = peekToken(); // *
 	//std::string operator_ = operatort_token->getStringValue();
 
-	if (!left_node || !left_node->isValidExpressionType())
+	if (!left_node )
 	{
-		//TODO: might be unary: *a, &a or !a
-		// 
-		//FIXME: create debug messages that separates LEXING from PARSING and prints error location in file
-		//cwarning("left node in expression %i is not allowed in expression", left_node->getNodeType());
+		if (operatort_token->isUnaryOperator())
+		{
+			parseUnary();
+		}
 		return;
+		cwarning("expression has no left operand, expected unary, but no found", operatort_token->getFilePosition());
 	}
+
 	nextToken(); // operator token popped '*'
 	popLastNode();  // 50
 	parseExpression(); // parse 30 + 20
@@ -230,7 +232,7 @@ void parser::parseVariableOrFunction()
 	}
 	else if (token->isTokenTypeOperator() && (token->getStringValue() == "="))
 	{
-		//declared variable int a = 50;
+		//assigned variable int a = 50;
 		_node->setNodeType(nodeType::NODE_TYPE_VARIABLE);
 		_node->setDatatype(datatype);
 		parseExpression();
@@ -243,7 +245,7 @@ void parser::parseVariableOrFunction()
 		_node->setReturnDatatype(datatype);
 		pushNode(_node); //_node is popped inside parseFunction
 		parseFunction();
-		return; //function node allready pushed
+		return; //function node already pushed
 	}
 	else
 	{
@@ -256,10 +258,13 @@ void parser::parseVariableOrFunction()
 
 void parser::parseFunction()
 {
-	//deal with parameters
-
 	std::shared_ptr<token> token = nextToken(); //pop ')'
 	std::shared_ptr < node > function_node = popLastNode();
+	//deal with parameters
+	if (token->getCharValue() != ')')
+	{
+		parseFunctionParameters();
+	}
 	parseBody();
 	std::shared_ptr < node > body_node = popLastNode();
 	function_node->setBodyNode(body_node);
@@ -338,6 +343,12 @@ void parser::parseStatement()
 	}
 }
 
+void parser::parseFunctionParameters()
+{
+	cerror("function parameters is not yet supported by the parser!");
+	assert(0);
+}
+
 void parser::parseSymbol()
 {
 	//parse '{' new scope
@@ -347,6 +358,12 @@ void parser::parseSymbol()
 		parseBody();
 	}
 	//parse ':' label
+}
+
+void parser::parseUnary()
+{
+	cerror("parsing of unaries is not yet supported!");
+	assert(0);
 }
 
 std::shared_ptr<datatype> parser::parseDatatype()
