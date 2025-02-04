@@ -29,7 +29,7 @@ private:
 	//peeks at the next token
 	std::shared_ptr < token > peekToken();
 	void pushNode(std::shared_ptr < node > node);
-	std::shared_ptr < node > peekLastNode() { return m_nodes.back(); }
+	std::shared_ptr < node > peekLastNode() { if (!m_nodes.empty()) return m_nodes.back(); return std::shared_ptr < node >();	}
 	std::shared_ptr < node > peekLastNodeExpect(nodeType node_type);
 	std::shared_ptr < node > popLastNode() { auto node = m_nodes.back(); m_nodes.pop_back(); return node; }
 	std::shared_ptr < node > makeExpressionNode(filePosition file_position, std::string operator_, 

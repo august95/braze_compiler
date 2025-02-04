@@ -167,8 +167,11 @@ void parser::parseNormalExpression()
 		{
 			parseUnary();
 		}
+		else
+		{
+			cwarning("expression has no left operand, expected unary, but no found", operatort_token->getFilePosition());
+		}
 		return;
-		cwarning("expression has no left operand, expected unary, but no found", operatort_token->getFilePosition());
 	}
 
 	nextToken(); // operator token popped '*'
