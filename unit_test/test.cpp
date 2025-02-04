@@ -602,9 +602,17 @@ TEST(parser, function) {
 
 	std::string file_name = "test_parser_function.c";
 	//
-  // File Content
-  //
-	//  int main(){	int var_val; var_val + 50;}
+    // File Content
+    //
+	//  int main() 
+	//{
+	//	int var_a;
+	//	{
+	//		int var_val;
+	//		var_val + 50;
+	//		int var_b;
+	//	}
+	//}
 	//
 	const int num_of_tokens = 5;
 
@@ -630,9 +638,11 @@ TEST(parser, functionWithSecondScope) {
 
 	std::string file_name = "test_parser_function_2.c";
 	//
-	// File Content
-	//
-	//  int main() { int var_a; { int var_val; var_val + 50; int var_b;  } }
+	// int main()
+	//{
+	//	int var_val;
+	//	var_val + 50;
+	//}
 	//
 	const int num_of_tokens = 5;
 
