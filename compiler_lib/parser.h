@@ -24,7 +24,9 @@ public:
 	std::list < std::shared_ptr < node > > getAbstractSyntaxTree() { return m_nodes; }
 
 private:
+	//returns next tokens and pops the token of the token list
 	std::shared_ptr < token > nextToken();
+	//peeks at the next token
 	std::shared_ptr < token > peekToken();
 	void pushNode(std::shared_ptr < node > node);
 	std::shared_ptr < node > peekLastNode() { return m_nodes.back(); }

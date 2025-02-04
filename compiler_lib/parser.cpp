@@ -17,8 +17,18 @@ void parser::startParser()
 
 std::shared_ptr < token > parser::nextToken()
 {
+	if (m_tokens.empty())
+		return std::make_shared < token >();
+
 	std::shared_ptr < token > token = m_tokens.front();
 	m_tokens.pop_front();
+
+	//ignore new line tokens
+	while (!m_tokens.empty() && token->isTokenTypeNewLine())
+	{
+		token = m_tokens.front();
+		m_tokens.pop_front();
+	}
 	return token;
 }
 
@@ -26,6 +36,12 @@ std::shared_ptr < token > parser::peekToken()
 {
 	if (m_tokens.empty())
 		return std::make_shared < token >();
+
+	//ignore new line tokens
+	while (!m_tokens.empty() && m_tokens.front()->isTokenTypeNewLine())
+	{
+		m_tokens.pop_front();
+	}
 	return m_tokens.front();
 }
 
@@ -231,7 +247,7 @@ void parser::parseVariableOrFunction()
 	}
 	else
 	{
-		cerror("expected function or variable delcaration");
+		cerror("expected function or variable delcaration", token->getFilePosition());
 		assert(false);
 	}
 	pushNode(_node);
@@ -260,7 +276,7 @@ void parser::parseBody()
 
 	if (!token->isTokenTypeSymbol() || token->getCharValue() != '{')
 	{
-		cerror("expected symbol '{' at beginning of body");
+		cerror("expected symbol '{' at beginning of body", body_node->getFilePosition());
 	}
 
 	token = peekToken();
@@ -318,7 +334,7 @@ void parser::parseStatement()
 
 	if ((!token->isTokenTypeSymbol()) || token->getCharValue() != ';')
 	{
-		cerror("expected ';' at ending of statement");
+		cerror("expected ';' at ending of statement", token->getFilePosition());
 	}
 }
 
