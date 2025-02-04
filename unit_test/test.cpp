@@ -7,7 +7,7 @@
 
 #ifdef __LOCAL__
 std::string file_path = "test_files/";
-#else
+#else // __GTEST__
 std::string file_path = "D:/a/braze_compiler/braze_compiler/unit_test/test_files/";
 #endif // __LOCAL__
 

@@ -67,7 +67,7 @@ char lexer::peekChar()
 	{
 		return m_file.peek();
 	}
-	cerror("could not open test.c");
+	cerror("could not open test.c"); // add ...
 	return 'x';
 }
 
@@ -84,7 +84,7 @@ char lexer::nextChar()
 		return c;
 	}
 
-	cerror("could not open test.c");
+	cerror("could not open test.c"); // add ...
 	return 'x';
 }
 
@@ -92,7 +92,7 @@ void lexer::pushChar(char ch)
 {
 	if (!m_file.is_open())
 	{
-		cerror("LEX error: could not open test.c");
+		cerror("LEX error: could not open test.c"); // add ...
 		return;
 	}
 	m_file.putback(ch);
@@ -111,7 +111,7 @@ void lexer::startLexer()
 {
 	if (!m_file.is_open())
 	{
-		cerror("failed to open file");
+		cerror("failed to open file"); // add ...
 		return;
 	}
 

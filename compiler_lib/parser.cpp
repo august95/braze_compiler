@@ -247,7 +247,7 @@ void parser::parseVariableOrFunction()
 	}
 	else
 	{
-		cerror("expected function or variable delcaration", token->getFilePosition());
+		cerror("expected function or variable declaration", token->getFilePosition());
 		assert(false);
 	}
 	pushNode(_node);
@@ -293,7 +293,7 @@ void parser::parseBody()
 	token = peekToken(); // '}', parseGlobalKeyword will pop this symbol
 	if (!token->isTokenTypeSymbol() || token->getCharValue() != '}')
 	{
-		cerror("expected symbol '}' at ending of body");
+		cerror("expected symbol '}' at ending of body", token->getFilePosition());
 	}
 
 	pushNode(body_node);
