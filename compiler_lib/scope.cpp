@@ -44,5 +44,5 @@ void scope::updateStackOffset(std::shared_ptr<node> node, int stack_offset)
     m_parent->updateStackOffset(node, stack_offset);
     return;
   }
-  cerror("Could not update stack offfset on node");
+  cerror("Could not update stack offset on node", node->getFilePosition());
 }
