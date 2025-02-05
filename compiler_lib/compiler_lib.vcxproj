@@ -150,6 +150,7 @@
     <ClInclude Include="parser.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="scope.h" />
+    <ClInclude Include="scopeEntity.h" />
     <ClInclude Include="token.h" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +169,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="scope.cpp" />
+    <ClCompile Include="scopeEntity.cpp" />
     <ClCompile Include="token.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
