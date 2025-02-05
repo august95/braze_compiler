@@ -36,9 +36,9 @@ std::string filePosition::getLocationString()
 	std::string file_position = "file: ";
 	file_position += m_filename;
 	file_position += " line: ";
-	file_position += m_line;
+	file_position += std::to_string(m_line);
 	file_position += " col: ";
-	file_position += m_col;
+	file_position += std::to_string(m_col);
 	file_position += " ";
 	return file_position;
 }

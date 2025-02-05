@@ -30,6 +30,16 @@ public:
 	char getCharValue() { return m_char_value; }
 	filePosition getFilePosition() { return m_file_position; }
 
+	bool isUnaryOperator() {
+		return isTokenTypeOperator() ?
+			STRINGS_EQUAL(getStringValue().c_str(), "-") ||
+			STRINGS_EQUAL(getStringValue().c_str(), "!") ||
+			STRINGS_EQUAL(getStringValue().c_str(), "~") ||
+			STRINGS_EQUAL(getStringValue().c_str(), "*") ||
+			STRINGS_EQUAL(getStringValue().c_str(), "?")
+			: false;
+	}
+
 private:
 	tokenType m_token_tyoe;
 	filePosition m_file_position;

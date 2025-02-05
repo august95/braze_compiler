@@ -19,8 +19,18 @@ void parser::startParser()
 
 std::shared_ptr < token > parser::nextToken()
 {
+	if (m_tokens.empty())
+		return std::make_shared < token >();
+
 	std::shared_ptr < token > token = m_tokens.front();
 	m_tokens.pop_front();
+
+	//ignore new line tokens
+	while (!m_tokens.empty() && token->isTokenTypeNewLine())
+	{
+		token = m_tokens.front();
+		m_tokens.pop_front();
+	}
 	return token;
 }
 
@@ -28,6 +38,12 @@ std::shared_ptr < token > parser::peekToken()
 {
 	if (m_tokens.empty())
 		return std::make_shared < token >();
+
+	//ignore new line tokens
+	while (!m_tokens.empty() && m_tokens.front()->isTokenTypeNewLine())
+	{
+		m_tokens.pop_front();
+	}
 	return m_tokens.front();
 }
 
@@ -170,14 +186,19 @@ void parser::parseNormalExpression()
 	std::shared_ptr <token> operatort_token = peekToken(); // *
 	//std::string operator_ = operatort_token->getStringValue();
 
-	if (!left_node || !left_node->isValidExpressionType())
+	if (!left_node )
 	{
-		//TODO: might be unary: *a, &a or !a
-		// 
-		//FIXME: create debug messages that separates LEXING from PARSING and prints error location in file
-		//cwarning("left node in expression %i is not allowed in expression", left_node->getNodeType());
+		if (operatort_token->isUnaryOperator())
+		{
+			parseUnary();
+		}
+		else
+		{
+			cwarning("expression has no left operand, expected unary, but no found", operatort_token->getFilePosition());
+		}
 		return;
 	}
+
 	nextToken(); // operator token popped '*'
 	popLastNode();  // 50
 	parseExpression(); // parse 30 + 20
@@ -240,7 +261,7 @@ void parser::parseVariableOrFunction()
 	}
 	else if (token->isTokenTypeOperator() && (token->getStringValue() == "="))
 	{
-		//declared variable int a = 50;
+		//assigned variable int a = 50;
 		_node->setNodeType(nodeType::NODE_TYPE_VARIABLE);
 		_node->setDatatype(datatype);
 		parseExpression();
@@ -254,11 +275,11 @@ void parser::parseVariableOrFunction()
 		_node->setReturnDatatype(datatype);
 		pushNode(_node); //_node is popped inside parseFunction
 		parseFunction();
-		return; //function node allready pushed
+		return; //function node already pushed
 	}
 	else
 	{
-		cerror("expected function or variable delcaration");
+		cerror("expected function or variable declaration", token->getFilePosition());
 		assert(false);
 	}
 	pushNode(_node);
@@ -267,9 +288,14 @@ void parser::parseVariableOrFunction()
 
 void parser::parseFunction()
 {
-	//deal with parameters
+
 	std::shared_ptr<token> token = nextToken(); //pop ')'
 	std::shared_ptr < node > function_node = popLastNode();
+	//deal with parameters
+	if (token->getCharValue() != ')')
+	{
+		parseFunctionParameters();
+	}
 	parseBody();
 	std::shared_ptr < node > body_node = popLastNode();
 	function_node->setBodyNode(body_node);
@@ -287,7 +313,7 @@ void parser::parseBody()
 
 	if (!token->isTokenTypeSymbol() || token->getCharValue() != '{')
 	{
-		cerror("expected symbol '{' at beginning of body");
+		cerror("expected symbol '{' at beginning of body", body_node->getFilePosition());
 	}
 
 	token = peekToken();
@@ -304,7 +330,7 @@ void parser::parseBody()
 	token = peekToken(); // '}', parseGlobalKeyword will pop this symbol
 	if (!token->isTokenTypeSymbol() || token->getCharValue() != '}')
 	{
-		cerror("expected symbol '}' at ending of body");
+		cerror("expected symbol '}' at ending of body", token->getFilePosition());
 	}
 	pushNode(body_node);
 	finishScope();
@@ -350,9 +376,15 @@ void parser::parseStatement(int& stack_offset)
 
 	if ((!token->isTokenTypeSymbol()) || token->getCharValue() != ';')
 	{
-		cerror("expected ';' at ending of statement");
+		cerror("expected ';' at ending of statement", token->getFilePosition());
 	}
 
+}
+
+void parser::parseFunctionParameters()
+{
+	cerror("function parameters is not yet supported by the parser!");
+	assert(0);
 }
 
 void parser::parseSymbol()
@@ -364,6 +396,12 @@ void parser::parseSymbol()
 		parseBody();
 	}
 	//parse ':' label
+}
+
+void parser::parseUnary()
+{
+	cerror("parsing of unaries is not yet supported!");
+	assert(0);
 }
 
 std::shared_ptr<datatype> parser::parseDatatype()
