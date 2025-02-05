@@ -6,7 +6,8 @@
 node::node()
 	:m_body_size(0),
 	m_node_type(nodeType::NODE_TYPE_BLANK),
-	m_number_val(0)
+	m_number_val(0),
+	m_stack_offset(0)
 {
 
 }
@@ -15,14 +16,16 @@ node::node(filePosition file_position)
 	:m_file_position(file_position),
 	m_node_type(nodeType::NODE_TYPE_BLANK),
 	m_body_size(0),
-	m_number_val(0)
+	m_number_val(0),
+	m_stack_offset(0)
 {
 }
 
 node::node(nodeType node_type)
 	:m_node_type(node_type),
 	m_body_size(0),
-	m_number_val(0)
+	m_number_val(0),
+	m_stack_offset(0)
 {
 
 }
@@ -31,7 +34,8 @@ node::node(nodeType node_type, filePosition file_position)
 	:m_node_type(node_type),
 	m_file_position(file_position),
 	m_body_size(0),
-	m_number_val(0)
+	m_number_val(0),
+	m_stack_offset(0)
 {
 
 }
@@ -41,7 +45,8 @@ node::node(nodeType node_type, filePosition file_position, std::string string_va
 	m_file_position(file_position),
 	m_string_value(string_value),
 	m_body_size(0),
-	m_number_val(0)
+	m_number_val(0),
+	m_stack_offset(0)
 {
 
 }
@@ -50,7 +55,8 @@ node::node(nodeType node_type, filePosition file_position, unsigned long number_
 	:m_node_type(node_type),
 	m_file_position(file_position),
 	m_number_val(number_value),
-	m_body_size(0)
+	m_body_size(0),
+	m_stack_offset(0)
 {
 
 }
@@ -61,7 +67,8 @@ node::node(nodeType node_type, filePosition file_position, std::shared_ptr < nod
 	m_left_node(left_node),
 	m_right_node(right_node),
 	m_body_size(0),
-	m_number_val(0)
+	m_number_val(0),
+	m_stack_offset(0)
 {
 
 }
@@ -76,7 +83,7 @@ bool node::isValidExpressionType()
 		m_node_type == NODE_TYPE_STRING;
 }
 
-int node::getStackSize()
+int node::getDatatypeSize()
 {
 	//local variables in the scope increment the stack size of that scope,
 	//function parameters is not yet parsed by the parser. The parameters
@@ -156,7 +163,7 @@ void node::reorderExpression()
 void node::addStatement(std::shared_ptr<node> statement)
 {
 	m_statements.push_back(statement);
-	m_body_size += statement->getStackSize();
+	m_body_size += statement->getDatatypeSize();
 	//TODO: add code for padding and allignemt?
 	//x86 acquire minimum 16 byte stack size
 }

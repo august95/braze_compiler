@@ -2,6 +2,7 @@
 
 #include "../compiler_lib/compiler_lib.cpp"
 #include "../compiler_lib/compilerProcess.h"
+#include "../compiler_lib/scope.h"
 #include <string>
 #include <list>
 
@@ -620,7 +621,6 @@ TEST(parser, function) {
 	std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
 	EXPECT_EQ(statements.size(), 2 );
 	statements.pop_back();
-	EXPECT_EQ(statements.back()->getStackSize(), 4); //int var_val;
 
 }
 
@@ -654,10 +654,12 @@ TEST(parser, functionWithSecondScope) {
 	
 	std::shared_ptr < node > nested_body_node = statements.back(); // { int var_val; var_val + 50; int var_b;  }
 	statements.pop_back();
-	EXPECT_EQ(statements.back()->getStackSize(), 4); //int var_val;
+	EXPECT_EQ(statements.back()->getDatatypeSize(), 4); //int var_val;
+	EXPECT_EQ(statements.back()->getStackOffset(), 4); //int var_val;
 
 	EXPECT_EQ(nested_body_node->getBodySize(), 8);
 	std::list < std::shared_ptr < node > > nested_statements = nested_body_node->getStatements();
 	EXPECT_EQ(nested_statements.size(), 3);
+
 }
 

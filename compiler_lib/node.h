@@ -56,7 +56,7 @@ public:
 
 	void reorderExpression();
 	bool isValidExpressionType();
-	int getStackSize();
+	int getDatatypeSize();
 
 	nodeType getNodeType() { return m_node_type;	}
 	void setNodeType(nodeType node_type) { m_node_type = node_type; }
@@ -81,6 +81,8 @@ public:
 	void setStringValue(std::string string_value) { m_string_value = string_value; }
 	std::string getStringValue() { return m_string_value; }
 	unsigned long getNumberValue() { return m_number_val; }
+	void setStackOffset(int stack_offset) { m_stack_offset = stack_offset; }
+	int getStackOffset() { return m_stack_offset; }
 
 private:
 	void setRightNode(std::shared_ptr < node > right_node) { m_right_node = right_node; }
@@ -108,6 +110,7 @@ protected:
 	filePosition m_file_position;
 	std::string m_string_value;
 	unsigned long m_number_val;
+	int m_stack_offset;
 };
 
 

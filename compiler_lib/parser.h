@@ -5,6 +5,7 @@
 #include "token.h"
 #include "node.h"
 #include "datatype.h"
+#include "scope.h"
 #include <list>
 #include <iostream>
 
@@ -22,10 +23,14 @@ public:
 	void setTokenList(std::list < std::shared_ptr < token > > tokens) { m_tokens = tokens; };
 	void startParser();
 	std::list < std::shared_ptr < node > > getAbstractSyntaxTree() { return m_nodes; }
+	std::shared_ptr < scope > lastScope() { return m_last_scope; }
 
 private:
 	std::shared_ptr < token > nextToken();
 	std::shared_ptr < token > peekToken();
+	std::shared_ptr < scope > newScope();
+	void finishScope();
+	void addNodeToCurrentScope(std::shared_ptr < node > node);
 	void pushNode(std::shared_ptr < node > node);
 	std::shared_ptr < node > peekLastNode() { return m_nodes.back(); }
 	std::shared_ptr < node > peekLastNodeExpect(nodeType node_type);
@@ -50,7 +55,7 @@ private:
 	void parseVariableOrFunction();
 	void parseFunction();
 	void parseBody();
-	void parseStatement();
+	void parseStatement(int & stack_offset);
 	void parseSymbol();
 
 	std::shared_ptr < datatype > parseDatatype();
@@ -59,10 +64,10 @@ private:
 private:
 	std::list < std::shared_ptr < node > > m_nodes;
 	std::list < std::shared_ptr < token > > m_tokens;
+	std::shared_ptr < scope > m_root_scope;
+	std::shared_ptr < scope > m_last_scope;
 
 	void _assert_(bool condition, std::string message);
-
-
-};
+	};
 
 
