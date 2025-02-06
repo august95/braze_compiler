@@ -30,3 +30,20 @@ token::token(tokenType token_type, filePosition file_position, std::string strin
 {
 
 }
+
+bool token::isUnaryOperator()
+{
+	if(isTokenTypeOperator())
+	{
+		if (STRINGS_EQUAL(getStringValue().c_str(), "-") ||
+			STRINGS_EQUAL(getStringValue().c_str(), "!") ||
+			STRINGS_EQUAL(getStringValue().c_str(), "~") ||
+			STRINGS_EQUAL(getStringValue().c_str(), "*") ||
+			STRINGS_EQUAL(getStringValue().c_str(), "&")
+			)
+		{
+			return true;
+		}
+	}
+	return false;
+}
