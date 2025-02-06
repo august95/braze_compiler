@@ -21,15 +21,6 @@ node::node(filePosition file_position)
 {
 }
 
-node::node(nodeType node_type)
-	:m_node_type(node_type),
-	m_body_size(0),
-	m_number_val(0),
-	m_stack_offset(0)
-{
-
-}
-
 node::node(nodeType node_type, filePosition file_position)
 	:m_node_type(node_type),
 	m_file_position(file_position),
@@ -40,38 +31,6 @@ node::node(nodeType node_type, filePosition file_position)
 
 }
 
-node::node(nodeType node_type, filePosition file_position, std::string string_value)
-	:m_node_type(node_type),
-	m_file_position(file_position),
-	m_string_value(string_value),
-	m_body_size(0),
-	m_number_val(0),
-	m_stack_offset(0)
-{
-
-}
-
-node::node(nodeType node_type, filePosition file_position, unsigned long number_value)
-	:m_node_type(node_type),
-	m_file_position(file_position),
-	m_number_val(number_value),
-	m_body_size(0),
-	m_stack_offset(0)
-{
-
-}
-
-node::node(nodeType node_type, filePosition file_position, std::shared_ptr < node > left_node, std::shared_ptr < node > right_node)
-	:m_node_type(node_type),
-	m_file_position(file_position),
-	m_left_node(left_node),
-	m_right_node(right_node),
-	m_body_size(0),
-	m_number_val(0),
-	m_stack_offset(0)
-{
-
-}
 
 bool node::isValidExpressionType()
 {
@@ -174,7 +133,9 @@ void node::shiftChildrenLeft()
 	std::shared_ptr < node > new_left_exp_node = getLeftNode();
 	std::shared_ptr < node > new_right_exp_node = getRightNode()->getLeftNode();
 
-	std::shared_ptr < node > new_left_operand = std::make_shared< node >(nodeType::NODE_TYPE_EXPRESSION, getFilePosition(), new_left_exp_node, new_right_exp_node);
+	std::shared_ptr < node > new_left_operand = std::make_shared< node >(nodeType::NODE_TYPE_EXPRESSION, getFilePosition());
+	new_left_operand->setLeftNode(new_left_exp_node);
+	new_left_operand->setRightNode(new_right_exp_node);
 	new_left_operand->setStringValue(m_string_value);
 	std::shared_ptr < node > new_right_operand = getRightNode()->getRightNode();
 	setLeftNode(new_left_operand);

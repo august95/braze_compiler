@@ -85,7 +85,9 @@ std::shared_ptr < node > parser::peekLastNodeExpect(nodeType node_type)
 std::shared_ptr < node > parser::makeExpressionNode(filePosition file_position, std::string operator_, std::shared_ptr < node > left_node, std::shared_ptr < node > right_node)
 {
 
-	std::shared_ptr < node > expression_node = std::make_shared<node>(NODE_TYPE_EXPRESSION, file_position, left_node, right_node);
+	std::shared_ptr < node > expression_node = std::make_shared<node>(NODE_TYPE_EXPRESSION, file_position);
+	expression_node->setLeftNode(left_node);
+	expression_node->setRightNode(right_node);
 	expression_node->setStringValue(operator_);
 	return expression_node;
 }
@@ -161,15 +163,18 @@ void parser::parseSingleTokenToExpresssionNode()
 
 	if (t->isTokenTypeNumber())
 	{
-		n = std::make_shared<node>(nodeType::NODE_TYPE_NUMBER, t->getFilePosition(), t->getNumberValue());
+		n = std::make_shared<node>(nodeType::NODE_TYPE_NUMBER, t->getFilePosition());
+		n->setNumberValue(t->getNumberValue());
 	}
 	else if (t->isTokenTypeIdentifier())
 	{
-		n = std::make_shared<node>(nodeType::NODE_TYPE_IDENTIFIER, t->getFilePosition(), t->getStringValue());
+		n = std::make_shared<node>(nodeType::NODE_TYPE_IDENTIFIER, t->getFilePosition());
+		n->setStringValue(t->getStringValue());
 	}
 	else if (t->isTokenTypeString())
 	{
-		n = std::make_shared<node>(nodeType::NODE_TYPE_STRING, t->getFilePosition(), t->getStringValue());
+		n = std::make_shared<node>(nodeType::NODE_TYPE_STRING, t->getFilePosition());
+		n->setStringValue(t->getStringValue());
 	}	
 	pushNode(n);	
 }
@@ -344,7 +349,7 @@ void parser::parseStatement(int& stack_offset)
 		parseKeyword();
 		if (peekLastNode()->getNodeType() == NODE_TYPE_VARIABLE)
 		{
-			//an new variable decalaration will tak up space on the stack in that scope
+			//a new variable decalaration, will tak up space on the stack in that scope
 			//stack_offset is not available in parseVariableOrFunction, so update here
 			//TODO: deal with global variables
 			stack_offset += peekLastNode()->getDatatypeSize();
@@ -361,6 +366,7 @@ void parser::parseStatement(int& stack_offset)
 	{
 		parseSymbol();
 		nextToken(); //pop off '}'
+		//add the stack offset of the nested scope
 		/*
 		* Nested scope, return because ';' is not expected
 		* 

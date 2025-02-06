@@ -48,11 +48,8 @@ class node
 public:
 	node();
 	node(filePosition file_position);
-	node(nodeType node_type);
 	node(nodeType node_type, filePosition file_position);
-	node(nodeType node_type, filePosition file_position, std::string string_value);
-	node(nodeType node_type, filePosition file_position, unsigned long number_value);
-	node(nodeType node_type, filePosition file_position, std::shared_ptr < node > left_node, std::shared_ptr < node > right_node);
+
 
 	void reorderExpression();
 	bool isValidExpressionType();
@@ -63,7 +60,9 @@ public:
 	filePosition getFilePosition() { return m_file_position; }
 
 	std::shared_ptr < node > getLeftNode() { return m_left_node; }
+	void setLeftNode(std::shared_ptr < node > left_node) { m_left_node = left_node; }
 	std::shared_ptr < node > getRightNode() { return m_right_node; }
+	void setRightNode(std::shared_ptr < node > right_node) { m_right_node = right_node; }
 	void setValueNode(std::shared_ptr < node > val_node) { m_value_node = val_node; }
 	std::shared_ptr < node > getValueNode() { return m_value_node; }
 	void setBodyNode(std::shared_ptr < node > body_node) { m_body_node = body_node; }
@@ -80,13 +79,12 @@ public:
 
 	void setStringValue(std::string string_value) { m_string_value = string_value; }
 	std::string getStringValue() { return m_string_value; }
+	void setNumberValue(unsigned long number_val) { m_number_val = number_val; }
 	unsigned long getNumberValue() { return m_number_val; }
 	void setStackOffset(int stack_offset) { m_stack_offset = stack_offset; }
 	int getStackOffset() { return m_stack_offset; }
 
 private:
-	void setRightNode(std::shared_ptr < node > right_node) { m_right_node = right_node; }
-	void setLeftNode(std::shared_ptr < node > left_node) { m_left_node = left_node; }
 	void shiftChildrenLeft();
 
 protected:
