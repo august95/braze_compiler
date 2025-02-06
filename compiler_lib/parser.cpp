@@ -327,7 +327,7 @@ void parser::parseBody()
 	{
 		parseStatement(stack_offset);
 		std::shared_ptr < node > statement_node = popLastNode();
-		body_node->addStatement(statement_node);
+		body_node->addStatement(statement_node, stack_offset);
 		token = peekToken();
 
 	}
@@ -347,13 +347,12 @@ void parser::parseStatement(int& stack_offset)
 	if (token->isTokenTypeKeyword())
 	{
 		parseKeyword();
-		if (peekLastNode()->getNodeType() == NODE_TYPE_VARIABLE)
+		if (peekLastNode()->getNodeType() == NODE_TYPE_VARIABLE )
 		{
 			//a new variable decalaration, will tak up space on the stack in that scope
 			//stack_offset is not available in parseVariableOrFunction, so update here
 			//TODO: deal with global variables
 			stack_offset += peekLastNode()->getDatatypeSize();
-			m_last_scope->updateStackOffset(peekLastNode(), stack_offset);
 			return;
 		}
 	}
@@ -366,7 +365,9 @@ void parser::parseStatement(int& stack_offset)
 	{
 		parseSymbol();
 		nextToken(); //pop off '}'
-		//add the stack offset of the nested scope
+
+		stack_offset += peekLastNode()->getDatatypeSize();
+		//add the stack offset of the nested scope to the outer scope
 		/*
 		* Nested scope, return because ';' is not expected
 		* 

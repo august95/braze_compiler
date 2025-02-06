@@ -7,4 +7,5 @@ int main()
 		var_val + 50; 
 		int var_b;  
 	} 
+	int var_c;
 }

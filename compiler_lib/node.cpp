@@ -119,10 +119,14 @@ void node::reorderExpression()
 
 }
 
-void node::addStatement(std::shared_ptr<node> statement)
+void node::addStatement(std::shared_ptr<node> statement, int stack_offset)
 {
 	m_statements.push_back(statement);
 	m_body_size += statement->getDatatypeSize();
+	if (m_node_type == NODE_TYPE_VARIABLE || m_node_type == NODE_TYPE_BODY) //nested scopes
+	{
+		statement->setStackOffset(stack_offset);
+	}
 	//TODO: add code for padding and allignemt?
 	//x86 acquire minimum 16 byte stack size
 }
