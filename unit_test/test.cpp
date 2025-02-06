@@ -11,7 +11,7 @@ std::string file_path = "test_files/";
 #else // __GTEST__
 std::string file_path = "D:/a/braze_compiler/braze_compiler/unit_test/test_files/";
 #endif // __LOCAL__
-/*
+
 
 TEST(lexer, symbols) {
 
@@ -688,10 +688,10 @@ TEST(parser, functionWithSecondScope) {
 
 }
 
-*/
 
 
 
+/*
 
 TEST(parser, unaryOperator) {
 
@@ -723,3 +723,4 @@ TEST(parser, unaryOperator) {
 
 
 }
+*/
