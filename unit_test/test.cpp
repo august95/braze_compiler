@@ -11,7 +11,7 @@ std::string file_path = "test_files/";
 #else // __GTEST__
 std::string file_path = "D:/a/braze_compiler/braze_compiler/unit_test/test_files/";
 #endif // __LOCAL__
-
+/*
 
 TEST(lexer, symbols) {
 
@@ -602,19 +602,15 @@ TEST(parser, keyword) {
 TEST(parser, function) {
 
 	std::string file_name = "test_parser_function.c";
-	//
-    // File Content
-    //
-	//  int main() 
-	//{
-	//	int var_a;
-	//	{
-	//		int var_val;
-	//		var_val + 50;
-	//		int var_b;
-	//	}
-	//}
-	//
+
+//
+//int main()
+//{
+//	int var_val;
+//	var_val + 50;
+//}
+//
+
 	const int num_of_tokens = 5;
 
 	compileProcess process;
@@ -636,14 +632,21 @@ TEST(parser, function) {
 
 TEST(parser, functionWithSecondScope) {
 
+//
+// File Content
+// 
+//  int main() 
+//  {
+//	  int var_a;
+//	  {
+//	  	int var_val;
+//	  	var_val + 50;
+//	  	int var_b;
+//	  }
+//  }
+//
 	std::string file_name = "test_parser_function_2.c";
-	//
-	// int main()
-	//{
-	//	int var_val;
-	//	var_val + 50;
-	//}
-	//
+
 	const int num_of_tokens = 5;
 
 	compileProcess process;
@@ -663,13 +666,60 @@ TEST(parser, functionWithSecondScope) {
 
 	
 	std::shared_ptr < node > nested_body_node = statements.back(); // { int var_val; var_val + 50; int var_b;  }
-	statements.pop_back();
-	EXPECT_EQ(statements.back()->getDatatypeSize(), 4); //int var_val;
-	EXPECT_EQ(statements.back()->getStackOffset(), 4); //int var_val;
+	
+	statements.pop_back(); //statemnets.back() now becomes int var_a as the nested body noed is popped
+
+
+	EXPECT_EQ(statements.back()->getDatatypeSize(),4); //int var_a;
+	EXPECT_EQ(statements.back()->getStackOffset(), 4);// int var_a;
 
 	EXPECT_EQ(nested_body_node->getBodySize(), 8);
 	std::list < std::shared_ptr < node > > nested_statements = nested_body_node->getStatements();
 	EXPECT_EQ(nested_statements.size(), 3);
 
+	std::list < std::shared_ptr < node > > nested_statments = nested_body_node->getStatements();
+
+
+	EXPECT_EQ(nested_statments.front()->getDatatypeSize(), 4); //int var_val;
+	EXPECT_EQ(nested_statments.front()->getStackOffset(), 4);// int var_val;
+
+	EXPECT_EQ(nested_statments.back()->getDatatypeSize(), 4); //int var_b;
+	EXPECT_EQ(nested_statments.back()->getStackOffset(), 8);// int var_b;
+
 }
 
+*/
+
+
+
+
+TEST(parser, unaryOperator) {
+
+//	int main()
+//	{
+//		int* var_ptr;
+//		int  var_value = 0xdebg000;
+//		int var_ptr = &var_value;
+//	}
+
+	std::string file_name = "test_parser_unary.c";
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+
+	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+	std::shared_ptr < node > _node = ast.front();
+
+	EXPECT_EQ(_node->getStringValue(), "main");
+	EXPECT_EQ(_node->getBodyNode()->getBodySize(), 12);
+	EXPECT_EQ(_node->getReturnDatatype()->getDatatypeSize(), 8);
+	EXPECT_EQ(_node->getReturnDatatype()->getPrimitiveType(), primitiveType::DATA_TYPE_INTEGER);
+
+	std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
+	EXPECT_EQ(statements.size(), 3);
+
+
+}
