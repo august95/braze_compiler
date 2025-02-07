@@ -107,15 +107,20 @@ void lexer::initialize(std::string filename)
 	m_file_position.setFileName(m_filename);
 }
 
-void lexer::startLexer()
+int lexer::startLexer()
 {
 	if (!m_file.is_open())
 	{
 		cerror("failed to open file"); // add ...
-		return;
+		return -2;
 	}
 
 	lexFile();
+
+	if (!tokens.empty())
+		return 0;
+
+	return -1;
 }
 
 void lexer::lexFile()

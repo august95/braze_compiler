@@ -12,9 +12,13 @@ parser::parser()
 	m_last_scope = m_root_scope;
 }
 
-void parser::startParser()
+int parser::startParser()
 {
 	parseTokens();
+	if (!m_nodes.empty())
+		return 0;
+	
+	return -1;
 }
 
 std::shared_ptr < token > parser::nextToken()

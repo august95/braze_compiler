@@ -22,7 +22,7 @@ public:
 	void pushChar(char ch);
 
 	void initialize(std::string filename);
-	void startLexer();
+	int startLexer();
 	std::list < std::shared_ptr < token > > getTokens() { return tokens; }
 
 private:
