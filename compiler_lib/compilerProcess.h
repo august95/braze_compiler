@@ -4,6 +4,7 @@
 
 #include "lexer.h"
 #include "parser.h"
+#include "codeGenerator.h"
 
 
 class compileProcess
@@ -20,6 +21,7 @@ private:
 
 	lexer lexer;
 	parser parser;
+	codeGenerator code_generator;
 
 };
 

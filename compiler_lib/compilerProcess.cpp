@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "compilerProcess.h"
+#include "braze_compiler.h"
 
 compileProcess::compileProcess()
 {
@@ -13,7 +14,25 @@ void compileProcess::initialize(std::string filename)
 
 void compileProcess::startCompiler()
 {
-	lexer.startLexer();
+	int ret = lexer.startLexer();
+	if (ret != 0)
+	{
+		cerror("failed to lex file!");
+	}
+
 	parser.setTokenList(lexer.getTokens());
-	parser.startParser();
+	ret = parser.startParser();
+	if (ret != 0)
+	{
+		cerror("failed to parse tokens into abstract syntax tree!");
+	}
+
+	code_generator.setAbstractSyntaxTree(parser.getAbstractSyntaxTree());
+	ret = code_generator.startCodeGeneration();
+	if (ret != 0)
+	{
+		cerror("failed to generate code from abstract syntax tree!");
+	}
+
+	//TODO: invoke nasm assembler with obj file containing assembly as parameter
 }
