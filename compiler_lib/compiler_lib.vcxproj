@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="braze_compiler.h" />
+    <ClInclude Include="codeGenerator.h" />
     <ClInclude Include="compilerProcess.h" />
     <ClInclude Include="datatype.h" />
     <ClInclude Include="ExpressionableOperatorPrecedence.h" />
@@ -154,6 +155,7 @@
     <ClInclude Include="token.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="codeGenerator.cpp" />
     <ClCompile Include="compilerProcess.cpp" />
     <ClCompile Include="compiler_lib.cpp" />
     <ClCompile Include="datatype.cpp" />
