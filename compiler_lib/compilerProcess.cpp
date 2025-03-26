@@ -1,15 +1,17 @@
 #include "pch.h"
 #include "compilerProcess.h"
 #include "braze_compiler.h"
+#include <cstdio>  // For fopen, fclose, fread, fwrite, etc.
+
 
 compileProcess::compileProcess()
 {
 
 }
-
 void compileProcess::initialize(std::string filename)
 {
 	lexer.initialize(filename);
+	code_generator.setFileName(filename);
 }
 
 void compileProcess::startCompiler()
