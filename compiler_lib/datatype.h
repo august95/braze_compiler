@@ -17,6 +17,15 @@ enum primitiveType
   DATA_TYPE_UNKNOWN
 };
 
+enum
+{
+  DATA_SIZE_NONE = 0,
+  DATA_SIZE_BYTE = 1,
+  DATA_SIZE_WORD = 2,
+  DATA_SIZE_DWORD = 4,
+  DATA_SIZE_DDWORD = 8
+};
+
 
 class datatype
 {
@@ -39,9 +48,14 @@ public:
   bool isStruct() { return m_first == primitiveType::DATA_TYPE_STRUCT; }
   primitiveType getPrimitiveType() { return m_first; }
   primitiveType getSecondPrimitiveType() { return m_second; }
+  bool isPrimitiveType() { return m_first != primitiveType::DATA_TYPE_STRUCT && 
+                                  m_first != primitiveType::DATA_TYPE_UNION && 
+                                  m_first != primitiveType::DATA_TYPE_NONE && 
+                                  m_first != primitiveType::DATA_TYPE_UNKNOWN; }
   void calcualteDatatypeSize();
   static int getPrimitiveTypeSize(primitiveType primitive_type);
   int getDatatypeSize() { return m_datatype_size; }
+  std::string getStringForPrimitiveSize();
 
 
   static bool IsKeywordDatatype(std::string val);

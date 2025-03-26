@@ -152,43 +152,65 @@ int datatype::getPrimitiveTypeSize(primitiveType primitive_type)
   switch (primitive_type)
   {
   case primitiveType::DATA_TYPE_NONE:
-    size = 0;
+    size = DATA_SIZE_NONE;
     break;
 
   case primitiveType::DATA_TYPE_VOID:
-    size = 0;
+    size = DATA_SIZE_NONE;
     break;
 
   case primitiveType::DATA_TYPE_CHAR:
-    size = 1;
+    size = DATA_SIZE_BYTE;
     break;
 
   case primitiveType::DATA_TYPE_SHORT:
-    size = 2;
+    size = DATA_SIZE_WORD;
     break;
 
   case primitiveType::DATA_TYPE_INTEGER:
-    size = 4;
+    size = DATA_SIZE_DWORD;
     break;
 
   case primitiveType::DATA_TYPE_LONG:
-    size = 4;
+    size = DATA_SIZE_DWORD;
     break;
 
   case primitiveType::DATA_TYPE_FLOAT:
-    size = 4;
+    size = DATA_SIZE_DWORD;
     break;
 
   case primitiveType::DATA_TYPE_DOUBLE:
-    size = 4;
+    size = DATA_SIZE_DWORD;
     break;
 
   case primitiveType::DATA_TYPE_UNKNOWN:
-    size = 0;
+    size = DATA_SIZE_DDWORD;
     break;
   
   }
   return size;
+}
+
+std::string datatype::getStringForPrimitiveSize()
+{
+  if (m_datatype_size == DATA_SIZE_BYTE)
+  {
+    return "db";
+  }
+  else if (m_datatype_size == DATA_SIZE_WORD)
+  {
+    return "dm";
+  }
+  else if (m_datatype_size == DATA_SIZE_DWORD)
+  {
+    return "dd";
+  }
+  else if (m_datatype_size == DATA_SIZE_DDWORD)
+  {
+    return "dq";
+  }
+  cerror("Codegen: generating global variable with no size", m_file_position);
+  assert(0);
 }
 
 
