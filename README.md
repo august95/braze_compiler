@@ -1,3 +1,5 @@
 # braze_compiler
 
-lexer and wip parser for a c like language
+work in progress 
+
+lexer and parser for a c like language
