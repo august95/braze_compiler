@@ -236,7 +236,7 @@ void parser::parseGlobalKeyword()
 	//FIXME: add symbol resolver
 
 	parseKeyword();
-	nextToken();
+	//nextToken();
 }
 
 void parser::parseVariableOrFunction()
@@ -276,6 +276,7 @@ void parser::parseVariableOrFunction()
 		parseExpression();
 		_node->setValueNode(popLastNode());
 		m_last_scope->addNode(_node);
+    nextToken(); //pop off ';'	
 	}
 	else if (token->isTokenTypeOperator() && (token->getStringValue() == "("))
 	{
@@ -284,6 +285,7 @@ void parser::parseVariableOrFunction()
 		_node->setReturnDatatype(datatype);
 		pushNode(_node); //_node is popped inside parseFunction
 		parseFunction();
+    nextToken(); //pop off '}'
 		return; //function node already pushed
 	}
 	else
