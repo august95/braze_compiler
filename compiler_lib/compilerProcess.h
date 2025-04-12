@@ -17,6 +17,8 @@ public:
 	//for unit tests
 	std::list < std::shared_ptr < token > > getTokens() { return lexer.getTokens(); }
 	std::list < std::shared_ptr < node > > getAbstractSyntaxTree() { return parser.getAbstractSyntaxTree(); }
+
+	bool __unit_test_no_code_generation;
 private:
 
 	lexer lexer;

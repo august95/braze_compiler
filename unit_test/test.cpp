@@ -546,6 +546,7 @@ TEST(parser, expression) {
 	const int num_of_tokens = 5;
 
 	compileProcess process;
+	process.__unit_test_no_code_generation = true;
 	process.initialize(file_path + file_name);
 	process.startCompiler();
 
@@ -573,6 +574,7 @@ TEST(parser, keyword) {
 	const int num_of_tokens = 5;
 
 	compileProcess process;
+	process.__unit_test_no_code_generation = true;
 	process.initialize(file_path + file_name);
 	process.startCompiler();
 
@@ -614,6 +616,7 @@ TEST(parser, function) {
 	const int num_of_tokens = 5;
 
 	compileProcess process;
+	process.__unit_test_no_code_generation = true;
 	process.initialize(file_path + file_name);
 	process.startCompiler();
 
@@ -651,6 +654,7 @@ TEST(parser, functionWithSecondScope) {
 	const int num_of_tokens = 5;
 
 	compileProcess process;
+	process.__unit_test_no_code_generation = true;
 	process.initialize(file_path + file_name);
 	process.startCompiler();
 
@@ -694,6 +698,43 @@ TEST(parser, functionWithSecondScope) {
 }
 
 
+
+
+
+
+TEST(codegen, globalVariables) {
+
+//	int a;
+//	int b = 5;
+//	int c = 0x4;
+//	char d = 'a';
+
+	std::string file_name = "test_codegen_global_variables.c";
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+
+}
+
+TEST(codegen, function) {
+
+//	int main()
+//	{
+//		int a = 0;
+//	}
+
+	std::string file_name = "test_codegen_function.c";
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+
+}
 
 
 /*

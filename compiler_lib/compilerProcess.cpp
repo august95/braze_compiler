@@ -5,6 +5,7 @@
 
 
 compileProcess::compileProcess()
+	:__unit_test_no_code_generation(false)
 {
 
 }
@@ -28,6 +29,8 @@ void compileProcess::startCompiler()
 	{
 		cerror("failed to parse tokens into abstract syntax tree!");
 	}
+
+	if (__unit_test_no_code_generation) return;
 
 	code_generator.setAbstractSyntaxTree(parser.getAbstractSyntaxTree());
 	ret = code_generator.startCodeGeneration();
