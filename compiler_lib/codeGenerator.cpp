@@ -2,6 +2,11 @@
 #include "codeGenerator.h"
 #include "braze_compiler.h"
 
+#define C_STACK_ALIGNMENT 16
+#define STACK_PUSH_SIZE 4
+#define C_ALIGN(size) (size % C_STACK_ALIGNMENT) ? size + (C_STACK_ALIGNMENT - (size % C_STACK_ALIGNMENT)) : size
+
+
 codeGenerator::codeGenerator()
 {
 }
@@ -44,6 +49,8 @@ int codeGenerator::startCodeGeneration()
 
   generateDataSection();
 
+  generateRoot();
+
 
   return 0;
 }
@@ -58,6 +65,41 @@ void codeGenerator::generateDataSection()
     {
       generateGlobalVariable(node);
     }
+  }
+}
+
+void codeGenerator::generateRoot()
+{
+  m_asm_writer.asmPush("section .text");
+  
+  for (auto node : m_ast)
+  {
+    if (node->getNodeType() == NODE_TYPE_VARIABLE)
+    {
+      //already processed in generateDataSection
+    }
+    if (node->getNodeType() == NODE_TYPE_FUNCTION)
+    {
+      generateRootNode(node);
+    }
+  }
+}
+
+void codeGenerator::generateRootNode(std::shared_ptr<node> node)
+{
+  if (node->getNodeType() == NODE_TYPE_FUNCTION)
+  {
+    std::string function_name = node->getStringValue();
+    m_asm_writer.asmPush("global " + function_name);
+    m_asm_writer.asmPush(function_name + ":");
+    m_asm_writer.asmPush("push ebp");
+    m_asm_writer.asmPush("mov ebp, esp");
+    m_asm_writer.asmPush("sub esp, " + std::to_string(C_ALIGN(node->getBodyNode()->getBodySize())));
+
+    //add body generation
+
+
+    m_asm_writer.asmPush("add esp, " + std::to_string(C_ALIGN(node->getBodyNode()->getBodySize())));
   }
 }
 
@@ -92,5 +134,5 @@ void codeGenerator::generateGlobalVariablePrimitive(std::shared_ptr<node> node)
   {
     var_value = std::to_string(node->getValueNode()->getNumberValue());
   }
-  m_asm_writer.asmPush(var_name + " " + datatype->getStringForPrimitiveSize() + " " + var_value);
+  m_asm_writer.asmPush(var_name + ": " + datatype->getStringForPrimitiveSize() + " " + var_value);
 }

@@ -13,6 +13,9 @@ public:
   void setFileName(std::string filename);
   int startCodeGeneration();
   void generateDataSection();
+  void generateRoot();
+  void generateRootNode(std::shared_ptr < node > node);
+  void generateBody(std::shared_ptr < node > node);
   void generateGlobalVariable(std::shared_ptr < node > node);
   void generateGlobalVariablePrimitive(std::shared_ptr < node > node);
 private:
