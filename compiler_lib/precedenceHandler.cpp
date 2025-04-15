@@ -27,6 +27,22 @@ expresssionable_op_precedence_group op_precedence[TOTAL_OPERATOR_GROUPS] = {
 };
 
 
+void precedenceHandler::shiftChildrenLeft(std::shared_ptr < node > node_)
+{
+	std::string right_operator = node_->getRightNode()->getStringValue();
+	std::shared_ptr < node > new_left_exp_node = node_->getLeftNode();
+	std::shared_ptr < node > new_right_exp_node = node_->getRightNode()->getLeftNode();
+
+	std::shared_ptr < node > new_left_operand = std::make_shared< node >(nodeType::NODE_TYPE_EXPRESSION, node_->getFilePosition());
+	new_left_operand->setLeftNode(new_left_exp_node);
+	new_left_operand->setRightNode(new_right_exp_node);
+	new_left_operand->setStringValue(node_->getStringValue());
+	std::shared_ptr < node > new_right_operand = node_->getRightNode()->getRightNode();
+	node_->setLeftNode(new_left_operand);
+	node_->setRightNode(new_right_operand);
+	node_->setStringValue(right_operator);
+}
+
 /*
 changing order according to precedence:
 	*
@@ -54,23 +70,6 @@ will stay like:
 	30   20
 
 */
-
-
-void precedenceHandler::shiftChildrenLeft(std::shared_ptr < node > node_)
-{
-	std::string right_operator = node_->getRightNode()->getStringValue();
-	std::shared_ptr < node > new_left_exp_node = node_->getLeftNode();
-	std::shared_ptr < node > new_right_exp_node = node_->getRightNode()->getLeftNode();
-
-	std::shared_ptr < node > new_left_operand = std::make_shared< node >(nodeType::NODE_TYPE_EXPRESSION, node_->getFilePosition());
-	new_left_operand->setLeftNode(new_left_exp_node);
-	new_left_operand->setRightNode(new_right_exp_node);
-	new_left_operand->setStringValue(node_->getStringValue());
-	std::shared_ptr < node > new_right_operand = node_->getRightNode()->getRightNode();
-	node_->setLeftNode(new_left_operand);
-	node_->setRightNode(new_right_operand);
-	node_->setStringValue(right_operator);
-}
 
 void precedenceHandler::reorderExpression(std::shared_ptr < node > node_)
 {
