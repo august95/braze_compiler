@@ -50,8 +50,6 @@ public:
 	node(filePosition file_position);
 	node(nodeType node_type, filePosition file_position);
 
-
-	void reorderExpression();
 	bool isValidExpressionType();
 	int getDatatypeSize();
 
@@ -84,8 +82,6 @@ public:
 	void setStackOffset(int stack_offset) { m_stack_offset = stack_offset; }
 	int getStackOffset() { return m_stack_offset; }
 
-private:
-	void shiftChildrenLeft();
 
 protected:
 	//for expression nodes

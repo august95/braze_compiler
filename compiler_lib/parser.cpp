@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "parser.h"
 #include "braze_compiler.h"
+#include "precedenceHandler.h"
 #include <memory>
 
 
@@ -214,7 +215,7 @@ void parser::parseNormalExpression()
 	std::shared_ptr < node > right_node = popLastNode(); // + L(30) R(20)
 	std::shared_ptr < node > expression_node = makeExpressionNode(operatort_token->getFilePosition(), operatort_token->getStringValue(), left_node, right_node);
 	
-	expression_node->reorderExpression();
+	precedenceHandler::reorderExpression(expression_node);
 
 	pushNode(expression_node);
 }

@@ -151,6 +151,7 @@
     <ClInclude Include="node.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="precedenceHandler.h" />
     <ClInclude Include="scope.h" />
     <ClInclude Include="scopeEntity.h" />
     <ClInclude Include="token.h" />
@@ -172,6 +173,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="precedenceHandler.cpp" />
     <ClCompile Include="scope.cpp" />
     <ClCompile Include="scopeEntity.cpp" />
     <ClCompile Include="token.cpp" />
