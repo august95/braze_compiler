@@ -152,6 +152,8 @@
     <ClInclude Include="parser.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="precedenceHandler.h" />
+    <ClInclude Include="resolver.h" />
+    <ClInclude Include="resolverScope.h" />
     <ClInclude Include="scope.h" />
     <ClInclude Include="scopeEntity.h" />
     <ClInclude Include="token.h" />
@@ -174,6 +176,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="precedenceHandler.cpp" />
+    <ClCompile Include="resolver.cpp" />
+    <ClCompile Include="resolverScope.cpp" />
     <ClCompile Include="scope.cpp" />
     <ClCompile Include="scopeEntity.cpp" />
     <ClCompile Include="token.cpp" />

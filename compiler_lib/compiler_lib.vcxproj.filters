@@ -61,6 +61,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="precedenceHandler.h">
+    <ClInclude Include="resolverScope.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -108,6 +112,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="precedenceHandler.cpp">
+    <ClCompile Include="resolverScope.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
