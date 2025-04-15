@@ -1,8 +1,9 @@
 #pragma once
 #include "node.h"
 
+const static unsigned int TOTAL_OPERATOR_GROUPS = 14;
 struct expresssionable_op_precedence_group {
-	const char* operators[16]; // or whatever max size fits your needs
+	const char* operators[TOTAL_OPERATOR_GROUPS];
 	int associtivity;
 };
 

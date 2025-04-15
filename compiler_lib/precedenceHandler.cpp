@@ -2,12 +2,9 @@
 #include "precedenceHandler.h"
 #include <cstddef>
 
-// Assuming these are defined somewhere:
-#define TOTAL_OPERATOR_GROUPS 14
+
 #define ASSOSCIATIVITY_LEFT_TO_RIGHT 0
 #define ASSOSCIATIVITY_RIGHT_TO_LEFT 1
-
-
 
 expresssionable_op_precedence_group op_precedence[TOTAL_OPERATOR_GROUPS] = {
 	{{"++", "--", "()", "[]", "(", "[", ".", "->", NULL}, ASSOSCIATIVITY_LEFT_TO_RIGHT},
