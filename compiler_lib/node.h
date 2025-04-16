@@ -83,6 +83,10 @@ public:
 	int getStackOffset() { return m_stack_offset; }
 
 
+  bool isArray() { return m_node_type == nodeType::NODE_TYPE_EXPRESSION && m_string_value == "[]"; }
+  bool isAssignmentNode() { return m_node_type == nodeType::NODE_TYPE_EXPRESSION && (m_string_value == "=" || m_string_value == "+=" || m_string_value == "-=" || m_string_value == "/=" || m_string_value == "*="); }
+
+
 protected:
 	//for expression nodes
 	std::shared_ptr < node > m_left_node; 
