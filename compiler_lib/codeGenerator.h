@@ -3,6 +3,14 @@
 #include "node.h"
 #include "scope.h"
 #include "asmWriter.h"
+#include "resolver.h"
+
+enum
+{
+  IS_ASSIGNMENT = 0x1,
+  IS_RIGHT_HAND_OF_ASSIGNMENT = 0x2,
+  IS_NOT_ROOT = 0x4
+};
 
 class codeGenerator
 {
@@ -15,9 +23,16 @@ public:
   void generateDataSection();
   void generateRoot();
   void generateRootNode(std::shared_ptr < node > node);
+  void generateFunction(std::shared_ptr < node > node);
   void generateBody(std::shared_ptr < node > node);
+  void generateScope(std::shared_ptr<node> node);
+  void generateStatement(std::shared_ptr<node> node);
   void generateGlobalVariable(std::shared_ptr < node > node);
   void generateGlobalVariablePrimitive(std::shared_ptr < node > node);
+  void generateScopedVariable(std::shared_ptr < node > node);
+  void generateExpressionable(std::shared_ptr < node > node, int flags);
+  void generateNumber(std::shared_ptr<node> node, int flags);
+  void generateAssignmentPart(std::shared_ptr < node > node, int flags);
 private:
 
   scope m_root_scope;
@@ -25,6 +40,8 @@ private:
   std::string output_file;
   std::list < std::shared_ptr < node > > m_ast;
   asmWriter m_asm_writer;
+  resolver m_resolver;
+
 
 };
 
