@@ -153,6 +153,7 @@
     <ClInclude Include="precedenceHandler.h" />
     <ClInclude Include="resolver.h" />
     <ClInclude Include="resolverScope.h" />
+    <ClInclude Include="resolverScopeData.h" />
     <ClInclude Include="scope.h" />
     <ClInclude Include="scopeEntity.h" />
     <ClInclude Include="token.h" />
@@ -176,6 +177,7 @@
     <ClCompile Include="precedenceHandler.cpp" />
     <ClCompile Include="resolver.cpp" />
     <ClCompile Include="resolverScope.cpp" />
+    <ClCompile Include="resolverScopeData.cpp" />
     <ClCompile Include="scope.cpp" />
     <ClCompile Include="scopeEntity.cpp" />
     <ClCompile Include="token.cpp" />

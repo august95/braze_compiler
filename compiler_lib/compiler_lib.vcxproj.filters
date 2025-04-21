@@ -17,6 +17,7 @@
     <ClCompile Include="scope.cpp" />
     <ClCompile Include="scopeEntity.cpp" />
     <ClCompile Include="token.cpp" />
+    <ClCompile Include="resolverScopeData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="asmWriter.h" />
@@ -36,5 +37,6 @@
     <ClInclude Include="scope.h" />
     <ClInclude Include="scopeEntity.h" />
     <ClInclude Include="token.h" />
+    <ClInclude Include="resolverScopeData.h" />
   </ItemGroup>
 </Project>
