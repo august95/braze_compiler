@@ -14,13 +14,12 @@ enum
 class resolverEntityData
 {
 public:
-	resolverEntityData();
+	resolverEntityData(int entity_type= ENTITY_TYPE_NONE);
 	void resolveVariableNode(std::shared_ptr<node> node);
 	std::string getAddress() { return m_address; }
 	std::string getBaseAddress() { return m_base_address; }
 	void calculateAddress(bool local_stack, std::string& address, int stack_offset);
 	std::shared_ptr < node > getNode() { return m_node; }
-
 
 private:
 	// ie variable function or struct

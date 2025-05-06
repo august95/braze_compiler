@@ -230,7 +230,7 @@ void codeGenerator::generateNumber(std::shared_ptr<node> node, int flags)
 void codeGenerator::generateAssignmentPart(std::shared_ptr<node> node, int flags)
 {
 
-  std::shared_ptr<resolverEntityData> entity = m_resolver.follow(node);
+  std::shared_ptr<resolverEntity> entity = m_resolver.follow(node);
   if (entity)
   {
     m_asm_writer.asmPush("pop eax");

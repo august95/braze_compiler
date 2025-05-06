@@ -2,8 +2,10 @@
 #include "resolverEntityData.h"
 
 
-resolverEntityData::resolverEntityData()
-    :m_entity_type(ENTITY_TYPE_NONE)
+resolverEntityData::resolverEntityData(int entity_type)
+    :m_entity_type(entity_type),
+    m_is_stack(false),
+    offset(0)
 {
 }
 
@@ -17,7 +19,6 @@ void resolverEntityData::resolveVariableNode(std::shared_ptr<node> node)
     //should this be a function?
     //needs to handle global variables as well, not only offset from local base pointer
     calculateAddress(true, m_address, node->getStackOffset());
-
 }
 
 void resolverEntityData::calculateAddress(bool local_stack, std::string& address, int stack_offset)

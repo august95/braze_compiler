@@ -18,6 +18,7 @@
     <ClCompile Include="token.cpp" />
     <ClCompile Include="resolverScopeData.cpp" />
     <ClCompile Include="resolverEntityData.cpp" />
+    <ClCompile Include="resolverEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="asmWriter.h" />
@@ -38,5 +39,6 @@
     <ClInclude Include="token.h" />
     <ClInclude Include="resolverScopeData.h" />
     <ClInclude Include="resolverEntityData.h" />
+    <ClInclude Include="resolverEntity.h" />
   </ItemGroup>
 </Project>

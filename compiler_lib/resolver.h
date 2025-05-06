@@ -1,6 +1,6 @@
 #pragma once
 #include "resolverScope.h"
-#include "resolverEntityData.h"
+#include "resolverEntity.h"
 #include "node.h"
 #include <vector>
 #include <iostream>
@@ -11,7 +11,7 @@ public:
   void registerFunction( std::shared_ptr < node > function_node);
   void createNewScope(bool local_stack, bool stack);
   void addEntity(std::shared_ptr<node> node);
-  std::shared_ptr<resolverEntityData> follow(std::shared_ptr<node> node);
+  std::shared_ptr<resolverEntity> follow(std::shared_ptr<node> node);
   void removeScope();
   void initialize();
 private:
