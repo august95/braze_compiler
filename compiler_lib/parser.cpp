@@ -16,8 +16,17 @@ parser::parser()
 int parser::startParser()
 {
 	parseTokens();
+
 	if (!m_nodes.empty())
+	{
+		int stack_offset = 0;
+		for (auto it = m_nodes.begin(); it != m_nodes.end(); ++it)
+		{
+			std::shared_ptr<node> current_node = *it;
+			current_node->calculateStackOffset(stack_offset);
+		}
 		return 0;
+	}
 	
 	return -1;
 }
@@ -148,20 +157,20 @@ int parser::parseExpressionOperatorOrOperand()
 	}
 	if (token->isTokenTypeNumber() || token->isTokenTypeIdentifier())
 	{
-		parseSingleTokenToExpresssionNode();
+		parseOperand();
 		return 0;
 	}
 	else if (token->isTokenTypeOperator())
 	{
-		parseOperand();
+		parseOperator();
 		return 0;
 	}
-	//TODO: add keyword in case of cast:  int a = (int)b;
+	//TODO: add keyword '(' in case of cast:  int a = (int)b;
 
 	return 1;
 }
 
-void parser::parseSingleTokenToExpresssionNode()
+void parser::parseOperand()
 {
 	std::shared_ptr < token > t = nextToken();
 	std::shared_ptr < node > n;
@@ -184,7 +193,7 @@ void parser::parseSingleTokenToExpresssionNode()
 	pushNode(n);	
 }
 
-void parser::parseOperand()
+void parser::parseOperator()
 {
 	parseNormalExpression();
 }
@@ -277,7 +286,7 @@ void parser::parseVariableOrFunction()
 		parseExpression();
 		_node->setValueNode(popLastNode());
 		m_last_scope->addNode(_node);
-    nextToken(); //pop off ';'	
+		nextToken(); //pop off ';'	
 	}
 	else if (token->isTokenTypeOperator() && (token->getStringValue() == "("))
 	{
@@ -286,7 +295,7 @@ void parser::parseVariableOrFunction()
 		_node->setReturnDatatype(datatype);
 		pushNode(_node); //_node is popped inside parseFunction
 		parseFunction();
-    nextToken(); //pop off '}'
+		nextToken(); //pop off '}'
 		return; //function node already pushed
 	}
 	else
@@ -332,9 +341,9 @@ void parser::parseBody()
 	
 	while (!token->isTokenTypeSymbol() || (token->getCharValue() != '}'))
 	{
-		parseStatement(stack_offset);
+		parseStatement();
 		std::shared_ptr < node > statement_node = popLastNode();
-		body_node->addStatement(statement_node, stack_offset);
+		body_node->addStatement(statement_node);
 		token = peekToken();
 
 	}
@@ -348,23 +357,17 @@ void parser::parseBody()
 	finishScope();
 }
 
-void parser::parseStatement(int& stack_offset)
+void parser::parseStatement()
 {
 	std::shared_ptr<token> token = peekToken();
 	if (token->isTokenTypeKeyword())
 	{
+		//variable, or struct
 		parseKeyword();
-		if (peekLastNode()->getNodeType() == NODE_TYPE_VARIABLE )
-		{
-			//a new variable decalaration, will tak up space on the stack in that scope
-			//stack_offset is not available in parseVariableOrFunction, so update here
-			//TODO: deal with global variables
-			stack_offset += peekLastNode()->getDatatypeSize();
-			return;
-		}
+		return;
 	}
 
-	parseExpression(); //if symbol, no tokens are popped
+	parseExpression(); //if next token is symbol, no tokens are popped
 	
 	token = peekToken();
 
@@ -372,9 +375,6 @@ void parser::parseStatement(int& stack_offset)
 	{
 		parseSymbol();
 		nextToken(); //pop off '}'
-
-		stack_offset += peekLastNode()->getDatatypeSize();
-		//add the stack offset of the nested scope to the outer scope
 		/*
 		* Nested scope, return because ';' is not expected
 		* 
@@ -385,14 +385,12 @@ void parser::parseStatement(int& stack_offset)
 		*/
 		return;
 	}
-
 	token = nextToken();
 
 	if ((!token->isTokenTypeSymbol()) || token->getCharValue() != ';')
 	{
 		cerror("expected ';' at ending of statement", token->getFilePosition());
 	}
-
 }
 
 void parser::parseFunctionParameters()

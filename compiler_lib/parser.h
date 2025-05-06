@@ -49,15 +49,15 @@ private:
 
 	void parseExpression();
 	int parseExpressionOperatorOrOperand();
-	void parseSingleTokenToExpresssionNode();
 	void parseOperand();
+	void parseOperator();
 	void parseNormalExpression();
 	void parseKeyword();
 	void parseGlobalKeyword();
 	void parseVariableOrFunction();
 	void parseFunction();
 	void parseBody();
-	void parseStatement(int & stack_offset);
+	void parseStatement();
 	void parseFunctionParameters();
 	void parseSymbol();
 	void parseUnary();

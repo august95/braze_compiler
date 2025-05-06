@@ -12,7 +12,6 @@ std::string file_path = "test_files/";
 std::string file_path = "D:/a/braze_compiler/braze_compiler/unit_test/test_files/";
 #endif // __LOCAL__
 
-
 TEST(lexer, symbols) {
 
 	std::string file_name = "test_lexer_symbol.c";
@@ -605,13 +604,13 @@ TEST(parser, function) {
 
 	std::string file_name = "test_parser_function.c";
 
-//
-//int main()
-//{
+
+//	int main()
+//	{
 //	int var_val;
+//	int var_b = 0;
 //	var_val + 50;
-//}
-//
+//	}
 
 	const int num_of_tokens = 5;
 
@@ -624,10 +623,19 @@ TEST(parser, function) {
 	std::shared_ptr < node > _node = ast.front();
 
 	EXPECT_EQ(_node->getStringValue(), "main");
-	EXPECT_EQ(_node->getBodyNode()->getBodySize(), 4 );
+	EXPECT_EQ(_node->getBodyNode()->getBodySize(), 8 );
 	std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
-	EXPECT_EQ(statements.size(), 2 );
+	EXPECT_EQ(statements.size(), 3 );
+
+	statements.pop_back(); // var_val + 50
+	std::shared_ptr < node > var_a = statements.back();
+	EXPECT_EQ(var_a->getDatatypeSize(), 4); //int var_b;
+	EXPECT_EQ(var_a->getStackOffset(), 8);// int var_b;
 	statements.pop_back();
+
+	var_a = statements.back();
+	EXPECT_EQ(var_a->getDatatypeSize(), 4); //int var_val;
+	EXPECT_EQ(var_a->getStackOffset(), 4);// int var_val;
 
 }
 
@@ -687,10 +695,10 @@ TEST(parser, functionWithSecondScope) {
 
 
 	EXPECT_EQ(nested_statments.front()->getDatatypeSize(), 4); //int var_val;
-	EXPECT_EQ(nested_statments.front()->getStackOffset(), 4);// int var_val;
+	EXPECT_EQ(nested_statments.front()->getStackOffset(), 8);// int var_val;
 
 	EXPECT_EQ(nested_statments.back()->getDatatypeSize(), 4); //int var_b;
-	EXPECT_EQ(nested_statments.back()->getStackOffset(), 8);// int var_b;
+	EXPECT_EQ(nested_statments.back()->getStackOffset(), 12);// int var_b;
 
 	
 	EXPECT_EQ(var_c->getDatatypeSize(), 4); //int var_c;

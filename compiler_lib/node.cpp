@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "node.h"
+#include "braze_compiler.h"
 
 
 node::node()
@@ -54,23 +55,50 @@ int node::getDatatypeSize()
 			return m_datatype->getDatatypeSize();
 		}
 	}
-
-	else if (m_node_type == NODE_TYPE_BODY)
-	{
-		return m_body_size;
-	}
-
+	cerror("retreived dataType size on non variable node");
 	return 0;
 }
 
-void node::addStatement(std::shared_ptr<node> statement, int stack_offset)
+void node::addStatement(std::shared_ptr<node> statement)
 {
+	//stack size calculation moved to node class, and is performed after all tokens has been parsed!
 	m_statements.push_back(statement);
-	m_body_size += statement->getDatatypeSize();
-	if (m_node_type == NODE_TYPE_VARIABLE || m_node_type == NODE_TYPE_BODY) //nested scopes
-	{
-		statement->setStackOffset(stack_offset);
-	}
 	//TODO: add code for padding and allignemt?
 	//x86 acquire minimum 16 byte stack size
+}
+
+
+void node::calculateStackOffset(int& stack_offset)
+{
+	if (m_node_type == NODE_TYPE_VARIABLE)
+	{
+		stack_offset += m_datatype->getDatatypeSize();
+		setStackOffset(stack_offset);
+	}
+	else if (m_node_type == NODE_TYPE_BODY)
+	{
+		//we might have nested scopes {{}}, stack_offset can be something else that 0 from the previous scope
+		//store for nested body size calculation, 0 if first scope in function
+		int stack_offset_copy = stack_offset; 
+		setStackOffset(stack_offset);
+
+		for (auto it = m_statements.begin(); it != m_statements.end(); ++it) 
+		{
+			std::shared_ptr<node> current_node = *it;
+			current_node->calculateStackOffset(stack_offset);
+		}
+		m_body_size = stack_offset - stack_offset_copy;
+	}
+	else if (m_node_type == NODE_TYPE_FUNCTION)
+	{
+		//avoid adding the stack offset from the global variables
+		int new_stack_offset = 0;
+		//not forwared delcaration
+		if (m_body_node)
+		{
+			m_body_node->calculateStackOffset(new_stack_offset);
+			m_body_size = m_body_node->getBodySize();
+		}
+	}
+
 }
