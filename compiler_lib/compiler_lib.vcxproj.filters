@@ -15,9 +15,9 @@
     <ClCompile Include="resolver.cpp" />
     <ClCompile Include="resolverScope.cpp" />
     <ClCompile Include="scope.cpp" />
-    <ClCompile Include="scopeEntity.cpp" />
     <ClCompile Include="token.cpp" />
     <ClCompile Include="resolverScopeData.cpp" />
+    <ClCompile Include="resolverEntityData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="asmWriter.h" />
@@ -35,8 +35,8 @@
     <ClInclude Include="resolver.h" />
     <ClInclude Include="resolverScope.h" />
     <ClInclude Include="scope.h" />
-    <ClInclude Include="scopeEntity.h" />
     <ClInclude Include="token.h" />
     <ClInclude Include="resolverScopeData.h" />
+    <ClInclude Include="resolverEntityData.h" />
   </ItemGroup>
 </Project>

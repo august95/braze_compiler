@@ -8,7 +8,7 @@ resolver::resolver()
 
 void resolver::registerFunction(std::shared_ptr<node> function_node)
 { 
-  std::shared_ptr< resolverEntity> data = std::make_shared<resolverEntity>();
+  std::shared_ptr< resolverEntityData> data = std::make_shared<resolverEntityData>();
   std::shared_ptr< resolverScope> scope = std::make_shared<resolverScope>();
   scope->addScopeData(data);
   m_scope.push_back(scope);
@@ -25,18 +25,18 @@ void resolver::addEntity(std::shared_ptr<node> node)
 {
   if (node->getNodeType() == NODE_TYPE_VARIABLE)
   {
-    std::shared_ptr<resolverEntity> entity = std::make_shared<resolverEntity>();
+    std::shared_ptr<resolverEntityData> entity = std::make_shared<resolverEntityData>();
     entity->resolveVariableNode(node);
     m_scope.back()->addScopeData(entity);
     //std::cout << "resolver: added variable " << node->getStringValue()<< "  add addess: " << entity->getAddress() << std::endl;
   }
 }
 
-std::shared_ptr<resolverEntity> resolver::follow(std::shared_ptr<node> node)
+std::shared_ptr<resolverEntityData> resolver::follow(std::shared_ptr<node> node)
 {
   for (auto it = m_scope.rbegin(); it != m_scope.rend(); ++it)
   {
-    std::shared_ptr<resolverEntity> entity = (*it)->follow(node);
+    std::shared_ptr<resolverEntityData> entity = (*it)->follow(node);
     if (entity)
       return entity;
   }

@@ -8,12 +8,12 @@ resolverScope::resolverScope()
 {
 }
 
-void resolverScope::addScopeData(std::shared_ptr < resolverEntity > scope_data)
+void resolverScope::addScopeData(std::shared_ptr < resolverEntityData > scope_data)
 {
   m_scope_data.push_back(scope_data);
 }
 
-std::shared_ptr<resolverEntity> resolverScope::follow(std::shared_ptr<node> node)
+std::shared_ptr<resolverEntityData> resolverScope::follow(std::shared_ptr<node> node)
 {
   for (auto entity : m_scope_data)
   {
