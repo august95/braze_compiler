@@ -2,7 +2,7 @@
 #include "resolverEntityData.h"
 
 
-resolverEntityData::resolverEntityData(int entity_type)
+resolverEntityData::resolverEntityData(entityType entity_type)
     :m_entity_type(entity_type),
     m_is_stack(false),
     offset(0)
@@ -11,7 +11,7 @@ resolverEntityData::resolverEntityData(int entity_type)
 
 void resolverEntityData::resolveVariableNode(std::shared_ptr<node> node)
 {
-    m_entity_type = ENTITY_TYPE_VARIABLE;
+    m_entity_type = VARIABLE;
     m_node = node;
     m_datatype = node->getDatatype();
     m_is_stack = true;
@@ -33,4 +33,19 @@ void resolverEntityData::calculateAddress(bool local_stack, std::string& address
     }
 
 
+}
+void resolverEntityData::registerFunction(std::shared_ptr<node> node)
+{
+  m_entity_type = FUNCTION;
+  setGlobalAsmAddress(node->getStringValue(), 0);
+}
+
+void resolverEntityData::setGlobalAsmAddress(std::string name, int offset)
+{
+  if (offset == 0)
+  {
+    m_address += name;
+    return;
+  }
+  m_address += name + "+" + std::to_string(offset);
 }

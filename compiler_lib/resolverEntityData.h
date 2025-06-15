@@ -3,25 +3,27 @@
 #include "datatype.h"
 #include <string>
 
-enum
+enum entityType
 {
-	ENTITY_TYPE_NONE,
-	ENTITY_TYPE_FUNCTION,
-	ENTITY_TYPE_VARIABLE,
-	ENTITY_TYPE_STRUCT
+	NONE,
+	FUNCTION,
+	VARIABLE,
+	STRUCT
 };
 
 class resolverEntityData
 {
 public:
-	resolverEntityData(int entity_type= ENTITY_TYPE_NONE);
+	resolverEntityData(entityType entity_type = entityType::NONE);
 	void resolveVariableNode(std::shared_ptr<node> node);
 	std::string getAddress() { return m_address; }
 	std::string getBaseAddress() { return m_base_address; }
 	void calculateAddress(bool local_stack, std::string& address, int stack_offset);
 	std::shared_ptr < node > getNode() { return m_node; }
+	void registerFunction(std::shared_ptr<node> node);
+	void setGlobalAsmAddress(std::string name, int offset = 0);
 
-private:
+//private:
 	// ie variable function or struct
 	int m_entity_type;
 	// This is the addresss [ebp-4][var_name+4]

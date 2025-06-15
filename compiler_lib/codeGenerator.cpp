@@ -192,12 +192,15 @@ void codeGenerator::generateScopedVariable(std::shared_ptr<node> node)
 {
   if (node->getNodeType() == NODE_TYPE_VARIABLE)
   {
-    m_resolver.addEntity(node);
+    std::shared_ptr<resolverEntity> entity = m_resolver.addEntity(node);
     if (node->getValueNode())
     {
       generateExpressionable(node->getValueNode(), IS_ASSIGNMENT | IS_RIGHT_HAND_OF_ASSIGNMENT);
-
-      generateAssignmentPart(node, 0);
+      std::string reg_to_use = "eax";
+      m_asm_writer.asmPush("pop eax");
+      //finish scoped variable
+      m_asm_writer.asmPush("mov eax " + entity->getAddress());
+      //generateAssignmentPart(node, 0);
     }
   }
 }
