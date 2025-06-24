@@ -48,7 +48,7 @@ private:
 	
 
 	void parseExpression();
-	int parseExpressionOperatorOrOperand();
+	void parseExpressionOperatorOrOperand( bool& continue_to_parse_exp);
 	void parseOperand();
 	void parseOperator();
 	void parseNormalExpression();

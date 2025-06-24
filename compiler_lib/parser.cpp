@@ -142,32 +142,36 @@ void parser::parseNextToken()
 void parser::parseExpression()
 {
 	//parse all the tokens in the expression until the ';'. Example :a = b + 5;
- 	while (parseExpressionOperatorOrOperand() == 0)
+	bool continue_to_parse_exp = false;
+	do 
 	{
-
-	}
+		parseExpressionOperatorOrOperand(continue_to_parse_exp);
+	} while (continue_to_parse_exp);
 }
 
-int parser::parseExpressionOperatorOrOperand()
+void parser::parseExpressionOperatorOrOperand(bool& continue_to_parse_exp)
 {
 	std::shared_ptr < token > token = peekToken();
 	if (!token)
 	{
-		return -1;
+		continue_to_parse_exp = false;
+		return;
 	}
 	if (token->isTokenTypeNumber() || token->isTokenTypeIdentifier())
 	{
+		continue_to_parse_exp = true;
 		parseOperand();
-		return 0;
+		return;
 	}
 	else if (token->isTokenTypeOperator())
 	{
+		continue_to_parse_exp = true;
 		parseOperator();
-		return 0;
+		return;
 	}
 	//TODO: add keyword '(' in case of cast:  int a = (int)b;
 
-	return 1;
+	continue_to_parse_exp = false;
 }
 
 void parser::parseOperand()
