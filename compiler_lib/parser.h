@@ -1,4 +1,4 @@
-#pragma onc
+#pragma once
 
 //receives a list of tokens, creates an abstract syntax tree with nodes
 

@@ -56,11 +56,11 @@ public:
   static int getPrimitiveTypeSize(primitiveType primitive_type);
   int getDatatypeSize() { return m_datatype_size; }
   std::string getStringForPrimitiveSize();
-
+  std::string getDatatypeRegisterSize();
+  void getRegToUse(std::string& reg_to_use);
 
   static bool IsKeywordDatatype(std::string val);
   static bool isKeywordVariableModifier(std::string val);
-
 
 private:
 

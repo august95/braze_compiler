@@ -2,14 +2,14 @@
 #include "resolverEntityData.h"
 
 
-resolverEntityData::resolverEntityData(entityType entity_type)
+resolverEntityData::resolverEntityData(entityDataType entity_type)
     :m_entity_type(entity_type),
     m_is_stack(false),
     offset(0)
 {
 }
 
-void resolverEntityData::resolveVariableNode(std::shared_ptr<node> node)
+void resolverEntityData::setVariableNode(std::shared_ptr<node> node, bool is_local_stack, bool is_global)
 {
     m_entity_type = VARIABLE;
     m_node = node;
@@ -18,11 +18,19 @@ void resolverEntityData::resolveVariableNode(std::shared_ptr<node> node)
 
     //should this be a function?
     //needs to handle global variables as well, not only offset from local base pointer
-    calculateAddress(true, m_address, node->getStackOffset());
+    if (is_local_stack)
+    {
+      setStackAsmAddress(is_local_stack, m_address, node->getStackOffset());
+    }
+    else
+    {
+      setGlobalAsmAddress(m_node->getStringValue(), is_global?node->getStackOffset():0);
+    }
 }
 
-void resolverEntityData::calculateAddress(bool local_stack, std::string& address, int stack_offset)
+void resolverEntityData::setStackAsmAddress(bool local_stack, std::string& address, int stack_offset)
 {
+  //FIXME: handle positive stack offset for function parameters
     if (local_stack)
     {
         address = "ebp -" + std::to_string(stack_offset);

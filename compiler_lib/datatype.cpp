@@ -213,6 +213,91 @@ std::string datatype::getStringForPrimitiveSize()
   assert(0);
 }
 
+std::string datatype::getDatatypeRegisterSize()
+{
+  if (m_datatype_size == DATA_SIZE_BYTE)
+  {
+    return "byte";
+  }
+  else if (m_datatype_size == DATA_SIZE_WORD)
+  {
+    return "word";
+  }
+  else if (m_datatype_size == DATA_SIZE_DWORD)
+  {
+    return "dword";
+  }
+  else if (m_datatype_size == DATA_SIZE_DDWORD)
+  {
+    return "ddword";
+  }
+}
+
+void datatype::getRegToUse(std::string& reg_to_use)
+{
+  if (STRINGS_EQUAL(reg_to_use.c_str(), "eax"))
+  {
+    if (m_datatype_size == DATA_SIZE_BYTE)
+    {
+      reg_to_use = "al";
+    }
+    else if (m_datatype_size == DATA_SIZE_WORD)
+    {
+      reg_to_use = "ax";
+    }
+    else if (m_datatype_size == DATA_SIZE_DWORD)
+    {
+      reg_to_use = "eax";
+    }
+  }
+  else if (STRINGS_EQUAL(reg_to_use.c_str(), "ebx"))
+  {
+    if (m_datatype_size == DATA_SIZE_BYTE)
+    {
+      reg_to_use = "bl";
+    }
+    else if (m_datatype_size == DATA_SIZE_WORD)
+    {
+      reg_to_use = "bx";
+    }
+    else if (m_datatype_size == DATA_SIZE_DWORD)
+    {
+      reg_to_use = "ebx";
+    }
+  }
+  else if (STRINGS_EQUAL(reg_to_use.c_str(), "ecx"))
+  {
+    if (m_datatype_size == DATA_SIZE_BYTE)
+    {
+      reg_to_use = "cl";
+    }
+    else if (m_datatype_size == DATA_SIZE_WORD)
+    {
+      reg_to_use = "cx";
+    }
+    else if (m_datatype_size == DATA_SIZE_DWORD)
+    {
+      reg_to_use = "ecx";
+    }
+  }
+  else if (STRINGS_EQUAL(reg_to_use.c_str(), "edx"))
+  {
+    if (m_datatype_size == DATA_SIZE_BYTE)
+    {
+      reg_to_use = "dl";
+    }
+    else if (m_datatype_size == DATA_SIZE_WORD)
+    {
+      reg_to_use = "dx";
+    }
+    else if (m_datatype_size == DATA_SIZE_DWORD)
+    {
+      reg_to_use = "edx";
+    }
+  }
+
+}
+
 
 bool datatype::IsKeywordDatatype(std::string val)
 {

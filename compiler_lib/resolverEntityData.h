@@ -3,22 +3,23 @@
 #include "datatype.h"
 #include <string>
 
-enum entityType
+enum entityDataType
 {
 	NONE,
 	FUNCTION,
 	VARIABLE,
-	STRUCT
+	STRUCT,
+	SCOPE
 };
 
 class resolverEntityData
 {
 public:
-	resolverEntityData(entityType entity_type = entityType::NONE);
-	void resolveVariableNode(std::shared_ptr<node> node);
+	resolverEntityData(entityDataType entity_type = entityDataType::NONE);
+	void setVariableNode(std::shared_ptr<node> node, bool is_local_stack =false, bool is_global= false);
 	std::string getAddress() { return m_address; }
 	std::string getBaseAddress() { return m_base_address; }
-	void calculateAddress(bool local_stack, std::string& address, int stack_offset);
+	void setStackAsmAddress(bool local_stack, std::string& address, int stack_offset);
 	std::shared_ptr < node > getNode() { return m_node; }
 	void registerFunction(std::shared_ptr<node> node);
 	void setGlobalAsmAddress(std::string name, int offset = 0);
@@ -32,6 +33,7 @@ public:
 	std::string m_base_address;
 	// -4
 	int offset;
+	int flags;
 
 	bool m_is_stack;
 	std::shared_ptr < datatype> m_datatype;

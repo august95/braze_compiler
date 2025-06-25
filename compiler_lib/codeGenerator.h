@@ -31,8 +31,12 @@ public:
   void generateGlobalVariablePrimitive(std::shared_ptr < node > node);
   void generateScopedVariable(std::shared_ptr < node > node);
   void generateExpressionable(std::shared_ptr < node > node, int flags);
+  void generateExpNode(std::shared_ptr < node > node);
+  void generateAssignmentExpression(std::shared_ptr < node > node);
   void generateNumber(std::shared_ptr<node> node, int flags);
+  void generateIdentifier(std::shared_ptr<node> node);
   void generateAssignmentPart(std::shared_ptr < node > node, int flags);
+  void generateAssignmentInstructionForOperator(std::string mov_type, std::string address, std::string reg_to_use, std::string _operator);
 private:
 
   scope m_root_scope;

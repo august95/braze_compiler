@@ -150,6 +150,11 @@ void codeGenerator::generateStatement(std::shared_ptr<node> node)
     generateScopedVariable(node);
     return;
   }
+  if (node->getNodeType() == NODE_TYPE_EXPRESSION)
+  {
+    generateExpNode(node);
+    return;
+  }
   std::cout << "Codegen: statement not yet implemented" << std::endl;
 }
 
@@ -178,6 +183,8 @@ void codeGenerator::generateGlobalVariablePrimitive(std::shared_ptr<node> node)
     cerror("Codegen: strings not yet implemented"); 
     return;
   }
+  std::shared_ptr<resolverEntity> entity  = m_resolver.addEntity(node, false, false);
+
   std::string var_name = node->getStringValue();
   std::string var_value = "0";
   std::shared_ptr < datatype > datatype = node->getDatatype();
@@ -192,15 +199,15 @@ void codeGenerator::generateScopedVariable(std::shared_ptr<node> node)
 {
   if (node->getNodeType() == NODE_TYPE_VARIABLE)
   {
-    std::shared_ptr<resolverEntity> entity = m_resolver.addEntity(node);
+    std::shared_ptr<resolverEntity> entity = m_resolver.addEntity(node,true);
     if (node->getValueNode())
     {
       generateExpressionable(node->getValueNode(), IS_ASSIGNMENT | IS_RIGHT_HAND_OF_ASSIGNMENT);
-      std::string reg_to_use = "eax";
       m_asm_writer.asmPush("pop eax");
-      //finish scoped variable
-      m_asm_writer.asmPush("mov eax " + entity->getAddress());
-      //generateAssignmentPart(node, 0);
+      std::string reg_to_use = "eax";
+      std::string mov_type = node->getDatatype()->getDatatypeRegisterSize();
+      node->getDatatype()->getRegToUse(reg_to_use);
+      generateAssignmentInstructionForOperator(mov_type, entity->getAddress(), reg_to_use, "=");
     }
   }
 }
@@ -211,7 +218,7 @@ void codeGenerator::generateExpressionable(std::shared_ptr<node> node, int flags
 
   if (node->getNodeType() == NODE_TYPE_IDENTIFIER)
   {
-
+    generateIdentifier(node);
   }
   else if (node->getNodeType() == NODE_TYPE_NUMBER)
   {
@@ -224,10 +231,33 @@ void codeGenerator::generateExpressionable(std::shared_ptr<node> node, int flags
 
 }
 
+void codeGenerator::generateExpNode(std::shared_ptr<node> node)
+{
+  if (node->isAssignmentNode())
+  {
+    generateAssignmentExpression(node);
+    return;
+  }
+  //try to resolve node!
+
+  //might be function call
+
+}
+
+void codeGenerator::generateAssignmentExpression(std::shared_ptr<node> node)
+{
+  generateExpressionable(node->getRightNode(), IS_ASSIGNMENT | IS_RIGHT_HAND_OF_ASSIGNMENT);
+}
+
 void codeGenerator::generateNumber(std::shared_ptr<node> node, int flags)
 {
   //todo add stack verificatoions
   m_asm_writer.asmPush("push dword " + std::to_string(node->getNumberValue()) );
+}
+
+void codeGenerator::generateIdentifier(std::shared_ptr<node> node)
+{
+  std::shared_ptr<resolverEntity> entity = m_resolver.follow(node);
 }
 
 void codeGenerator::generateAssignmentPart(std::shared_ptr<node> node, int flags)
@@ -240,4 +270,16 @@ void codeGenerator::generateAssignmentPart(std::shared_ptr<node> node, int flags
     m_asm_writer.asmPush("mov eax " + entity->getAddress());
   }
 
+}
+
+void codeGenerator::generateAssignmentInstructionForOperator(std::string mov_type, std::string address, std::string reg_to_use, std::string _operator)
+{
+  if (STRINGS_EQUAL(_operator.c_str(), "="))
+  {
+    m_asm_writer.asmPush("mov " + mov_type +" ["+ address+"], "+ reg_to_use);
+  }
+  else if (STRINGS_EQUAL(_operator.c_str(), "+="))
+  {
+    m_asm_writer.asmPush("add " + mov_type + " [" + address + "], " + reg_to_use);
+  }
 }

@@ -10,7 +10,7 @@ public:
   resolver();
   void registerFunction( std::shared_ptr < node > function_node);
   void createNewScope(bool local_stack, bool stack);
-  std::shared_ptr<resolverEntity> addEntity(std::shared_ptr<node> node);
+  std::shared_ptr<resolverEntity> addEntity(std::shared_ptr<node> node, bool is_local_stack=false, bool is_global=false);
   std::shared_ptr<resolverEntity> follow(std::shared_ptr<node> node);
   void removeScope();
   void initialize();

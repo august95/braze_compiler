@@ -8,10 +8,11 @@ resolver::resolver()
 
 void resolver::registerFunction(std::shared_ptr<node> function_node)
 { 
-  std::shared_ptr< resolverEntity> data = std::make_shared<resolverEntity>();
-  data->createResolverEntityData();
-  data->registerFunction(function_node);
-  m_root_scope->addScopeEntity(data);
+  std::shared_ptr< resolverEntity> resolver_entity = std::make_shared<resolverEntity>(function_node);
+  resolver_entity->createResolverEntityData();
+  resolver_entity->registerFunction(function_node);
+//  resolver_entity->setScope(m_current_scope);
+  m_root_scope->addScopeEntity(resolver_entity);
 }
 
 void resolver::createNewScope(bool local_stack, bool stack)
@@ -20,17 +21,18 @@ void resolver::createNewScope(bool local_stack, bool stack)
   m_current_scope->setNextScope(scope);
   scope->setPrevScope(m_current_scope);
   scope->setLocalStack(local_stack);
+  scope->setStack(stack);
   //todo: add flags to scope data?
   m_current_scope = scope;
 }
 
-std::shared_ptr<resolverEntity> resolver::addEntity(std::shared_ptr<node> node)
+std::shared_ptr<resolverEntity> resolver::addEntity(std::shared_ptr<node> node, bool is_local_stack, bool is_global)
 {
-  std::shared_ptr<resolverEntity> entity = std::make_shared<resolverEntity>();
+  std::shared_ptr<resolverEntity> entity = std::make_shared<resolverEntity>(node);
   if (node->getNodeType() == NODE_TYPE_VARIABLE)
   {
     entity->createResolverEntityData();
-    entity->addAddress(node);
+    entity->addAddress(node, is_local_stack);
     m_current_scope->addScopeEntity(entity);
     //std::cout << "resolver: added variable " << node->getStringValue()<< "  add addess: " << entity->getAddress() << std::endl;
   }
@@ -39,12 +41,13 @@ std::shared_ptr<resolverEntity> resolver::addEntity(std::shared_ptr<node> node)
 
 std::shared_ptr<resolverEntity> resolver::follow(std::shared_ptr<node> node)
 {
-  return  m_current_scope->follow(node);
+  return m_current_scope->follow(node);
 }
 
 void resolver::removeScope()
 {
   m_current_scope = m_current_scope->getPrevScope();
+  //todo add callback on deletion of scope
 }
 
 void resolver::initialize()
