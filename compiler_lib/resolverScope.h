@@ -1,7 +1,7 @@
 #pragma once
+#include "resolverEntity.h"
 #include <iostream>
 #include <list>
-#include "resolverEntity.h"
 
 class resolverScope
 {
@@ -20,6 +20,7 @@ public:
   bool isStack() { return m_is_stack; }
   void setStack(bool is_stack) { m_is_stack = is_stack; }
   std::shared_ptr < resolverEntity > follow(std::shared_ptr < node > node);
+  std::shared_ptr < resolverEntity > followName(std::shared_ptr < node > node);
 private:
   std::shared_ptr <resolverScope> m_next_scope;
   std::shared_ptr <resolverScope> m_prev_scope;
