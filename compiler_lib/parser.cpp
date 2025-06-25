@@ -250,6 +250,7 @@ void parser::parseGlobalKeyword()
 	//FIXME: add symbol resolver
 
 	parseKeyword();
+	peekLastNode()->setIsGlobal(true);
 	//nextToken();
 }
 

@@ -88,7 +88,8 @@ public:
     bool isArray() { return m_node_type == nodeType::NODE_TYPE_EXPRESSION && m_string_value == "[]"; }
     bool isAssignmentNode() { return m_node_type == nodeType::NODE_TYPE_EXPRESSION && (m_string_value == "=" || m_string_value == "+=" || m_string_value == "-=" || m_string_value == "/=" || m_string_value == "*="); }
 
-
+	void setIsGlobal(bool is_global) { m_is_global = is_global; }	
+	bool getIsGlobal() { return m_is_global; }
 protected:
 	//for expression nodes
 	std::shared_ptr < node > m_left_node; 
@@ -105,6 +106,7 @@ protected:
 	//used by: function nodes
 	std::shared_ptr < node > m_body_node;
 	std::shared_ptr < datatype > m_return_datatype;
+	bool m_is_global;
 
 	nodeType m_node_type;
 	filePosition m_file_position;

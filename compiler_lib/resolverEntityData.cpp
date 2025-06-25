@@ -24,7 +24,7 @@ void resolverEntityData::setVariableNode(std::shared_ptr<node> node, bool is_loc
     }
     else
     {
-      setGlobalAsmAddress(m_node->getStringValue(), is_global?node->getStackOffset():0);
+      setGlobalAsmAddress(m_node->getStringValue(), node->getIsGlobal() ? 0 : node->getStackOffset());
     }
 }
 
