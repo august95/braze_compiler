@@ -117,6 +117,7 @@ int lexer::startLexer()
 
 	lexFile();
 
+	m_file.close();
 	if (!tokens.empty())
 		return 0;
 

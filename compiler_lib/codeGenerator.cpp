@@ -53,6 +53,8 @@ int codeGenerator::startCodeGeneration()
 
   generateRoot();
 
+  m_asm_writer.close();
+
 
   return 0;
 }

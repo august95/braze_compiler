@@ -39,4 +39,9 @@ int asmWriter::initialize(std::string filename)
   return fopen_s(&file, filename.c_str(), "w");
 }
 
+void asmWriter::close()
+{
+    _fcloseall();
+}
+
 

@@ -9,6 +9,7 @@ public:
   void asmPush(std::string ins);
   void asmPushArgs(const char* ins, va_list args);
   int initialize(std::string filename);
+  void close();
 
   std::string m_filename;
   FILE* file;
