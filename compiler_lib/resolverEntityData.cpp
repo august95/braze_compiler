@@ -9,7 +9,7 @@ resolverEntityData::resolverEntityData(entityDataType entity_type)
 {
 }
 
-void resolverEntityData::setVariableNode(std::shared_ptr<node> node, bool is_local_stack, bool is_global)
+void resolverEntityData::setVariableNode(std::shared_ptr<node> node, bool is_local_stack)
 {
     m_entity_type = VARIABLE;
     m_node = node;

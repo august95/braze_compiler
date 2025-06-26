@@ -26,7 +26,7 @@ void resolver::createNewScope(bool local_stack, bool stack)
   m_current_scope = scope;
 }
 
-std::shared_ptr<resolverEntity> resolver::addEntity(std::shared_ptr<node> node, bool is_local_stack, bool is_global)
+std::shared_ptr<resolverEntity> resolver::addEntity(std::shared_ptr<node> node, bool is_local_stack)
 {
   std::shared_ptr<resolverEntity> entity = std::make_shared<resolverEntity>(node);
   if (node->getNodeType() == NODE_TYPE_VARIABLE)

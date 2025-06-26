@@ -183,7 +183,7 @@ void codeGenerator::generateGlobalVariablePrimitive(std::shared_ptr<node> node)
     cerror("Codegen: strings not yet implemented"); 
     return;
   }
-  std::shared_ptr<resolverEntity> entity  = m_resolver.addEntity(node, false, false);
+  std::shared_ptr<resolverEntity> entity  = m_resolver.addEntity(node, false);
 
   std::string var_name = node->getStringValue();
   std::string var_value = "0";

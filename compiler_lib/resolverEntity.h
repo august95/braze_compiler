@@ -15,7 +15,7 @@ public:
 	resolverEntity();
 	resolverEntity(std::shared_ptr < node > node);
 	void createResolverEntityData();
-	void addAddress(std::shared_ptr<node> node, bool is_stack=false, bool is_global=false);
+	void addAddress(std::shared_ptr<node> node, bool is_stack=false);
 	void registerFunction(std::shared_ptr<node> node);
 	std::string getAddress();
 	void setResolverEntityData(std::shared_ptr < resolverEntityData > entity_data) { m_entity_data = entity_data; }

@@ -16,7 +16,7 @@ class resolverEntityData
 {
 public:
 	resolverEntityData(entityDataType entity_type = entityDataType::NONE);
-	void setVariableNode(std::shared_ptr<node> node, bool is_local_stack =false, bool is_global= false);
+	void setVariableNode(std::shared_ptr<node> node, bool is_local_stack =false);
 	std::string getAddress() { return m_address; }
 	std::string getBaseAddress() { return m_base_address; }
 	void setStackAsmAddress(bool local_stack, std::string& address, int stack_offset);

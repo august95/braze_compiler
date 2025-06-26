@@ -19,10 +19,10 @@ void resolverEntity::createResolverEntityData()
 	m_entity_data = std::make_shared<resolverEntityData>();
 }
 
-void resolverEntity::addAddress(std::shared_ptr<node> node, bool is_local_stack, bool is_global)
+void resolverEntity::addAddress(std::shared_ptr<node> node, bool is_local_stack)
 {
 	if(m_entity_data)
-		m_entity_data->setVariableNode(node, is_local_stack, is_global);
+		m_entity_data->setVariableNode(node, is_local_stack);
 }
 void resolverEntity::registerFunction(std::shared_ptr<node> node)
 {
