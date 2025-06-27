@@ -154,6 +154,7 @@
     <ClInclude Include="resolver.h" />
     <ClInclude Include="resolverEntity.h" />
     <ClInclude Include="resolverEntityData.h" />
+    <ClInclude Include="resolverResult.h" />
     <ClInclude Include="resolverScope.h" />
     <ClInclude Include="resolverScopeData.h" />
     <ClInclude Include="scope.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="resolver.cpp" />
     <ClCompile Include="resolverEntity.cpp" />
     <ClCompile Include="resolverEntityData.cpp" />
+    <ClCompile Include="resolverResult.cpp" />
     <ClCompile Include="resolverScope.cpp" />
     <ClCompile Include="resolverScopeData.cpp" />
     <ClCompile Include="scope.cpp" />

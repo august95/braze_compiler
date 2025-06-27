@@ -1,4 +1,4 @@
 int a;
 int b = 5;
-int c = 0x4;
+int c = 0xb;
 char d = 'a';

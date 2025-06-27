@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "codeGenerator.h"
 #include "braze_compiler.h"
+#include "resolverResult.h"
 
 #define C_STACK_ALIGNMENT 16
 #define STACK_PUSH_SIZE 4
@@ -80,7 +81,7 @@ void codeGenerator::generateRoot()
   {
     if (node->getNodeType() == NODE_TYPE_VARIABLE)
     {
-      //already processed in generateDataSection
+      //Global variables already processed in generateDataSection
     }
     if (node->getNodeType() == NODE_TYPE_FUNCTION)
     {
@@ -240,15 +241,36 @@ void codeGenerator::generateExpNode(std::shared_ptr<node> node)
     generateAssignmentExpression(node);
     return;
   }
+  if (resolveNodeForValue(node))
+  { 
+    return;
+  }
+
   //try to resolve node!
+
 
   //might be function call
 
 }
 
+bool codeGenerator::resolveNodeForValue(std::shared_ptr<node> node)
+{
+  std::shared_ptr<resolverResult> result = m_resolver.follow(node);
+  std::shared_ptr<resolverEntity> entity = result->peekEntity();
+  if (!entity)
+  {
+    return false;
+  }
+  
+
+  return false;
+}
+
 void codeGenerator::generateAssignmentExpression(std::shared_ptr<node> node)
 {
   generateExpressionable(node->getRightNode(), IS_ASSIGNMENT | IS_RIGHT_HAND_OF_ASSIGNMENT);
+  //right hand node is now on stack, it can be popped in assignment part
+  //generateAssignmentPart(node->getLeftNode(), node->getStringValue());
 }
 
 void codeGenerator::generateNumber(std::shared_ptr<node> node, int flags)
@@ -259,17 +281,53 @@ void codeGenerator::generateNumber(std::shared_ptr<node> node, int flags)
 
 void codeGenerator::generateIdentifier(std::shared_ptr<node> node)
 {
-  std::shared_ptr<resolverEntity> entity = m_resolver.follow(node);
+  std::shared_ptr<resolverResult> result = m_resolver.follow(node);
+  std::shared_ptr<resolverEntity> entity = result->peekEntity();
+  generateMemoryAccess(node, entity, 0); //push value to stack
 }
 
-void codeGenerator::generateAssignmentPart(std::shared_ptr<node> node, int flags)
+void codeGenerator::generateAssignmentPart(std::shared_ptr<node> node, std::string operator_)
 {
+  std::shared_ptr<resolverResult> result = m_resolver.follow(node);
+  std::shared_ptr<resolverEntity> entity = result->peekEntity();
+  std::string reg_to_use = "eax";
+  std::string mov_type = entity->getNode()->getDatatype()->getDatatypeRegisterSize();
+  //fixme: add support for multiple resloverEnttiy from resolver.follow in case pointer access is necessary
 
-  std::shared_ptr<resolverEntity> entity = m_resolver.follow(node);
-  if (entity)
+  //fixme: add support for asignment of structs!
+
+  m_asm_writer.asmPush("pop eax");
+  generateAssignmentInstructionForOperator(mov_type, entity->getAddress(), reg_to_use, operator_);
+}
+
+void codeGenerator::generateVariableAccess(std::shared_ptr<node> node, std::shared_ptr<resolverEntity> entity, int flags)
+{
+  generateMemoryAccess(node, entity, flags);
+}
+
+void codeGenerator::generateMemoryAccess(std::shared_ptr<node> node, std::shared_ptr<resolverEntity> entity, int flags)
+{
+  if (flags & GET_ADDRESS)
   {
-    m_asm_writer.asmPush("pop eax");
-    m_asm_writer.asmPush("mov eax " + entity->getAddress());
+    //handle pointer access lea instruction
+  }
+
+  if (entity->getNode()->getNodeType() == NODE_TYPE_STRUCT)
+  {
+    //handle struct
+  }
+  else if (entity->getNode()->getDatatypeSize() != DATA_SIZE_DWORD)
+  {
+    //handle other sizes than dword
+  }
+  else if (entity->getNode()->getDatatypeSize() == DATA_SIZE_DWORD)
+  {
+    // we can push this straight to the stack
+    m_asm_writer.asmPush("push dword [" + entity->getResolverEntityData()->getAddress() + "]");
+  }
+  else
+  {
+    assert(0);
   }
 
 }

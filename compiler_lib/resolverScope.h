@@ -1,5 +1,6 @@
 #pragma once
 #include "resolverEntity.h"
+#include "resolverResult.h"
 #include <iostream>
 #include <list>
 
@@ -19,8 +20,8 @@ public:
   void setLocalStack(bool is_local_stack) { m_is_local_stack = is_local_stack; }
   bool isStack() { return m_is_stack; }
   void setStack(bool is_stack) { m_is_stack = is_stack; }
-  std::shared_ptr < resolverEntity > follow(std::shared_ptr < node > node);
-  std::shared_ptr < resolverEntity > followName(std::shared_ptr < node > node);
+  std::shared_ptr < resolverResult > follow(std::shared_ptr < node > node, std::shared_ptr<resolverResult> result);
+  std::shared_ptr < resolverResult > followName(std::shared_ptr < node > node, std::shared_ptr<resolverResult> result);
 private:
   std::shared_ptr <resolverScope> m_next_scope;
   std::shared_ptr <resolverScope> m_prev_scope;
