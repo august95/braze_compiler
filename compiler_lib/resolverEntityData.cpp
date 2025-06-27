@@ -33,7 +33,7 @@ void resolverEntityData::setStackAsmAddress(bool local_stack, std::string& addre
   //FIXME: handle positive stack offset for function parameters
     if (local_stack)
     {
-        address = "ebp -" + std::to_string(stack_offset);
+        address = "ebp-" + std::to_string(stack_offset);
     }
     else
     {

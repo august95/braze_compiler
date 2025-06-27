@@ -710,43 +710,20 @@ TEST(parser, functionWithSecondScope) {
 
 
 
-
-
-TEST(codegen, globalVariables) {
-
-//	int a;
-//	int b = 5;
-//	int c = 0x4;
-//	char d = 'a';
-
-	std::string file_name = "test_codegen_global_variables.c";
-
-	const int num_of_tokens = 5;
-
-	compileProcess process;
-	process.initialize(file_path + file_name);
-	process.startCompiler();
-
-
-}
-#include <iostream>
-#include <string>
-bool compareLines(const char* file_name, const char*  asm_file) {
-	std::string file_name_(file_name);
-	std::string asm_file_(asm_file);
-	std::istringstream stream1(file_name_);
-	std::istringstream stream2(asm_file_);
+bool compareLines(std::string file_name, std::string  asm_file) {
+	std::istringstream stream1(file_name.c_str());
+	std::istringstream stream2(asm_file.c_str());
 	std::string line1, line2;
 	int lineNumber = 1;
 	bool areEqual = true;
 
-	while (std::getline(stream1, line1) || std::getline(stream2, line2)) {
+	while (std::getline(stream1, line1) && std::getline(stream2, line2)) {
 		if (stream1.eof() && !stream2.eof()) line1 = "";
 		if (stream2.eof() && !stream1.eof()) line2 = "";
 
 		if (line1 != line2) {
 			std::cout << "Difference at line " << lineNumber << ":\n";
-			std::cout << "  file_name: \"" << line1 << "\"\n";
+			std::cout << "  target   : \"" << line1 << "\"\n";
 			std::cout << "  asm_file : \"" << line2 << "\"\n";
 			areEqual = false;
 		}
@@ -755,6 +732,59 @@ bool compareLines(const char* file_name, const char*  asm_file) {
 
 	return areEqual;
 }
+
+
+bool compareFiles(std::string target, std::string asm_file)
+{
+	std::ifstream file;
+	file.open(file_path + asm_file);
+	if (!file) {
+		std::cerr << "Failed to open the file.\n";
+	}
+	std::stringstream buffer;
+	buffer << file.rdbuf(); // Read entire file at once
+
+	return compareLines(target, buffer.str());
+}
+
+
+TEST(codegen, globalVariables) {
+
+//	int a;
+//	int b = 5;
+//	int c = 0xb;
+//	char d = 'a';
+
+
+	std::string target =
+		"section .data\n"
+//		"; int a\n"
+		"a: dd 0\n"
+//		"; int b\n"
+		"b: dd 5\n"
+//		"; int c\n"
+		"c: dd 11\n"
+//		"; char d\n"
+		"d: db 97\n"
+		"section .text\n"
+		"section .rodata\n";
+
+	std::string file_name = "test_codegen_global_variables.c";
+	std::string asm_file = file_name + ".asm";
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+
+
+
+	EXPECT_TRUE(compareFiles(target, asm_file));
+
+
+}
+
 
 TEST(codegen, function) {
 
@@ -769,64 +799,56 @@ TEST(codegen, function) {
 //	}
 
 
-std::string target =
-"section .data\n"
-//"; int var"
-"var : dd 0\n"
-"section.text\n"
-"global main\n"
-//"; main function"
-"main :\n"
-"push ebp\n"
-"mov ebp, esp\n"
-"sub esp, 16\n"
-"push dword 0\n"
-"pop eax\n"
-"mov dword[ebp - 4], eax\n"
-"push dword 5\n"
-"pop eax\n"
-"mov dword[ebp - 8], eax\n"
-/*
-"push dword[var]"
-"pop eax"
-"mov dword[ebp - 4], eax"
-"push dword[ebp - 8]"
-"push dword[ebp - 4]"
-"pop ecx"
-"pop eax"
-"add eax, ecx"
-"push eax"
-"pop eax"
-"mov dword[var], eax"
-*/
-"add esp, 16\n"
-"pop ebp\n"
-"ret\n";
+	std::string target =
+		"section .data\n"
+		//"; int var\n"
+		"var: dd 0\n"
+		"section .text\n"
+		"global main\n"
+		//"; main function\n"
+		"main:\n"
+		"push ebp\n"
+		"mov ebp, esp\n"
+		"sub esp, 16\n"
+		"push dword 0\n"
+		"pop eax\n"
+		"mov dword [ebp-4], eax\n"
+		"push dword 5\n"
+		"pop eax\n"
+		"mov dword [ebp-8], eax\n"
+		"push dword [var]\n"
+		/*
+		"pop eax\n"
+		"mov dword [ebp-4], eax\n"
+		"push dword [ebp-8]\n"
+		"push dword [ebp-4]\n"
+		"pop ecx\n"
+		"pop eax\n"
+		"add eax, ecx\n"
+		"push eax\n"
+		"pop eax\n"
+		"mov dword [var], eax\n"
+		*/
+
+
+		"add esp, 16\n"
+		"pop ebp\n"
+		"ret\n"
+		"section .rodata\n";
+
+
 
 	std::string file_name = "test_codegen_function.c";
-	std::string asm_file = "test_codegen_function.c.asm";
+	std::string asm_file = file_name + ".asm";
 
 	const int num_of_tokens = 5;
 
 	compileProcess process;
 	process.initialize(file_path + file_name);
 	process.startCompiler();
-	/*
-	std::ifstream file;
-	file.open(file_path + asm_file);
-	if (!file) {
-		std::cerr << "Failed to open the file.\n";
-	}
-	std::stringstream buffer;
-	buffer << file.rdbuf(); // Read entire file at once
-
-	//std::string fileContent = ;
+//	compareFiles(target, asm_file);
+	EXPECT_TRUE(compareFiles(target, asm_file));
 	
-	compareLines(target.c_str(), buffer.str().c_str());
-	//if(target.c_str() != buffer.str())
-		std::cout << "\n" << "======================================================= \n from: test_codegen_global_variables.c.asm:  \n" << buffer.str() << std::endl;
-	//EXPECT_TRUE();
-	*/
 }
 
 
