@@ -32,9 +32,9 @@ void asmWriter::asmGenArgs(const char* ins, va_list args)
   }
 }
 
-void asmWriter::asmGenPushIns(std::string reg)
+void asmWriter::asmGenPushIns(std::string reg, std::shared_ptr < datatype > datatype, int offset_from_bp)
 {
-  m_stack_monitor.pushElement(PUSHED_VAUE);
+  m_stack_monitor.pushElement(PUSHED_VAUE, datatype, offset_from_bp);
   asmGen("push " + reg);
 }
 
@@ -47,7 +47,7 @@ void asmWriter::asmGenPopIns(std::string reg)
 
 void asmWriter::asmGenPushEbp(int stack_subtraction)
 {
-  m_stack_monitor.pushElement(BASE_POINTER);
+  m_stack_monitor.pushElement(BASE_POINTER,0,0);
   asmGen("push ebp");
   asmGen("mov ebp, esp");
   asmGen("sub esp, " + std::to_string(stack_subtraction));

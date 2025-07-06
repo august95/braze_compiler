@@ -277,7 +277,7 @@ void codeGenerator::generateExpressionArithmetic(std::shared_ptr<node> node_)
     //result sent is stored in eax
     generateMath("eax", "ecx", node_->getExpressionType());
   }
-  m_asm_writer.asmGenPushIns("eax");
+  m_asm_writer.asmGenPushIns("eax", 0 , 0); //we dont always have accces to the assigned node in the node tree from here
 }
 
 void codeGenerator::generateExpressionLogicalArithmetic(std::shared_ptr<node> node)
@@ -312,7 +312,7 @@ void codeGenerator::generateAssignmentExpression(std::shared_ptr<node> node)
 void codeGenerator::generateNumber(std::shared_ptr<node> node, int flags)
 {
   //todo add stack verificatoions
-  m_asm_writer.asmGenPushIns("dword " + std::to_string(node->getNumberValue()) );
+  m_asm_writer.asmGenPushIns("dword " + std::to_string(node->getNumberValue()), node->getDatatype(), node->getStackOffset() );
 }
 
 void codeGenerator::generateIdentifier(std::shared_ptr<node> node)
@@ -365,7 +365,7 @@ void codeGenerator::generateMemoryAccess(std::shared_ptr<node> node, std::shared
   else if (entity->getNode()->getDatatypeSize() == DATA_SIZE_DWORD)
   {
     // we can push this straight to the stack
-    m_asm_writer.asmGenPushIns("dword [" + entity->getResolverEntityData()->getAddress() + "]");
+    m_asm_writer.asmGenPushIns("dword [" + entity->getResolverEntityData()->getAddress() + "]", node->getDatatype(), node->getStackOffset());
   }
   else
   {

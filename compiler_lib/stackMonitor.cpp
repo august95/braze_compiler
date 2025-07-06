@@ -6,9 +6,9 @@ stackMonitor::stackMonitor()
 {
 }
 
-void stackMonitor::pushElement(stackElementType type)
+void stackMonitor::pushElement(stackElementType type, std::shared_ptr < datatype > datatype, int offset_from_bp)
 {
-  m_stack.push_back(std::make_shared< stackElement >(type));
+  m_stack.push_back(std::make_shared< stackElement >(type, datatype, offset_from_bp));
 }
 
 void stackMonitor::popElement(stackElementType type)

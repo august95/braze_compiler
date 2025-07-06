@@ -15,17 +15,17 @@ class stackMonitor
 {
 public:
   stackMonitor();
-  void pushElement(stackElementType type);
+  void pushElement(stackElementType type, std::shared_ptr < datatype > datatype, int offset_from_bp);
   void popElement(stackElementType type);
 
   class stackElement
   {
   public:
 
-    stackElement(stackElementType type)
-      :m_element_type(type)
+    stackElement(stackElementType type, std::shared_ptr < datatype > datatype, int offset_from_bp)
+      :m_element_type(type), m_datatype(datatype), m_offset_from_bp(offset_from_bp)
     { }
-
+    int m_offset_from_bp;
     std::shared_ptr< datatype > m_datatype;
     stackElementType m_element_type;
   };
