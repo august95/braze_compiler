@@ -44,6 +44,7 @@ public:
   bool isExtern() { return m_extern; }
   bool secondaryPrimitiveType() { return m_has_secondary_primitive_type; }
   void incrementPointerDepth();
+  unsigned int getPointerDepth() { return m_pointer_depth; }
   bool isUnion() { return m_first == primitiveType::DATA_TYPE_UNION; }
   bool isStruct() { return m_first == primitiveType::DATA_TYPE_STRUCT; }
   primitiveType getPrimitiveType() { return m_first; }

@@ -3,6 +3,7 @@
 #include "braze_compiler.h"
 
 
+
 node::node()
 	:m_body_size(0),
 	m_node_type(nodeType::NODE_TYPE_BLANK),
@@ -68,6 +69,7 @@ void node::addStatement(std::shared_ptr<node> statement)
 }
 
 
+
 void node::calculateStackOffset(int& stack_offset)
 {
 	if (m_node_type == NODE_TYPE_VARIABLE)
@@ -101,4 +103,81 @@ void node::calculateStackOffset(int& stack_offset)
 		}
 	}
 
+}
+
+
+void node::generateExpressionFlag()
+{
+  if (STRINGS_EQUAL(m_string_value.c_str(), "+"))
+  {
+    m_exp_type = EXPRESSION_IS_ADDITION;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), "-"))
+  {
+    m_exp_type = EXPRESSION_IS_SUBTRACTION;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), "*"))
+  {
+    m_exp_type = EXPRESSION_IS_MULTPILICATION;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), "/"))
+  {
+    m_exp_type = EXPRESSION_IS_DIVISION;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), "%"))
+  {
+    m_exp_type = EXPRESSION_IS_MODULUS;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), ">"))
+  {
+    m_exp_type = EXPRESSION_IS_ABOVE;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), "<"))
+  {
+    m_exp_type = EXPRESSION_IS_BELOW;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), ">="))
+  {
+    m_exp_type = EXPRESSION_IS_ABOVE_OR_EQUAL;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), "<="))
+  {
+    m_exp_type = EXPRESSION_IS_BELOW_OR_EQUAL;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), "!="))
+  {
+    m_exp_type = EXPRESSION_IS_NOT_EQUAL;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), "=="))
+  {
+    m_exp_type = EXPRESSION_IS_EQUAL;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), "&&"))
+  {
+    m_exp_type = EXPRESSION_LOGICAL_AND;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), "||"))
+  {
+    m_exp_type = EXPRESSION_LOGICAL_OR;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), "<<"))
+  {
+    m_exp_type = EXPRESSION_BITSHIFT_LEFT;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), ">>"))
+  {
+    m_exp_type = EXPRESSION_BITSHIFT_RIGHT;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), "&"))
+  {
+    m_exp_type = EXPRESSION_IS_BITWISE_AND;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), "|"))
+  {
+    m_exp_type = EXPRESSION_IS_BITWISE_OR;
+  }
+  else if (STRINGS_EQUAL(m_string_value.c_str(), "^"))
+  {
+    m_exp_type = EXPRESSION_IS_BITWISE_XOR;
+  }
 }

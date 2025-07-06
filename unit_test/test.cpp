@@ -817,7 +817,7 @@ TEST(codegen, function) {
 		"pop eax\n"
 		"mov dword [ebp-8], eax\n"
 		"push dword [var]\n"
-		/*
+		//local variables a and b has been generated, start on assignments a=var;
 		"pop eax\n"
 		"mov dword [ebp-4], eax\n"
 		"push dword [ebp-8]\n"
@@ -828,9 +828,7 @@ TEST(codegen, function) {
 		"push eax\n"
 		"pop eax\n"
 		"mov dword [var], eax\n"
-		*/
-
-
+		//leave function
 		"add esp, 16\n"
 		"pop ebp\n"
 		"ret\n"

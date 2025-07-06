@@ -158,6 +158,7 @@
     <ClInclude Include="resolverScope.h" />
     <ClInclude Include="resolverScopeData.h" />
     <ClInclude Include="scope.h" />
+    <ClInclude Include="stackMonitor.h" />
     <ClInclude Include="token.h" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +185,7 @@
     <ClCompile Include="resolverScope.cpp" />
     <ClCompile Include="resolverScopeData.cpp" />
     <ClCompile Include="scope.cpp" />
+    <ClCompile Include="stackMonitor.cpp" />
     <ClCompile Include="token.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

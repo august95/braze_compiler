@@ -103,6 +103,7 @@ std::shared_ptr < node > parser::makeExpressionNode(filePosition file_position, 
 	expression_node->setLeftNode(left_node);
 	expression_node->setRightNode(right_node);
 	expression_node->setStringValue(operator_);
+	expression_node->generateExpressionFlag();
 	return expression_node;
 }
 
@@ -377,14 +378,7 @@ void parser::parseStatement()
 	{
 		parseSymbol();
 		nextToken(); //pop off '}'
-		/*
-		* Nested scope, return because ';' is not expected
-		* 
-		* {
-		*		{
-		*		}
-		* }
-		*/
+		//Nested scope, return because ';' is not expected {{}}
 		return;
 	}
 	token = nextToken();

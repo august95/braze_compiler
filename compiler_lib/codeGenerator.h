@@ -13,6 +13,18 @@ enum
   GET_ADDRESS = 0x8
 };
 
+
+/*
+* todo
+* pointers
+* function parameters
+* finish operators
+* logical operators
+* check that unsigned logic is correct
+* 
+* controll flow parsing
+* 
+*/
 class codeGenerator
 {
 public:
@@ -33,6 +45,8 @@ public:
   void generateScopedVariable(std::shared_ptr < node > node);
   void generateExpressionable(std::shared_ptr < node > node, int flags);
   void generateExpNode(std::shared_ptr < node > node);
+  void generateExpressionArithmetic(std::shared_ptr < node > node_);
+  void generateExpressionLogicalArithmetic(std::shared_ptr < node > node);
   bool resolveNodeForValue(std::shared_ptr < node > node);
   void generateAssignmentExpression(std::shared_ptr < node > node);
   void generateNumber(std::shared_ptr<node> node, int flags);
@@ -41,6 +55,8 @@ public:
   void generateVariableAccess(std::shared_ptr < node > node, std::shared_ptr<resolverEntity> entity, int flags);
   void generateMemoryAccess(std::shared_ptr < node > node, std::shared_ptr<resolverEntity> entity, int flags);
   void generateAssignmentInstructionForOperator(std::string mov_type, std::string address, std::string reg_to_use, std::string _operator);
+  void generateMath(std::string reg1, std::string reg2, ExpressionType exp_type, bool is_signed=false);
+  void generateCompare(std::string reg1, std::string reg2);
 private:
 
   scope m_root_scope;

@@ -62,7 +62,7 @@ int codeGenerator::startCodeGeneration()
 
 void codeGenerator::generateDataSection()
 {
-  m_asm_writer.asmPush("section .data");
+  m_asm_writer.asmGen("section .data");
 
   for (auto node : m_ast)
   {
@@ -75,7 +75,7 @@ void codeGenerator::generateDataSection()
 
 void codeGenerator::generateRoot()
 {
-  m_asm_writer.asmPush("section .text");
+  m_asm_writer.asmGen("section .text");
   
   for (auto node : m_ast)
   {
@@ -96,25 +96,14 @@ void codeGenerator::generateRootNode(std::shared_ptr<node> node)
   {
     m_resolver.registerFunction(node);
     std::string function_name = node->getStringValue();
-    m_asm_writer.asmPush("global " + function_name);
-    m_asm_writer.asmPush(function_name + ":");
-    m_asm_writer.asmPush("push ebp");
-    m_asm_writer.asmPush("mov ebp, esp");
-    m_asm_writer.asmPush("sub esp, " + std::to_string(C_ALIGN(node->getBodyNode()->getBodySize())));
+    m_asm_writer.asmGen("global " + function_name);
+    m_asm_writer.asmGen(function_name + ":");
+    m_asm_writer.asmGenPushEbp(C_ALIGN(node->getBodyNode()->getBodySize()));
     //add function parameters
     m_resolver.createNewScope(true, false); 
-
-    //add body generation
     generateBody(node->getBodyNode());
-
-
     m_resolver.removeScope();
-
-
-
-    m_asm_writer.asmPush("add esp, " + std::to_string(C_ALIGN(node->getBodyNode()->getBodySize())));
-    m_asm_writer.asmPush("pop ebp");
-    m_asm_writer.asmPush("ret");
+    m_asm_writer.asmGenPopEbp(C_ALIGN(node->getBodyNode()->getBodySize()));
   }
 }
 
@@ -195,7 +184,7 @@ void codeGenerator::generateGlobalVariablePrimitive(std::shared_ptr<node> node)
   {
     var_value = std::to_string(node->getValueNode()->getNumberValue());
   }
-  m_asm_writer.asmPush(var_name + ": " + datatype->getStringForPrimitiveSize() + " " + var_value);
+  m_asm_writer.asmGen(var_name + ": " + datatype->getStringForPrimitiveSize() + " " + var_value);
 }
 
 void codeGenerator::generateScopedVariable(std::shared_ptr<node> node)
@@ -206,7 +195,7 @@ void codeGenerator::generateScopedVariable(std::shared_ptr<node> node)
     if (node->getValueNode())
     {
       generateExpressionable(node->getValueNode(), IS_ASSIGNMENT | IS_RIGHT_HAND_OF_ASSIGNMENT);
-      m_asm_writer.asmPush("pop eax");
+      m_asm_writer.asmGenPopIns("eax");
       std::string reg_to_use = "eax";
       std::string mov_type = node->getDatatype()->getDatatypeRegisterSize();
       node->getDatatype()->getRegToUse(reg_to_use);
@@ -227,6 +216,10 @@ void codeGenerator::generateExpressionable(std::shared_ptr<node> node, int flags
   {
     generateNumber(node, flags);
   }
+  else if (node->getNodeType() == NODE_TYPE_EXPRESSION)
+  {
+    generateExpNode(node);
+  }
   else if (node->getNodeType() == NODE_TYPE_STRING)
   {
 
@@ -246,23 +239,66 @@ void codeGenerator::generateExpNode(std::shared_ptr<node> node)
     return;
   }
 
-  //try to resolve node!
-
+  generateExpressionArithmetic(node);
 
   //might be function call
 
 }
 
+void codeGenerator::generateExpressionArithmetic(std::shared_ptr<node> node_)
+{
+  assert(node_->getNodeType() == NODE_TYPE_EXPRESSION);
+
+  std::shared_ptr < node >  left = node_->getLeftNode();
+  std::shared_ptr < node > right = node_->getRightNode();
+
+  if (node_->getExpressionType() & EXPRESSION_LOGICAL_OPERATOR)
+  {
+    generateExpressionLogicalArithmetic(node_);
+  }
+  generateExpressionable(left, 0); //pushes to stack
+  generateExpressionable(right, 0); // pushes to stack
+  std::shared_ptr<datatype> last_datatype_on_stack = right->getDatatype();
+  if (node_->getExpressionType() & EXPRESSION_GEN_MATHABLE)
+  {
+    m_asm_writer.asmGenPopIns("ecx"); //right node
+    m_asm_writer.asmGenPopIns("eax"); //left node
+
+    /*
+    FIXME:  operands might be identifiers without datatype. Make the symbol resolver store a pointer to 
+    the node that is identified during parsing
+
+    if (left->getDatatype()->getPointerDepth() > 0 || right->getDatatype()->getPointerDepth() > 0)
+    {
+      //handle pointer access
+    }
+    */
+
+    //result sent is stored in eax
+    generateMath("eax", "ecx", node_->getExpressionType());
+  }
+  m_asm_writer.asmGenPushIns("eax");
+}
+
+void codeGenerator::generateExpressionLogicalArithmetic(std::shared_ptr<node> node)
+{
+  //implement
+}
+
 bool codeGenerator::resolveNodeForValue(std::shared_ptr<node> node)
 {
-  std::shared_ptr<resolverResult> result = m_resolver.follow(node);
+  std::shared_ptr<resolverResult> result;
+  m_resolver.follow(node, result);
   std::shared_ptr<resolverEntity> entity = result->peekEntity();
   if (!entity)
   {
     return false;
   }
   
-
+  /*
+  add resolver code
+  return true;  
+  */
   return false;
 }
 
@@ -270,33 +306,39 @@ void codeGenerator::generateAssignmentExpression(std::shared_ptr<node> node)
 {
   generateExpressionable(node->getRightNode(), IS_ASSIGNMENT | IS_RIGHT_HAND_OF_ASSIGNMENT);
   //right hand node is now on stack, it can be popped in assignment part
-  //generateAssignmentPart(node->getLeftNode(), node->getStringValue());
+  generateAssignmentPart(node->getLeftNode(), node->getStringValue());
 }
 
 void codeGenerator::generateNumber(std::shared_ptr<node> node, int flags)
 {
   //todo add stack verificatoions
-  m_asm_writer.asmPush("push dword " + std::to_string(node->getNumberValue()) );
+  m_asm_writer.asmGenPushIns("dword " + std::to_string(node->getNumberValue()) );
 }
 
 void codeGenerator::generateIdentifier(std::shared_ptr<node> node)
 {
-  std::shared_ptr<resolverResult> result = m_resolver.follow(node);
+  std::shared_ptr<resolverResult> result;
+  m_resolver.follow(node, result);
   std::shared_ptr<resolverEntity> entity = result->peekEntity();
   generateMemoryAccess(node, entity, 0); //push value to stack
 }
 
 void codeGenerator::generateAssignmentPart(std::shared_ptr<node> node, std::string operator_)
 {
-  std::shared_ptr<resolverResult> result = m_resolver.follow(node);
+  std::shared_ptr<resolverResult> result;
+  m_resolver.follow(node, result);
   std::shared_ptr<resolverEntity> entity = result->peekEntity();
   std::string reg_to_use = "eax";
   std::string mov_type = entity->getNode()->getDatatype()->getDatatypeRegisterSize();
-  //fixme: add support for multiple resloverEnttiy from resolver.follow in case pointer access is necessary
+  if (entity->getNext())
+  {
+    //requires extra accesses
+    assert(0);
+  }
 
   //fixme: add support for asignment of structs!
 
-  m_asm_writer.asmPush("pop eax");
+  m_asm_writer.asmGenPopIns("eax");
   generateAssignmentInstructionForOperator(mov_type, entity->getAddress(), reg_to_use, operator_);
 }
 
@@ -323,7 +365,7 @@ void codeGenerator::generateMemoryAccess(std::shared_ptr<node> node, std::shared
   else if (entity->getNode()->getDatatypeSize() == DATA_SIZE_DWORD)
   {
     // we can push this straight to the stack
-    m_asm_writer.asmPush("push dword [" + entity->getResolverEntityData()->getAddress() + "]");
+    m_asm_writer.asmGenPushIns("dword [" + entity->getResolverEntityData()->getAddress() + "]");
   }
   else
   {
@@ -336,10 +378,115 @@ void codeGenerator::generateAssignmentInstructionForOperator(std::string mov_typ
 {
   if (STRINGS_EQUAL(_operator.c_str(), "="))
   {
-    m_asm_writer.asmPush("mov " + mov_type +" ["+ address+"], "+ reg_to_use);
+    m_asm_writer.asmGen("mov " + mov_type +" ["+ address+"], "+ reg_to_use);
   }
   else if (STRINGS_EQUAL(_operator.c_str(), "+="))
   {
-    m_asm_writer.asmPush("add " + mov_type + " [" + address + "], " + reg_to_use);
+    m_asm_writer.asmGen("add " + mov_type + " [" + address + "], " + reg_to_use);
   }
+}
+
+void codeGenerator::generateMath(std::string reg1, std::string reg2, ExpressionType exp_type, bool is_signed)
+{
+  if (exp_type & EXPRESSION_IS_ADDITION)
+  {
+    m_asm_writer.asmGen("add "+reg1 + ", " + reg2);
+  }
+  else if (exp_type & EXPRESSION_IS_SUBTRACTION)
+  {
+    m_asm_writer.asmGen("sub " + reg1 + ", " + reg2);
+  }
+  else if (exp_type & EXPRESSION_IS_MULTPILICATION)
+  {
+    m_asm_writer.asmGen("mov ecx, " + reg2);
+    if (is_signed)
+    {
+      m_asm_writer.asmGen("imul ecx");
+    }
+    else
+    {
+      m_asm_writer.asmGen("mul ecx");
+    }
+  }
+  else if (exp_type & EXPRESSION_IS_DIVISION)
+  {
+    m_asm_writer.asmGen("mov ecx, "+ reg2);
+    m_asm_writer.asmGen("cdq");
+    if (is_signed)
+    {
+      m_asm_writer.asmGen("idiv ecx");
+    }
+    else
+    {
+      m_asm_writer.asmGen("div ecx");
+    }
+  }
+  else if (exp_type & EXPRESSION_IS_MODULUS)
+  {
+    m_asm_writer.asmGen("mov ecx, " + reg2);
+    m_asm_writer.asmGen("cdq");
+    if (is_signed)
+    {
+      m_asm_writer.asmGen("idiv ecx");
+    }
+    else
+    {
+      m_asm_writer.asmGen("div ecx");
+    }
+
+    m_asm_writer.asmGen("mov eax, edx");
+  }
+  else if (exp_type & EXPRESSION_IS_ABOVE)
+  {
+    generateCompare(reg2, "setg");
+  }
+  else if (exp_type & EXPRESSION_IS_BELOW)
+  {
+    generateCompare(reg2, "setl");
+  }
+  else if (exp_type & EXPRESSION_IS_EQUAL)
+  {
+    generateCompare(reg2, "sete");
+  }
+  else if (exp_type & EXPRESSION_IS_ABOVE_OR_EQUAL)
+  {
+    generateCompare(reg2, "setge");
+  }
+  else if (exp_type & EXPRESSION_IS_BELOW_OR_EQUAL)
+  {
+    generateCompare(reg2, "setle");
+  }
+  else if (exp_type & EXPRESSION_IS_NOT_EQUAL)
+  {
+    generateCompare(reg2, "setne");
+  }
+  /*
+  else if (exp_type & EXPRESSION_BITSHIFT_LEFT)
+  {
+    reg2 = subRegister(reg2, DATA_SIZE_BYTE);
+    m_asm_writer.asmPush("sal " + reg1 + ", " + reg2);
+  }
+  else if (exp_type & EXPRESSION_BITSHIFT_RIGHT)
+  {
+    reg2 = subRegister(reg2, DATA_SIZE_BYTE);
+    m_asm_writer.asmPush("sar " + reg1 + ", " + reg2);
+  }
+  */
+  else if (exp_type & EXPRESSION_IS_BITWISE_AND)
+  {
+    m_asm_writer.asmGen("and " + reg1 + ", " + reg2);
+  }
+  else if (exp_type & EXPRESSION_IS_BITWISE_OR)
+  {
+    m_asm_writer.asmGen("or " + reg1 + ", " + reg2);
+  }
+  else if (exp_type & EXPRESSION_IS_BITWISE_XOR)
+  {
+    m_asm_writer.asmGen("xor " + reg1 + ", " + reg2);
+  }
+}
+
+void codeGenerator::generateCompare(std::string reg1, std::string reg2)
+{
+  assert(0);
 }

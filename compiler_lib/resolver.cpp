@@ -39,9 +39,9 @@ std::shared_ptr<resolverEntity> resolver::addEntity(std::shared_ptr<node> node, 
   return entity;
 }
 
-std::shared_ptr<resolverResult> resolver::follow(std::shared_ptr<node> node)
+std::shared_ptr<resolverResult> resolver::follow(std::shared_ptr<node> node, std::shared_ptr<resolverResult>& result)
 {
-  std::shared_ptr<resolverResult> result = std::make_shared< resolverResult >();
+  result = std::make_shared< resolverResult >();
   return m_current_scope->follow(node, result);
 }
 

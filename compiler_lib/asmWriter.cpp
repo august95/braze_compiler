@@ -7,7 +7,7 @@ asmWriter::asmWriter()
 {
 }
 
-void asmWriter::asmPush(std::string ins)
+void asmWriter::asmGen(std::string ins)
 {
 
   fprintf(stdout, ins.c_str());
@@ -19,7 +19,7 @@ void asmWriter::asmPush(std::string ins)
   }
 }
 
-void asmWriter::asmPushArgs(const char* ins, va_list args)
+void asmWriter::asmGenArgs(const char* ins, va_list args)
 {
   va_list args2;
   va_copy(args2, args);
@@ -30,6 +30,35 @@ void asmWriter::asmPushArgs(const char* ins, va_list args)
     vfprintf(file, ins, args2);
     fprintf(file, "\n");
   }
+}
+
+void asmWriter::asmGenPushIns(std::string reg)
+{
+  m_stack_monitor.pushElement(PUSHED_VAUE);
+  asmGen("push " + reg);
+}
+
+void asmWriter::asmGenPopIns(std::string reg)
+{
+  m_stack_monitor.popElement(PUSHED_VAUE);
+  asmGen("pop " + reg);
+}
+
+
+void asmWriter::asmGenPushEbp(int stack_subtraction)
+{
+  m_stack_monitor.pushElement(BASE_POINTER);
+  asmGen("push ebp");
+  asmGen("mov ebp, esp");
+  asmGen("sub esp, " + std::to_string(stack_subtraction));
+}
+
+void asmWriter::asmGenPopEbp(int stack_addition)
+{
+  m_stack_monitor.popElement(BASE_POINTER);
+  asmGen("add esp, " + std::to_string(stack_addition));
+  asmGen("pop ebp");
+  asmGen("ret");
 }
 
 int asmWriter::initialize(std::string filename)
