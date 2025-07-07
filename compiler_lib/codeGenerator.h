@@ -16,12 +16,12 @@ enum
 
 /*
 * todo
+* symbol resolver in parser
+* function parameters and fix stack offset
 * pointers
-* function parameters
 * finish operators
 * logical operators
 * check that unsigned logic is correct
-* 
 * controll flow parsing
 * 
 */

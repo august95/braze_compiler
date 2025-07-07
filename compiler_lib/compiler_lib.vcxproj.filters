@@ -21,6 +21,7 @@
     <ClCompile Include="resolverEntity.cpp" />
     <ClCompile Include="resolverResult.cpp" />
     <ClCompile Include="stackMonitor.cpp" />
+    <ClCompile Include="symbolResolver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="asmWriter.h" />
@@ -44,5 +45,6 @@
     <ClInclude Include="resolverEntity.h" />
     <ClInclude Include="resolverResult.h" />
     <ClInclude Include="stackMonitor.h" />
+    <ClInclude Include="symbolResolver.h" />
   </ItemGroup>
 </Project>

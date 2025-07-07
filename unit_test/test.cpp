@@ -7,6 +7,7 @@
 #include <list>
 #include <iostream>
 #include <sstream>
+#define __UNIT_TEST__
 
 #ifdef __LOCAL__
 std::string file_path = "test_files/";
@@ -734,6 +735,7 @@ bool compareLines(std::string file_name, std::string  asm_file) {
 }
 
 
+
 bool compareFiles(std::string target, std::string asm_file)
 {
 	std::ifstream file;
@@ -784,7 +786,6 @@ TEST(codegen, globalVariables) {
 
 
 }
-
 
 TEST(codegen, function) {
 

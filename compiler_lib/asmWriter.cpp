@@ -73,4 +73,9 @@ void asmWriter::close()
     _fcloseall();
 }
 
+std::shared_ptr <datatype> asmWriter::getDatatypeOnStack(int index)
+{
+  return m_stack_monitor.getDatatypeOnStack(index);
+}
+
 

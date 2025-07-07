@@ -6,6 +6,7 @@
 #include "node.h"
 #include "datatype.h"
 #include "scope.h"
+#include "symbolResolver.h"
 #include <list>
 #include <iostream>
 
@@ -66,10 +67,13 @@ private:
 
 
 private:
+	/**/
 	std::list < std::shared_ptr < node > > m_nodes;
 	std::list < std::shared_ptr < token > > m_tokens;
 	std::shared_ptr < scope > m_root_scope;
 	std::shared_ptr < scope > m_last_scope;
+
+	symbolResolver m_symbol_resolver;
 
 	void _assert_(bool condition, std::string message);
 	};

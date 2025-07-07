@@ -60,6 +60,15 @@ int node::getDatatypeSize()
 	return 0;
 }
 
+std::shared_ptr<datatype> node::getDatatype()
+{
+  if (m_node_type == NODE_TYPE_IDENTIFIER)
+  {
+    return m_declaration_node->getDatatype();
+  }
+  return m_datatype;
+}
+
 void node::addStatement(std::shared_ptr<node> statement)
 {
 	//stack size calculation moved to node class, and is performed after all tokens has been parsed!

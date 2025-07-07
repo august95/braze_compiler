@@ -15,9 +15,9 @@ public:
   void asmGenPopIns(std::string reg);
   void asmGenPushEbp(int stack_subtraction);
   void asmGenPopEbp(int stack_addition);
-
   int initialize(std::string filename);
   void close();
+  std::shared_ptr <datatype> getDatatypeOnStack(int index = 0);
 
   stackMonitor m_stack_monitor;
   std::string m_filename;

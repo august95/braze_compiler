@@ -258,21 +258,23 @@ void codeGenerator::generateExpressionArithmetic(std::shared_ptr<node> node_)
   }
   generateExpressionable(left, 0); //pushes to stack
   generateExpressionable(right, 0); // pushes to stack
-  std::shared_ptr<datatype> last_datatype_on_stack = right->getDatatype();
+//  std::shared_ptr<datatype> last_datatype_on_stack = right->getDatatype();
+  std::shared_ptr<datatype> datatype_on_stack = m_asm_writer.getDatatypeOnStack();
   if (node_->getExpressionType() & EXPRESSION_GEN_MATHABLE)
   {
+    std::shared_ptr<datatype> previous_datatype_on_stack = m_asm_writer.getDatatypeOnStack(1);
+
     m_asm_writer.asmGenPopIns("ecx"); //right node
     m_asm_writer.asmGenPopIns("eax"); //left node
 
-    /*
-    FIXME:  operands might be identifiers without datatype. Make the symbol resolver store a pointer to 
-    the node that is identified during parsing
-
-    if (left->getDatatype()->getPointerDepth() > 0 || right->getDatatype()->getPointerDepth() > 0)
+    //FIXME:  operands might be identifiers without datatype. Make the symbol resolver store a pointer to 
+    //the node that is identified during parsing
+    
+    if (datatype_on_stack && previous_datatype_on_stack && (datatype_on_stack->getPointerDepth() > 0 || right->getDatatype()->getPointerDepth() > 0))
     {
+      assert(0);
       //handle pointer access
     }
-    */
 
     //result sent is stored in eax
     generateMath("eax", "ecx", node_->getExpressionType());

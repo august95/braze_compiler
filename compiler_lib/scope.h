@@ -13,6 +13,8 @@ public:
 	void addNode(std::shared_ptr<node> node);
 	std::shared_ptr < scope > getParent() { return m_parent; }
 	bool isRootScope() { return m_is_root_scope; }
+	std::shared_ptr < node > find(std::shared_ptr < node > identifier);
+
 private:
 	int m_flags;
 	size_t m_size;

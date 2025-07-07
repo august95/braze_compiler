@@ -3,7 +3,6 @@
 class resolverResult
 {
 public:
-  resolverResult();
   
   void addEntity(std::shared_ptr < resolverEntity > entity);
   std::shared_ptr < resolverEntity > peekEntity();

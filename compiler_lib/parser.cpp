@@ -177,25 +177,26 @@ void parser::parseExpressionOperatorOrOperand(bool& continue_to_parse_exp)
 
 void parser::parseOperand()
 {
-	std::shared_ptr < token > t = nextToken();
-	std::shared_ptr < node > n;
+	std::shared_ptr < token > token = nextToken();
+	std::shared_ptr < node > node_;
 
-	if (t->isTokenTypeNumber())
+	if (token->isTokenTypeNumber())
 	{
-		n = std::make_shared<node>(nodeType::NODE_TYPE_NUMBER, t->getFilePosition());
-		n->setNumberValue(t->getNumberValue());
+		node_ = std::make_shared<node>(nodeType::NODE_TYPE_NUMBER, token->getFilePosition());
+		node_->setNumberValue(token->getNumberValue());
 	}
-	else if (t->isTokenTypeIdentifier())
+	else if (token->isTokenTypeIdentifier())
 	{
-		n = std::make_shared<node>(nodeType::NODE_TYPE_IDENTIFIER, t->getFilePosition());
-		n->setStringValue(t->getStringValue());
+		node_ = std::make_shared<node>(nodeType::NODE_TYPE_IDENTIFIER, token->getFilePosition());
+		node_->setStringValue(token->getStringValue());
+		node_->setDeclarationNode(m_symbol_resolver.findDeclerationNode(node_));
 	}
-	else if (t->isTokenTypeString())
+	else if (token->isTokenTypeString())
 	{
-		n = std::make_shared<node>(nodeType::NODE_TYPE_STRING, t->getFilePosition());
-		n->setStringValue(t->getStringValue());
+		node_ = std::make_shared<node>(nodeType::NODE_TYPE_STRING, token->getFilePosition());
+		node_->setStringValue(token->getStringValue());
 	}	
-	pushNode(n);	
+	pushNode(node_);	
 }
 
 void parser::parseOperator()
@@ -279,7 +280,7 @@ void parser::parseVariableOrFunction()
 		// unassigned variable int a;
 		_node->setNodeType(nodeType::NODE_TYPE_VARIABLE);
 		_node->setDatatype(datatype);
-		m_last_scope->addNode(_node);
+		m_symbol_resolver.addNodeToCurrentScope(_node);
 	}
 	else if (token->isTokenTypeOperator() && (token->getStringValue() == "="))
 	{
@@ -288,7 +289,7 @@ void parser::parseVariableOrFunction()
 		_node->setDatatype(datatype);
 		parseExpression();
 		_node->setValueNode(popLastNode());
-		m_last_scope->addNode(_node);
+		m_symbol_resolver.addNodeToCurrentScope(_node);
 		nextToken(); //pop off ';'	
 	}
 	else if (token->isTokenTypeOperator() && (token->getStringValue() == "("))
@@ -299,6 +300,7 @@ void parser::parseVariableOrFunction()
 		pushNode(_node); //_node is popped inside parseFunction
 		parseFunction();
 		nextToken(); //pop off '}'
+		m_symbol_resolver.addNodeToCurrentScope(peekLastNode());
 		return; //function node already pushed
 	}
 	else
@@ -329,6 +331,7 @@ void parser::parseFunction()
 void parser::parseBody()
 {
 	newScope();
+	m_symbol_resolver.newScope();
 	//create new scope
 	std::shared_ptr<token> token = nextToken(); // '{'
 	std::list < std::shared_ptr < node > > statements;
@@ -357,6 +360,7 @@ void parser::parseBody()
 		cerror("expected symbol '}' at ending of body", token->getFilePosition());
 	}
 	pushNode(body_node);
+	m_symbol_resolver.finishScope();
 	finishScope();
 }
 

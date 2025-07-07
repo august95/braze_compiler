@@ -133,9 +133,11 @@ public:
 	void setBodyNode(std::shared_ptr < node > body_node) { m_body_node = body_node; }
 	std::shared_ptr < node > getBodyNode() { return m_body_node; }
 	int getBodySize() { return m_body_size; }
+	void setDeclarationNode(std::shared_ptr < node > declaration_node) { m_declaration_node = declaration_node; }
+	std::shared_ptr < node > getDeclarationNode() { return m_declaration_node; }
 
 	void setDatatype(std::shared_ptr < datatype > dtype) { m_datatype = dtype; }
-	std::shared_ptr < datatype > getDatatype() {return m_datatype; }
+	std::shared_ptr < datatype > getDatatype();
 	void setReturnDatatype(std::shared_ptr < datatype > dtype) { m_return_datatype = dtype; }
 	std::shared_ptr < datatype > getReturnDatatype() {return m_return_datatype; }
 	void addStatement(std::shared_ptr<node> statement);
@@ -176,6 +178,9 @@ protected:
 	std::shared_ptr < node > m_body_node;
 	std::shared_ptr < datatype > m_return_datatype;
 	bool m_is_global;
+
+	//used by identifiers
+	std::shared_ptr < node > m_declaration_node;
 
 	nodeType m_node_type;
 	filePosition m_file_position;

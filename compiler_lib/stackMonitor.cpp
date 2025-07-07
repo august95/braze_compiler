@@ -21,3 +21,16 @@ void stackMonitor::popElement(stackElementType type)
   }
 }
 
+std::shared_ptr<datatype> stackMonitor::getDatatypeOnStack(int index)
+{
+  int i = 0;
+  for (auto it = m_stack.rbegin(); it != m_stack.rend(); ++it) {
+    if (i == index)
+    {
+      return (*it)->m_datatype;
+    }
+    i++;
+  }
+  return std::shared_ptr<datatype>();
+}
+

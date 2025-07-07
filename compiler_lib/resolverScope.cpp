@@ -15,19 +15,19 @@ void resolverScope::addScopeEntity(std::shared_ptr < resolverEntity > scope_data
   m_scope_entities.push_back(scope_data);
 }
 
-std::shared_ptr<resolverResult> resolverScope::follow(std::shared_ptr<node> node, std::shared_ptr<resolverResult> result)
+void resolverScope::follow(std::shared_ptr<node> node, std::shared_ptr<resolverResult> result)
 {
   if (node->getNodeType() == NODE_TYPE_VARIABLE)
   {
-    return followName(node, result);
+    followName(node, result);
   }
   else if (node->getNodeType() == NODE_TYPE_IDENTIFIER)
   {
-    return followName(node, result);
+    followName(node, result);
   }
 }
 
-std::shared_ptr<resolverResult> resolverScope::followName(std::shared_ptr<node> node, std::shared_ptr<resolverResult> result)
+void resolverScope::followName(std::shared_ptr<node> node, std::shared_ptr<resolverResult> result)
 {
   for (auto entity : m_scope_entities)
   {
@@ -38,7 +38,7 @@ std::shared_ptr<resolverResult> resolverScope::followName(std::shared_ptr<node> 
       if (STRINGS_EQUAL(entity_s.c_str(), node_s.c_str()))
       {
         result->addEntity(entity);
-        return result;
+        return;
       }
     }
   }
