@@ -18,6 +18,7 @@ datatype::datatype()
 {
 }
 
+
 datatype::datatype(filePosition file_position)
   :m_first(primitiveType::DATA_TYPE_NONE),
   m_second(primitiveType::DATA_TYPE_NONE),
@@ -329,6 +330,19 @@ bool datatype::isKeywordVariableModifier(std::string val)
     STRINGS_EQUAL(val.c_str(), "const") ||
     STRINGS_EQUAL(val.c_str(), "extern") ||
     STRINGS_EQUAL(val.c_str(), "__ignore_typecheck__");
+}
+
+int datatype::Padding(int val, int to)
+{
+  if (to <= 0)
+  {
+    return 0;
+  }
+  if ((val % to) == 0)
+  {
+    return 0;
+  }
+  return to - (val % to) % to;
 }
 
 

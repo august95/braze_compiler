@@ -178,6 +178,7 @@ protected:
 	std::shared_ptr < datatype > m_datatype;
 	bool m_is_global;
 	bool m_is_function_argument;
+	int m_padding;
 
 	//used by: variable nodes and body nodes
 	int m_stack_offset;

@@ -2,7 +2,6 @@
 #include "node.h"
 #include "braze_compiler.h"
 
-
 node::node()
 	:m_body_size(0),
 	m_node_type(nodeType::NODE_TYPE_BLANK),
@@ -13,6 +12,7 @@ node::node()
   m_exp_type(EXPRESSION_FLAG_NONE),
   m_stack_size(0),
   m_stack_addition(4),
+  m_padding(0)
 {
 
 }
@@ -28,6 +28,7 @@ node::node(filePosition file_position)
   m_exp_type(EXPRESSION_FLAG_NONE),
   m_stack_size(0),
   m_stack_addition(4),
+  m_padding(0)
 {
 }
 
@@ -42,6 +43,7 @@ node::node(nodeType node_type, filePosition file_position)
   m_exp_type(EXPRESSION_FLAG_NONE),
   m_stack_size(0),
   m_stack_addition(4),
+  m_padding(0)
 {
 
 }
@@ -97,12 +99,11 @@ void node::calculateStackOffset(int& stack_offset)
 {
 	if (m_node_type == NODE_TYPE_VARIABLE)
 	{
-		stack_offset += m_datatype->getDatatypeSize();
-		setStackOffset(stack_offset);
     if (getIsFunctionArgument())
     {
       stack_offset += m_datatype->getDatatypeSize();
       //make the stack offset alligned to 4 byte
+      stack_offset += datatype::Padding(m_datatype->getDatatypeSize(), DATA_SIZE_DWORD);
       setStackOffset(stack_offset);
       return;
     }
@@ -110,7 +111,9 @@ void node::calculateStackOffset(int& stack_offset)
     {
       stack_offset -= m_datatype->getDatatypeSize();
       //make the stack offset alligned to 4 byte
+      m_padding = datatype::Padding(m_datatype->getDatatypeSize(), DATA_SIZE_DWORD);
       setStackOffset(stack_offset);
+      stack_offset -= m_padding;
       return;
     }
 		
@@ -124,12 +127,9 @@ void node::calculateStackOffset(int& stack_offset)
 
 		for (auto it = m_statements.begin(); it != m_statements.end(); ++it) 
 		{
-			std::shared_ptr<node> current_node = *it;
-			current_node->calculateStackOffset(stack_offset);
 			std::shared_ptr<node> statement_node = *it;
       statement_node->calculateStackOffset(stack_offset);
 		}
-		m_body_size = stack_offset - stack_offset_copy;
 		m_body_size = abs(stack_offset - stack_offset_copy);
     return;
 	}
@@ -141,7 +141,6 @@ void node::calculateStackOffset(int& stack_offset)
 		if (m_body_node)
 		{
 			m_body_node->calculateStackOffset(new_stack_offset);
-			m_body_size = m_body_node->getBodySize();
 			m_stack_size = m_body_node->getBodySize();
 		}
     //positive stack offset for function arguments

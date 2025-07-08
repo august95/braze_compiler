@@ -27,7 +27,6 @@ enum
   DATA_SIZE_DDWORD = 8
 };
 
-
 class datatype
 {
 public:
@@ -63,6 +62,7 @@ public:
 
   static bool IsKeywordDatatype(std::string val);
   static bool isKeywordVariableModifier(std::string val);
+  static int Padding(int val, int to);
 
 private:
 
