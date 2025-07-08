@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "parser.h"
-#include "braze_compiler.h"
-#include "precedenceHandler.h"
+#include "../parser.h"
+#include "../braze_compiler.h"
+#include "../precedenceHandler.h"
 #include <memory>
 
 parser::parser()

@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="test.cpp" />
+    <ClCompile Include="pch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="test_files\lexer\test_lexer_identifiers_symbols.c">
+      <Filter>lexer</Filter>
+    </None>
+    <None Include="test_files\lexer\test_lexer_numbers.c">
+      <Filter>lexer</Filter>
+    </None>
+    <None Include="test_files\lexer\test_lexer_operators.c">
+      <Filter>lexer</Filter>
+    </None>
+    <None Include="test_files\lexer\test_lexer_ordinary_c_file.c">
+      <Filter>lexer</Filter>
+    </None>
+    <None Include="test_files\lexer\test_lexer_quote.c">
+      <Filter>lexer</Filter>
+    </None>
+    <None Include="test_files\lexer\test_lexer_string_and_include_strings.c">
+      <Filter>lexer</Filter>
+    </None>
+    <None Include="test_files\lexer\test_lexer_symbol.c">
+      <Filter>lexer</Filter>
+    </None>
+    <None Include="test_files\codegeneration\test_codegen_function.c">
+      <Filter>codegeneration</Filter>
+    </None>
+    <None Include="test_files\codegeneration\test_codegen_function_arguments.c">
+      <Filter>codegeneration</Filter>
+    </None>
+    <None Include="test_files\codegeneration\test_codegen_function_arguments2.c">
+      <Filter>codegeneration</Filter>
+    </None>
+    <None Include="test_files\codegeneration\test_codegen_function_arguments3.c">
+      <Filter>codegeneration</Filter>
+    </None>
+    <None Include="test_files\codegeneration\test_codegen_global_variables.c">
+      <Filter>codegeneration</Filter>
+    </None>
+    <None Include="test_files\parser\test_parser_function.c">
+      <Filter>parser</Filter>
+    </None>
+    <None Include="test_files\parser\test_parser_function_2.c">
+      <Filter>parser</Filter>
+    </None>
+    <None Include="test_files\parser\test_parser_function_arguments.c">
+      <Filter>parser</Filter>
+    </None>
+    <None Include="test_files\parser\test_parser_global_access_from_function.c">
+      <Filter>parser</Filter>
+    </None>
+    <None Include="test_files\parser\test_parser_keyword.c">
+      <Filter>parser</Filter>
+    </None>
+    <None Include="test_files\parser\test_parser_test.c">
+      <Filter>parser</Filter>
+    </None>
+    <None Include="test_files\parser\test_parser_unary.c">
+      <Filter>parser</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="lexer">
+      <UniqueIdentifier>{baffa09b-93af-4344-9878-037bb53a764d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="parser">
+      <UniqueIdentifier>{833b1d39-e467-43d1-982e-1d6ea801b3dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="codegeneration">
+      <UniqueIdentifier>{91b1686c-69cd-4206-8adb-d0f468f42b14}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

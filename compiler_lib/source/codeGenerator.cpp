@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "codeGenerator.h"
-#include "braze_compiler.h"
-#include "resolverResult.h"
+#include "../codeGenerator.h"
+#include "../braze_compiler.h"
+#include "../resolverResult.h"
 
 #define C_STACK_ALIGNMENT 16
 #define STACK_PUSH_SIZE 4

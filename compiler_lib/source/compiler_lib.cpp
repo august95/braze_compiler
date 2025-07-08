@@ -2,8 +2,8 @@
 //
 
 #include "pch.h"
-#include "framework.h"
-#include "compilerProcess.h"
+#include "../framework.h"
+#include "../compilerProcess.h"
 #include <iostream>
 
 // TODO: This is an example of a library function

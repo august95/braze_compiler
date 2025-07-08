@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "token.h"
+#include "../token.h"
 
 token::token()
 	:m_token_tyoe(TOKEN_TYPE_NONE),

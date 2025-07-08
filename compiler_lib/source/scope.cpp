@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "scope.h"
-#include "braze_compiler.h"
+#include "../scope.h"
+#include "../braze_compiler.h"
 
 scope::scope()
   :m_size(0),

@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "asmWriter.h"
+#include "../asmWriter.h"
 #include <stdarg.h>
 
 asmWriter::asmWriter()
