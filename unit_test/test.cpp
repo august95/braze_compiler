@@ -15,6 +15,48 @@ std::string file_path = "test_files/";
 std::string file_path = "D:/a/braze_compiler/braze_compiler/unit_test/test_files/";
 #endif // __LOCAL__
 
+
+bool compareLines(std::string file_name, std::string  asm_file) {
+	std::istringstream stream1(file_name.c_str());
+	std::istringstream stream2(asm_file.c_str());
+	std::string line1, line2;
+	int lineNumber = 1;
+	bool areEqual = true;
+
+	while (std::getline(stream1, line1) && std::getline(stream2, line2)) {
+		if (stream1.eof() && !stream2.eof()) line1 = "";
+		if (stream2.eof() && !stream1.eof()) line2 = "";
+
+		if (line1 != line2) {
+			std::cout << "Difference at line " << lineNumber << ":\n";
+			std::cout << "  target   : \"" << line1 << "\"\n";
+			std::cout << "  asm_file : \"" << line2 << "\"\n";
+			areEqual = false;
+		}
+		lineNumber++;
+	}
+
+	return areEqual;
+}
+
+
+
+bool compareFiles(std::string target, std::string asm_file)
+{
+	std::ifstream file;
+	file.open(file_path + asm_file);
+	if (!file) {
+		std::cerr << "Failed to open the file.\n";
+	}
+	std::stringstream buffer;
+	buffer << file.rdbuf(); // Read entire file at once
+
+	return compareLines(target, buffer.str());
+}
+
+
+
+
 TEST(lexer, symbols) {
 
 	std::string file_name = "test_lexer_symbol.c";
@@ -633,15 +675,111 @@ TEST(parser, function) {
 	statements.pop_back(); // var_val + 50
 	std::shared_ptr < node > var_a = statements.back();
 	EXPECT_EQ(var_a->getDatatypeSize(), 4); //int var_b;
-	EXPECT_EQ(var_a->getStackOffset(), 8);// int var_b;
+	EXPECT_EQ(var_a->getStackOffset(), -8);// int var_b;
 	statements.pop_back();
 
 	var_a = statements.back();
 	EXPECT_EQ(var_a->getDatatypeSize(), 4); //int var_val;
-	EXPECT_EQ(var_a->getStackOffset(), 4);// int var_val;
+	EXPECT_EQ(var_a->getStackOffset(), -4);// int var_val;
 
 }
 
+TEST(parser, globalAccesFromFunction) {
+
+	std::string file_name = "test_parser_global_access_from_function.c";
+
+
+	//	int main()
+	//	{
+	//	int var_val;
+	//	int var_b = 0;
+	//	var_val + 50;
+	//	}
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.__unit_test_no_code_generation = true;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+
+	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+	std::shared_ptr < node > global = ast.front();
+	ast.pop_front();
+	std::shared_ptr < node > _node = ast.front();
+
+	EXPECT_EQ(_node->getStringValue(), "main");
+	EXPECT_EQ(_node->getBodyNode()->getBodySize(), 8);
+	std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
+	EXPECT_EQ(statements.size(), 3);
+
+	statements.pop_back(); // var_val + 50
+	std::shared_ptr < node > var_b = statements.back();
+	EXPECT_EQ(var_b->getDatatypeSize(), 4); //int var_b;
+	EXPECT_EQ(var_b->getStackOffset(), -8);// int var_b;
+	//testing symbol resolver, needs to find the declaration node for identifiers
+	EXPECT_TRUE(STRINGS_EQUAL(var_b->getValueNode()->getRightNode()->getDeclarationNode()->getStringValue().c_str(), global->getStringValue().c_str())); 
+	statements.pop_back();
+
+	var_b = statements.back();
+	EXPECT_EQ(var_b->getDatatypeSize(), 4); //int var_val;
+	EXPECT_EQ(var_b->getStackOffset(), -4);// int var_val;
+
+}
+
+TEST(parser, functionArgumets) {
+
+	std::string file_name = "test_parser_function_arguments.c";
+
+
+	//	int main(int a , char b)
+	//	{
+	//	int var_val;
+	//	int var_b = 0;
+	//	var_val + 50;
+	//	}
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.__unit_test_no_code_generation = true;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+
+	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+	std::shared_ptr < node > _node = ast.front();
+
+	EXPECT_EQ(_node->getStringValue(), "main");
+
+	std::list < std::shared_ptr < node > > arguments = _node->getFunctionArguments();
+
+	std::shared_ptr < node > a = arguments.back();
+	EXPECT_TRUE(STRINGS_EQUAL(a->getStringValue().c_str(), "b")); //int var_b;
+	EXPECT_EQ(a->getDatatypeSize(), 1); //int var_b;
+	EXPECT_EQ(a->getStackOffset(), 12);// int var_b;
+	arguments.pop_back();
+
+	a = arguments.back();
+	EXPECT_TRUE(STRINGS_EQUAL(a->getStringValue().c_str(), "a")); //int var_b;
+	EXPECT_EQ(a->getDatatypeSize(), 4); //int var_b;
+	EXPECT_EQ(a->getStackOffset(), 8);// int var_b;
+
+
+	EXPECT_EQ(_node->getBodyNode()->getBodySize(), 8);
+	std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
+	EXPECT_EQ(statements.size(), 3);
+
+	statements.pop_back(); // var_val + 50
+	std::shared_ptr < node > var_a = statements.back();
+	EXPECT_EQ(var_a->getDatatypeSize(), 4); //int var_b;
+	EXPECT_EQ(var_a->getStackOffset(), -8);// int var_b;
+	statements.pop_back();
+
+	var_a = statements.back();
+	EXPECT_EQ(var_a->getDatatypeSize(), 4); //int var_val;
+	EXPECT_EQ(var_a->getStackOffset(), -4);// int var_val;
+
+}
 
 
 TEST(parser, functionWithSecondScope) {
@@ -688,7 +826,7 @@ TEST(parser, functionWithSecondScope) {
 
 	std::shared_ptr < node > var_a = statements.back();
 	EXPECT_EQ(var_a->getDatatypeSize(),4); //int var_a;
-	EXPECT_EQ(var_a->getStackOffset(), 4);// int var_a;
+	EXPECT_EQ(var_a->getStackOffset(), -4);// int var_a;
 
 	EXPECT_EQ(nested_body_node->getBodySize(), 8);
 	std::list < std::shared_ptr < node > > nested_statements = nested_body_node->getStatements();
@@ -698,56 +836,16 @@ TEST(parser, functionWithSecondScope) {
 
 
 	EXPECT_EQ(nested_statments.front()->getDatatypeSize(), 4); //int var_val;
-	EXPECT_EQ(nested_statments.front()->getStackOffset(), 8);// int var_val;
+	EXPECT_EQ(nested_statments.front()->getStackOffset(), -8);// int var_val;
 
 	EXPECT_EQ(nested_statments.back()->getDatatypeSize(), 4); //int var_b;
-	EXPECT_EQ(nested_statments.back()->getStackOffset(), 12);// int var_b;
+	EXPECT_EQ(nested_statments.back()->getStackOffset(), -12);// int var_b;
 
 	
 	EXPECT_EQ(var_c->getDatatypeSize(), 4); //int var_c;
-	EXPECT_EQ(var_c->getStackOffset(), 16);// int var_c;
+	EXPECT_EQ(var_c->getStackOffset(), -16);// int var_c;
 }
 
-
-
-
-bool compareLines(std::string file_name, std::string  asm_file) {
-	std::istringstream stream1(file_name.c_str());
-	std::istringstream stream2(asm_file.c_str());
-	std::string line1, line2;
-	int lineNumber = 1;
-	bool areEqual = true;
-
-	while (std::getline(stream1, line1) && std::getline(stream2, line2)) {
-		if (stream1.eof() && !stream2.eof()) line1 = "";
-		if (stream2.eof() && !stream1.eof()) line2 = "";
-
-		if (line1 != line2) {
-			std::cout << "Difference at line " << lineNumber << ":\n";
-			std::cout << "  target   : \"" << line1 << "\"\n";
-			std::cout << "  asm_file : \"" << line2 << "\"\n";
-			areEqual = false;
-		}
-		lineNumber++;
-	}
-
-	return areEqual;
-}
-
-
-
-bool compareFiles(std::string target, std::string asm_file)
-{
-	std::ifstream file;
-	file.open(file_path + asm_file);
-	if (!file) {
-		std::cerr << "Failed to open the file.\n";
-	}
-	std::stringstream buffer;
-	buffer << file.rdbuf(); // Read entire file at once
-
-	return compareLines(target, buffer.str());
-}
 
 
 TEST(codegen, globalVariables) {
@@ -850,6 +948,214 @@ TEST(codegen, function) {
 	
 }
 
+TEST(codegen, functionArguments) {
+
+	//
+	//int var = 0;
+  //
+	//int main(bool c, int d)
+	//{
+	//	bool b = c;
+	//	long a = d;
+	//  int e = 5;
+	//	var = d;
+	//}
+
+
+	std::string target =
+		"section .data\n"
+		//		"; int var\n"
+		"var: dd 0\n"
+		"section .text\n"
+		"global main\n"
+		//		"; main function\n"
+		"main:\n"
+		"push ebp\n"
+		"mov ebp, esp\n"
+		"sub esp, 16\n"
+		"mov eax, [ebp+8]\n"
+		"movsx eax, al\n"
+		"push eax\n"
+		"pop eax\n"
+		"mov byte [ebp-1], al\n"
+		"push dword [ebp+12]\n"
+		"pop eax\n"
+		"mov dword [ebp-8], eax\n"
+		"push dword 5\n"
+		"pop eax\n"
+		"mov dword [ebp-12], eax\n"
+		"push dword [ebp+12]\n"
+		"pop eax\n"
+		"mov dword [var], eax\n"
+		"add esp, 16\n"
+		"pop ebp\n"
+		"ret\n"
+		"section .rodata\n";
+
+
+
+
+	std::string file_name = "test_codegen_function_arguments.c";
+	std::string asm_file = file_name + ".asm";
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+	//	compareFiles(target, asm_file);
+	EXPECT_TRUE(compareFiles(target, asm_file));
+
+}
+
+TEST(codegen, functionArguments2) {
+
+	//int var = 0;
+	//
+	//int main(char c, int d, char e , long f, int g, int h)
+	//{
+	//  char l = c;
+	//  long m = d;
+	//  int r = h;
+	//  int n = 5;
+	//  long o = f;
+	//  char p = e;
+	//  int w = g;
+	//  var = d;
+	//}
+
+
+	std::string target =
+		"section .data\n"
+//		"; int var\n"
+		"var: dd 0\n"
+		"section .text\n"
+		"global main\n"
+//		"; main function\n"
+		"main:\n"
+		"push ebp\n"
+		"mov ebp, esp\n"
+		"sub esp, 32\n"
+		"mov eax, [ebp+8]\n"
+		"movsx eax, al\n"
+		"push eax\n"
+		"pop eax\n"
+		"mov byte [ebp-1], al\n"
+		"push dword [ebp+12]\n"
+		"pop eax\n"
+		"mov dword [ebp-8], eax\n"
+		"push dword [ebp+28]\n"
+		"pop eax\n"
+		"mov dword [ebp-12], eax\n"
+		"push dword 5\n"
+		"pop eax\n"
+		"mov dword [ebp-16], eax\n"
+		"push dword [ebp+20]\n"
+		"pop eax\n"
+		"mov dword [ebp-20], eax\n"
+		"mov eax, [ebp+16]\n"
+		"movsx eax, al\n"
+		"push eax\n"
+		"pop eax\n"
+		"mov byte [ebp-21], al\n"
+		"push dword [ebp+24]\n"
+		"pop eax\n"
+		"mov dword [ebp-28], eax\n"
+		"push dword [ebp+12]\n"
+		"pop eax\n"
+		"mov dword [var], eax\n"
+		"add esp, 32\n"
+		"pop ebp\n"
+		"ret\n"
+		"section .rodata\n";
+
+
+
+
+	std::string file_name = "test_codegen_function_arguments2.c";
+	std::string asm_file = file_name + ".asm";
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+	//	compareFiles(target, asm_file);
+	EXPECT_TRUE(compareFiles(target, asm_file));
+
+}
+
+
+TEST(codegen, functionArguments3) {
+
+	//
+	//int var = 0;
+	//
+	//int main(bool c, int d)
+	//{
+	//	bool b = c;
+	//	long a = d;
+	//  int e = 5;
+	//	var = d;
+	//}
+
+
+
+	std::string target =
+		"section .data\n"
+//		"; int var\n"
+		"var: dd 0\n"
+		"section .text\n"
+		"global main\n"
+//		"; main function\n"
+		"main:\n"
+		"push ebp\n"
+		"mov ebp, esp\n"
+		"sub esp, 16\n"
+		"mov eax, [ebp+8]\n"
+		"movsx eax, al\n"
+		"push eax\n"
+		"pop eax\n"
+		"mov byte [ebp-1], al\n"
+		"push dword [ebp+12]\n"
+		"pop eax\n"
+		"mov dword [ebp-8], eax\n"
+		"push dword 5\n"
+		"pop eax\n"
+		"mov dword [ebp-12], eax\n"
+		"push dword [ebp-12]\n"
+		"pop eax\n"
+		"mov dword [ebp+12], eax\n"
+		"push dword 97\n"
+		"pop eax\n"
+    "mov byte [ebp+16], eax\n"	
+// "mov byte [ebp+16], al\n"
+		"push dword [ebp+12]\n"
+		"pop eax\n"
+		"mov dword [var], eax\n"
+		"push dword 10\n"
+		"pop eax\n"
+		"mov dword [ebp+20], eax\n"
+		"add esp, 16\n"
+		"pop ebp\n"
+		"ret\n"
+		"section .rodata\n";
+
+
+
+
+	std::string file_name = "test_codegen_function_arguments3.c";
+	std::string asm_file = file_name + ".asm";
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+	//	compareFiles(target, asm_file);
+	EXPECT_TRUE(compareFiles(target, asm_file));
+
+}
 
 /*
 
