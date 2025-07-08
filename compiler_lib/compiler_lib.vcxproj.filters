@@ -54,9 +54,6 @@
     <ClCompile Include="source\parser.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\pch.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="source\precedenceHandler.cpp">
       <Filter>source</Filter>
     </ClCompile>
