@@ -27,7 +27,7 @@ jobs:
       run: nuget restore braze_compiler.sln
 
     - name: Build braze_compiler Static Library
-      run: msbuild compiler_lib/compiler_lib.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }}
+      run: msbuild compiler_lib/compiler_lib.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:UsePrecompiledHeader=false /p:Platform=${{ env.PLATFORM }}
 
 #  build-braze_compiler:
 #    runs-on: windows-latest
