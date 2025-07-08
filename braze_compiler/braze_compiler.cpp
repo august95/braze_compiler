@@ -2,7 +2,7 @@
 //
 
 #include <iostream>
-#include "../compiler_lib/compiler_lib.cpp"
+#include "../compiler_lib/source/compiler_lib.cpp"
 #include "../compiler_lib/compilerProcess.h"
 
 
