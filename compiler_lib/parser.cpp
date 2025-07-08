@@ -4,8 +4,6 @@
 #include "precedenceHandler.h"
 #include <memory>
 
-
-
 parser::parser()
 	:m_root_scope(std::make_shared< scope >())
 {
@@ -58,6 +56,9 @@ std::shared_ptr < token > parser::peekToken()
 	{
 		m_tokens.pop_front();
 	}
+	//the loop might have emptied the last token
+	if (m_tokens.empty())
+		return std::make_shared < token >();
 	return m_tokens.front();
 }
 
@@ -276,7 +277,8 @@ void parser::parseVariableOrFunction()
 	}
 	else if (token->isTokenTypeOperator() && (token->getStringValue() == "("))
 	{
-		//parsing function int a(){}                
+		//parsing function int a(){} 
+	
 		_node->setNodeType(nodeType::NODE_TYPE_FUNCTION);
 		_node->setReturnDatatype(datatype);
 		pushNode(_node); //_node is popped inside parseFunction

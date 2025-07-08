@@ -4,6 +4,7 @@
 //A single entity. A collection of tokens will represents all the content inside a source file,
 //but in a format that makes it easier for the parser.
 
+
 enum tokenType
 {
 	TOKEN_TYPE_NONE,
@@ -47,9 +48,9 @@ public:
 
 	//called by the parser
 	bool isTokenTypeNone()			{ return m_token_tyoe == tokenType::TOKEN_TYPE_NONE; }
-	bool isTokenTypeIdentifier()	{ return m_token_tyoe == tokenType::TOKEN_TYPE_IDENTIFIER; }
+	bool isTokenTypeIdentifier(){ return m_token_tyoe == tokenType::TOKEN_TYPE_IDENTIFIER; }
 	bool isTokenTypeKeyword()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_KEYWORD; }
-	bool isTokenTypeOperator()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_OPERATOR; }
+	bool isTokenTypeOperator()	{ return m_token_tyoe == tokenType::TOKEN_TYPE_OPERATOR; }
 	bool isTokenTypeSymbol()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_SYMBOL; }
 	bool isTokenTypeNumber()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_NUMBER; }
 	bool isTokenTypeString()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_STRING; }
