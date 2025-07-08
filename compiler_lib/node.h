@@ -7,6 +7,7 @@
 #include <iostream>
 #include <list>
 
+
 enum nodeType
 {
 	NODE_TYPE_UNDEFINED,
@@ -45,6 +46,7 @@ enum nodeType
 
 enum ExpressionType
 {
+	EXPRESSION_FLAG_NONE = 0b00000000000000000000000000000000,
 	EXPRESSION_FLAG_RIGH_NODE = 0b00000000000000000000000000000001,
 	EXPRESSION_IN_FUNCTION_CALL_ARGUMENTS = 0b00000000000000000000000000000010,
 	EXPRESSION_IN_FUNCTION_CALL_LEFT_OPERAND = 0b00000000000000000000000000000100,
@@ -152,6 +154,10 @@ public:
 	int getStackOffset() { return m_stack_offset; }
 	void generateExpressionFlag();
 	ExpressionType getExpressionType() { return m_exp_type; }
+	void addFunctionArgumentNode(std::shared_ptr < node > node) { m_function_arguemnt.push_back(node); }
+	std::list < std::shared_ptr < node > > getFunctionArguments() { return m_function_arguemnt; }
+	void setIsFunctionArgument(bool is_function_argument) { m_is_function_argument = is_function_argument; }
+	bool getIsFunctionArgument() { return m_is_function_argument; }
 
 	void calculateStackOffset(int& stack_offset);
 
@@ -165,10 +171,16 @@ protected:
 	//for expression nodes
 	std::shared_ptr < node > m_left_node; 
 	std::shared_ptr < node > m_right_node;
+	ExpressionType m_exp_type;
 
 	//used by: variable nodes
 	std::shared_ptr < node > m_value_node;
 	std::shared_ptr < datatype > m_datatype;
+	bool m_is_global;
+	bool m_is_function_argument;
+
+	//used by: variable nodes and body nodes
+	int m_stack_offset;
 
 	//used by: body nodes
 	std::list < std::shared_ptr < node > > m_statements;
@@ -178,16 +190,19 @@ protected:
 	std::shared_ptr < node > m_body_node;
 	std::shared_ptr < datatype > m_return_datatype;
 	bool m_is_global;
+	std::list < std::shared_ptr < node > > m_function_arguemnt;
+	int m_stack_size;
+	//size of ebp and esp, migth be bigger when returning structs
+	int m_stack_addition; 
 
-	//used by identifiers
+	//used by: identifiers
 	std::shared_ptr < node > m_declaration_node;
 
+	//used by: multiple node types
 	nodeType m_node_type;
 	filePosition m_file_position;
 	std::string m_string_value;
 	unsigned long m_number_val;
-	int m_stack_offset;
-	ExpressionType m_exp_type;
 };
 
 

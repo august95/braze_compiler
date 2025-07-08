@@ -61,10 +61,24 @@ void asmWriter::asmGenPopEbp(int stack_addition)
   asmGen("ret");
 }
 
+void asmWriter::asmGenReduceRegister(std::string reg, int size, bool is_signed)
+{
+  if (size != DATA_SIZE_DWORD)
+  {
+    std::string ins = "movsx";
+    if (!is_signed)
+    {
+      ins = "movzx";
+    }
+
+    asmGen(ins + " eax, " + getSubRegister(reg, size));
+  }
+
+}
+
 int asmWriter::initialize(std::string filename)
 {
   m_filename = filename;
-
   return fopen_s(&file, filename.c_str(), "w");
 }
 
@@ -76,6 +90,73 @@ void asmWriter::close()
 std::shared_ptr <datatype> asmWriter::getDatatypeOnStack(int index)
 {
   return m_stack_monitor.getDatatypeOnStack(index);
+}
+
+std::string asmWriter::getSubRegister(std::string reg, int size)
+{
+    std::string sub_register;
+    if (STRINGS_EQUAL(reg.c_str(), "eax"))
+    {
+      if (size == DATA_SIZE_BYTE)
+      {
+        sub_register = "al";
+      }
+      else if (size == DATA_SIZE_WORD)
+      {
+        sub_register = "ax";
+      }
+      else if (size == DATA_SIZE_DWORD)
+      {
+        sub_register = "eax";
+      }
+    }
+    else if (STRINGS_EQUAL(reg.c_str(), "ebx"))
+    {
+      if (size == DATA_SIZE_BYTE)
+      {
+        sub_register = "bl";
+      }
+      else if (size == DATA_SIZE_WORD)
+      {
+        sub_register = "bx";
+      }
+      else if (size == DATA_SIZE_DWORD)
+      {
+        sub_register = "ebx";
+      }
+    }
+    else if (STRINGS_EQUAL(reg.c_str(), "ecx"))
+    {
+      if (size == DATA_SIZE_BYTE)
+      {
+        sub_register = "cl";
+      }
+      else if (size == DATA_SIZE_WORD)
+      {
+        sub_register = "cx";
+      }
+      else if (size == DATA_SIZE_DWORD)
+      {
+        sub_register = "ecx";
+      }
+    }
+    else if (STRINGS_EQUAL(reg.c_str(), "edx"))
+    {
+      if (size == DATA_SIZE_BYTE)
+      {
+        sub_register = "dl";
+      }
+      else if (size == DATA_SIZE_WORD)
+      {
+        sub_register = "dx";
+      }
+      else if (size == DATA_SIZE_DWORD)
+      {
+        sub_register = "edx";
+      }
+    }
+
+  return sub_register;
 }
 
 

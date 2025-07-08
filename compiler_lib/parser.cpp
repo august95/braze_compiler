@@ -61,24 +61,6 @@ std::shared_ptr < token > parser::peekToken()
 	return m_tokens.front();
 }
 
-std::shared_ptr<scope> parser::newScope()
-{
-	std::shared_ptr<scope> _scope = std::make_shared<scope>();
-	_scope->init(m_last_scope);
-	m_last_scope = _scope;
-	return _scope;
-}
-
-void parser::finishScope()
-{
-	if (m_last_scope->isRootScope())
-	{
-		cerror("tried to delete root scope!");
-		assert(0);
-	}
-	m_last_scope = m_last_scope->getParent();
-}
-
 void parser::addNodeToCurrentScope(std::shared_ptr<node> node)
 {
 	m_last_scope->addNode(node);
@@ -314,23 +296,30 @@ void parser::parseVariableOrFunction()
 
 void parser::parseFunction()
 {
-
-	std::shared_ptr<token> token = nextToken(); //pop ')'
-	std::shared_ptr < node > function_node = popLastNode();
+	m_symbol_resolver.newScope(); 
+	std::shared_ptr < node > function_node = peekLastNode();
 	//deal with parameters
+	std::shared_ptr<token> token = peekToken();
+	m_symbol_resolver.newScope();
 	if (token->getCharValue() != ')')
 	{
 		parseFunctionParameters();
 	}
+	else
+	{
+		nextToken(); //pop ')'
+	}
+	popLastNode(); // function node
 	parseBody();
 	std::shared_ptr < node > body_node = popLastNode();
 	function_node->setBodyNode(body_node);
 	pushNode(function_node);	
+	m_symbol_resolver.finishScope();
+	m_symbol_resolver.finishScope();
 }
 
 void parser::parseBody()
 {
-	newScope();
 	m_symbol_resolver.newScope();
 	//create new scope
 	std::shared_ptr<token> token = nextToken(); // '{'
@@ -361,7 +350,6 @@ void parser::parseBody()
 	}
 	pushNode(body_node);
 	m_symbol_resolver.finishScope();
-	finishScope();
 }
 
 void parser::parseStatement()
@@ -395,8 +383,31 @@ void parser::parseStatement()
 
 void parser::parseFunctionParameters()
 {
-	cerror("function parameters is not yet supported by the parser!");
-	assert(0);
+	std::shared_ptr < node > function_node = peekLastNode();
+	std::shared_ptr<token> token = peekToken(); 
+	while (token->getCharValue() != ')')
+	{
+		std::shared_ptr<datatype> datatype = parseDatatype();
+		if (datatype->isStruct() || datatype->isUnion())
+		{
+		}
+		token = nextToken();
+		assert(token->isTokenTypeIdentifier() && "expected variable name or function name");
+		std::shared_ptr < node > _node = std::make_shared < node >(token->getFilePosition());
+		_node->setStringValue(token->getStringValue());
+		_node->setNodeType(NODE_TYPE_VARIABLE);
+		_node->setIsFunctionArgument(true);
+		_node->setDatatype(datatype);
+		function_node->addFunctionArgumentNode(_node);
+		m_symbol_resolver.addNodeToCurrentScope(_node);
+		token = nextToken(); //pop of argument name
+
+		if (STRINGS_EQUAL(token->getStringValue().c_str(), ","))
+		{
+			//token = nextToken();
+		}
+	}
+	
 }
 
 void parser::parseSymbol()

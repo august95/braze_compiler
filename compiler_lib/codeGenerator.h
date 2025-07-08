@@ -13,7 +13,6 @@ enum
   GET_ADDRESS = 0x8
 };
 
-
 /*
 * todo
 * symbol resolver in parser
@@ -37,6 +36,7 @@ public:
   void generateRoot();
   void generateRootNode(std::shared_ptr < node > node);
   void generateFunction(std::shared_ptr < node > node);
+  void generateFunctionParameters(std::shared_ptr < node > node_);
   void generateBody(std::shared_ptr < node > node);
   void generateScope(std::shared_ptr<node> node);
   void generateStatement(std::shared_ptr<node> node);

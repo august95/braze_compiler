@@ -3,22 +3,31 @@
 #include "braze_compiler.h"
 
 
-
 node::node()
 	:m_body_size(0),
 	m_node_type(nodeType::NODE_TYPE_BLANK),
 	m_number_val(0),
-	m_stack_offset(0)
+	m_stack_offset(0),
+  m_is_function_argument(0),
+  m_is_global(0),
+  m_exp_type(EXPRESSION_FLAG_NONE),
+  m_stack_size(0),
+  m_stack_addition(4),
 {
 
 }
 
 node::node(filePosition file_position)
-	:m_file_position(file_position),
+	: m_file_position(file_position),
 	m_node_type(nodeType::NODE_TYPE_BLANK),
 	m_body_size(0),
 	m_number_val(0),
-	m_stack_offset(0)
+	m_stack_offset(0),
+  m_is_function_argument(0),
+  m_is_global(0),
+  m_exp_type(EXPRESSION_FLAG_NONE),
+  m_stack_size(0),
+  m_stack_addition(4),
 {
 }
 
@@ -27,7 +36,12 @@ node::node(nodeType node_type, filePosition file_position)
 	m_file_position(file_position),
 	m_body_size(0),
 	m_number_val(0),
-	m_stack_offset(0)
+	m_stack_offset(0),
+  m_is_function_argument(0),
+  m_is_global(0),
+  m_exp_type(EXPRESSION_FLAG_NONE),
+  m_stack_size(0),
+  m_stack_addition(4),
 {
 
 }
@@ -85,6 +99,21 @@ void node::calculateStackOffset(int& stack_offset)
 	{
 		stack_offset += m_datatype->getDatatypeSize();
 		setStackOffset(stack_offset);
+    if (getIsFunctionArgument())
+    {
+      stack_offset += m_datatype->getDatatypeSize();
+      //make the stack offset alligned to 4 byte
+      setStackOffset(stack_offset);
+      return;
+    }
+    else
+    {
+      stack_offset -= m_datatype->getDatatypeSize();
+      //make the stack offset alligned to 4 byte
+      setStackOffset(stack_offset);
+      return;
+    }
+		
 	}
 	else if (m_node_type == NODE_TYPE_BODY)
 	{
@@ -97,8 +126,12 @@ void node::calculateStackOffset(int& stack_offset)
 		{
 			std::shared_ptr<node> current_node = *it;
 			current_node->calculateStackOffset(stack_offset);
+			std::shared_ptr<node> statement_node = *it;
+      statement_node->calculateStackOffset(stack_offset);
 		}
 		m_body_size = stack_offset - stack_offset_copy;
+		m_body_size = abs(stack_offset - stack_offset_copy);
+    return;
 	}
 	else if (m_node_type == NODE_TYPE_FUNCTION)
 	{
@@ -109,7 +142,20 @@ void node::calculateStackOffset(int& stack_offset)
 		{
 			m_body_node->calculateStackOffset(new_stack_offset);
 			m_body_size = m_body_node->getBodySize();
+			m_stack_size = m_body_node->getBodySize();
 		}
+    //positive stack offset for function arguments
+    //first add stack addition, the size of ebp and esp that comes before the function arguments on the stack
+    // might be increased to 12 if the function returns a struct
+    int argument_stack_offset = m_stack_addition;
+    for (auto it = m_function_arguemnt.begin(); it != m_function_arguemnt.end(); ++it)
+    {
+      std::shared_ptr<node> argument_node = *it;
+      argument_node->calculateStackOffset(argument_stack_offset);
+      //not added to functions stack_size, are pushed to the stack by the caller before "call" instruction
+    }
+    return;
+    
 	}
 
 }

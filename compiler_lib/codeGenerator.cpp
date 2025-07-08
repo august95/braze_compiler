@@ -7,7 +7,6 @@
 #define STACK_PUSH_SIZE 4
 #define C_ALIGN(size) (size % C_STACK_ALIGNMENT) ? size + (C_STACK_ALIGNMENT - (size % C_STACK_ALIGNMENT)) : size
 
-
 codeGenerator::codeGenerator()
 {
 }
@@ -99,9 +98,11 @@ void codeGenerator::generateRootNode(std::shared_ptr<node> node)
     m_asm_writer.asmGen("global " + function_name);
     m_asm_writer.asmGen(function_name + ":");
     m_asm_writer.asmGenPushEbp(C_ALIGN(node->getBodyNode()->getBodySize()));
-    //add function parameters
+    m_resolver.createNewScope(true, false);
+    generateFunctionParameters(node);
     m_resolver.createNewScope(true, false); 
     generateBody(node->getBodyNode());
+    m_resolver.removeScope();
     m_resolver.removeScope();
     m_asm_writer.asmGenPopEbp(C_ALIGN(node->getBodyNode()->getBodySize()));
   }
@@ -111,6 +112,16 @@ void codeGenerator::generateFunction(std::shared_ptr<node> node)
 {
   //deal with forward declaration
   generateRootNode(node);
+}
+
+void codeGenerator::generateFunctionParameters(std::shared_ptr<node> node_)
+{
+  std::list < std::shared_ptr < node > > function_arguemnt = node_->getFunctionArguments();
+  for (auto it = function_arguemnt.begin(); it != function_arguemnt.end(); ++it)
+  {
+    std::shared_ptr<node> argument_node = (*it);
+    std::shared_ptr<resolverEntity> entity = m_resolver.addEntity(argument_node, true);
+  }
 }
 
 void codeGenerator::generateBody(std::shared_ptr<node> node)
@@ -363,6 +374,12 @@ void codeGenerator::generateMemoryAccess(std::shared_ptr<node> node, std::shared
   else if (entity->getNode()->getDatatypeSize() != DATA_SIZE_DWORD)
   {
     //handle other sizes than dword
+    //alignment in memory is always 4 bytes
+    //we need to reduce the number of bytes we are using in the register
+    m_asm_writer.asmGen("mov eax, [" + entity->getResolverEntityData()->getAddress() + "]");
+    m_asm_writer.asmGenReduceRegister("eax", node->getDatatype()->getDatatypeSize(), true);
+    m_asm_writer.asmGenPushIns("eax",node->getDatatype(), node->getStackOffset());
+
   }
   else if (entity->getNode()->getDatatypeSize() == DATA_SIZE_DWORD)
   {
