@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "lexer.h"
-#include "braze_compiler.h"
+#include "../lexer.h"
+#include "../braze_compiler.h"
 #include <iostream>
 #include <assert.h>
 

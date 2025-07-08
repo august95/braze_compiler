@@ -1,29 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="asmWriter.cpp" />
-    <ClCompile Include="codeGenerator.cpp" />
-    <ClCompile Include="compilerProcess.cpp" />
-    <ClCompile Include="compiler_lib.cpp" />
-    <ClCompile Include="datatype.cpp" />
-    <ClCompile Include="filePosition.cpp" />
-    <ClCompile Include="lexer.cpp" />
-    <ClCompile Include="node.cpp" />
-    <ClCompile Include="parser.cpp" />
-    <ClCompile Include="pch.cpp" />
-    <ClCompile Include="precedenceHandler.cpp" />
-    <ClCompile Include="resolver.cpp" />
-    <ClCompile Include="resolverScope.cpp" />
-    <ClCompile Include="scope.cpp" />
-    <ClCompile Include="token.cpp" />
-    <ClCompile Include="resolverScopeData.cpp" />
-    <ClCompile Include="resolverEntityData.cpp" />
-    <ClCompile Include="resolverEntity.cpp" />
-    <ClCompile Include="resolverResult.cpp" />
-    <ClCompile Include="stackMonitor.cpp" />
-    <ClCompile Include="symbolResolver.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="asmWriter.h" />
     <ClInclude Include="braze_compiler.h" />
     <ClInclude Include="codeGenerator.h" />
@@ -34,7 +11,6 @@
     <ClInclude Include="lexer.h" />
     <ClInclude Include="node.h" />
     <ClInclude Include="parser.h" />
-    <ClInclude Include="pch.h" />
     <ClInclude Include="precedenceHandler.h" />
     <ClInclude Include="resolver.h" />
     <ClInclude Include="resolverScope.h" />
@@ -46,5 +22,75 @@
     <ClInclude Include="resolverResult.h" />
     <ClInclude Include="stackMonitor.h" />
     <ClInclude Include="symbolResolver.h" />
+    <ClInclude Include="source\pch.h">
+      <Filter>source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\asmWriter.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\codeGenerator.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\compilerProcess.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\compiler_lib.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\datatype.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\filePosition.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lexer.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\node.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\parser.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\precedenceHandler.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\resolver.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\resolverEntity.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\resolverEntityData.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\resolverResult.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\resolverScope.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\resolverScopeData.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scope.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\stackMonitor.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\symbolResolver.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\token.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{d23c64dd-7d77-47ad-b352-4fe2728ec7b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

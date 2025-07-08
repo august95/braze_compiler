@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "node.h"
-#include "braze_compiler.h"
+#include "../node.h"
+#include "../braze_compiler.h"
 
 node::node()
 	:m_body_size(0),

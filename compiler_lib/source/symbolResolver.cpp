@@ -1,7 +1,7 @@
 #include "pch.h"
 #include <assert.h>
-#include "symbolResolver.h"
-#include "braze_compiler.h"
+#include "../symbolResolver.h"
+#include "../braze_compiler.h"
 
 symbolResolver::symbolResolver()
 	:m_root_scope(std::make_shared< scope >())

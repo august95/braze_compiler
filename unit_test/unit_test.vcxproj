@@ -107,6 +107,63 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <None Include="test_files\codegeneration\test_codegen_function.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\codegeneration\test_codegen_function_arguments.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\codegeneration\test_codegen_function_arguments2.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\codegeneration\test_codegen_function_arguments3.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\codegeneration\test_codegen_global_variables.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\lexer\test_lexer_identifiers_symbols.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\lexer\test_lexer_numbers.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\lexer\test_lexer_operators.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\lexer\test_lexer_ordinary_c_file.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\lexer\test_lexer_quote.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\lexer\test_lexer_string_and_include_strings.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\lexer\test_lexer_symbol.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\parser\test_parser_function.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\parser\test_parser_function_2.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\parser\test_parser_function_arguments.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\parser\test_parser_global_access_from_function.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\parser\test_parser_keyword.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\parser\test_parser_test.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\parser\test_parser_unary.c">
+      <FileType>CppCode</FileType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\compiler_lib\compiler_lib.vcxproj">

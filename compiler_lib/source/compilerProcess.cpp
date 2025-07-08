@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "compilerProcess.h"
-#include "braze_compiler.h"
+#include "../compilerProcess.h"
+#include "../braze_compiler.h"
 #include <cstdio>  // For fopen, fclose, fread, fwrite, etc.
 
 

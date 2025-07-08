@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "../compiler_lib/compiler_lib.cpp"
+#include "../compiler_lib/source/compiler_lib.cpp"
 #include "../compiler_lib/compilerProcess.h"
 #include "../compiler_lib/scope.h"
 #include <string>
@@ -59,7 +59,7 @@ bool compareFiles(std::string target, std::string asm_file)
 
 TEST(lexer, symbols) {
 
-	std::string file_name = "test_lexer_symbol.c";
+	std::string file_name = "lexer/test_lexer_symbol.c";
 	//
 	// File Content
 	//
@@ -108,7 +108,7 @@ TEST(lexer, symbols) {
 
 TEST(lexer, quote) {
 
-	std::string file_name = "test_lexer_quote.c";
+	std::string file_name = "lexer/test_lexer_quote.c";
 	//
 	// File Content
 	//
@@ -155,7 +155,7 @@ TEST(lexer, quote) {
 
 TEST(lexer, stringsAndIncludeStrings) {
 
-	std::string file_name = "test_lexer_string_and_include_strings.c";
+	std::string file_name = "lexer/test_lexer_string_and_include_strings.c";
 	//
 	// File Content
 	//
@@ -215,7 +215,7 @@ TEST(lexer, stringsAndIncludeStrings) {
 
 TEST(lexer, identifierOrKeyword) {
 
-	std::string file_name = "test_lexer_identifiers_symbols.c";
+	std::string file_name = "lexer/test_lexer_identifiers_symbols.c";
 	//
 	// File Content
 	//
@@ -271,7 +271,7 @@ TEST(lexer, identifierOrKeyword) {
 TEST(lexer, operators)
 {
 
-	std::string file_name = "test_lexer_operators.c";
+	std::string file_name = "lexer/test_lexer_operators.c";
 	//
 	// File Content
 	//
@@ -319,7 +319,7 @@ TEST(lexer, operators)
 
 TEST(lexer, numbers) {
 
-  std::string file_name = "test_lexer_numbers.c";
+  std::string file_name = "lexer/test_lexer_numbers.c";
 	//
 	// File Content
 	//
@@ -351,7 +351,7 @@ TEST(lexer, numbers) {
 }
 TEST(lexer, ordinaryCFile) {
 
-	std::string file_name = "test_lexer_ordinary_c_file.c";
+	std::string file_name = "lexer/test_lexer_ordinary_c_file.c";
 	//
 	// File Content
 	//
@@ -581,7 +581,7 @@ TEST(lexer, ordinaryCFile) {
 
 TEST(parser, expression) {
 
-	std::string file_name = "test_parser_test.c";
+	std::string file_name = "parser/test_parser_test.c";
 	//
 	// File Content
 	//
@@ -609,7 +609,7 @@ TEST(parser, expression) {
 
 TEST(parser, keyword) {
 
-	std::string file_name = "test_parser_keyword.c";
+	std::string file_name = "parser/test_parser_keyword.c";
 	//
 	// File Content
 	//
@@ -647,7 +647,7 @@ TEST(parser, keyword) {
 
 TEST(parser, function) {
 
-	std::string file_name = "test_parser_function.c";
+	std::string file_name = "parser/test_parser_function.c";
 
 
 //	int main()
@@ -686,7 +686,7 @@ TEST(parser, function) {
 
 TEST(parser, globalAccesFromFunction) {
 
-	std::string file_name = "test_parser_global_access_from_function.c";
+	std::string file_name = "parser/test_parser_global_access_from_function.c";
 
 
 	//	int main()
@@ -729,7 +729,7 @@ TEST(parser, globalAccesFromFunction) {
 
 TEST(parser, functionArgumets) {
 
-	std::string file_name = "test_parser_function_arguments.c";
+	std::string file_name = "parser/test_parser_function_arguments.c";
 
 
 	//	int main(int a , char b)
@@ -798,7 +798,7 @@ TEST(parser, functionWithSecondScope) {
 // 	int var_c;
 //  }
 //
-	std::string file_name = "test_parser_function_2.c";
+	std::string file_name = "parser/test_parser_function_2.c";
 
 	const int num_of_tokens = 5;
 
@@ -869,7 +869,7 @@ TEST(codegen, globalVariables) {
 		"section .text\n"
 		"section .rodata\n";
 
-	std::string file_name = "test_codegen_global_variables.c";
+	std::string file_name = "codegeneration/test_codegen_global_variables.c";
 	std::string asm_file = file_name + ".asm";
 
 	const int num_of_tokens = 5;
@@ -935,7 +935,7 @@ TEST(codegen, function) {
 
 
 
-	std::string file_name = "test_codegen_function.c";
+	std::string file_name = "codegeneration/test_codegen_function.c";
 	std::string asm_file = file_name + ".asm";
 
 	const int num_of_tokens = 5;
@@ -995,7 +995,7 @@ TEST(codegen, functionArguments) {
 
 
 
-	std::string file_name = "test_codegen_function_arguments.c";
+	std::string file_name = "codegeneration/test_codegen_function_arguments.c";
 	std::string asm_file = file_name + ".asm";
 
 	const int num_of_tokens = 5;
@@ -1072,7 +1072,7 @@ TEST(codegen, functionArguments2) {
 
 
 
-	std::string file_name = "test_codegen_function_arguments2.c";
+	std::string file_name = "codegeneration/test_codegen_function_arguments2.c";
 	std::string asm_file = file_name + ".asm";
 
 	const int num_of_tokens = 5;
@@ -1144,7 +1144,7 @@ TEST(codegen, functionArguments3) {
 
 
 
-	std::string file_name = "test_codegen_function_arguments3.c";
+	std::string file_name = "codegeneration/test_codegen_function_arguments3.c";
 	std::string asm_file = file_name + ".asm";
 
 	const int num_of_tokens = 5;

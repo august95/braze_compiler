@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "resolverEntity.h"
+#include "../resolverEntity.h"
 
 resolverEntity::resolverEntity()
 	:m_type(E_NONE),
