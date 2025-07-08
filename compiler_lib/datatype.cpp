@@ -107,6 +107,10 @@ void datatype::setDataType(std::string data_type)
   {
     primitive_type = primitiveType::DATA_TYPE_UNION;
   }
+  else if (STRINGS_EQUAL(data_type.c_str(), "bool"))
+  {
+    primitive_type = primitiveType::DATA_TYPE_BOOL;
+  }
   else
   {
     cerror("expected primitive data type");
@@ -181,6 +185,9 @@ int datatype::getPrimitiveTypeSize(primitiveType primitive_type)
 
   case primitiveType::DATA_TYPE_DOUBLE:
     size = DATA_SIZE_DWORD;
+    break;
+  case primitiveType::DATA_TYPE_BOOL:
+    size = DATA_SIZE_BYTE;
     break;
 
   case primitiveType::DATA_TYPE_UNKNOWN:
@@ -305,6 +312,7 @@ bool datatype::IsKeywordDatatype(std::string val)
     STRINGS_EQUAL(val.c_str(), "char") ||
     STRINGS_EQUAL(val.c_str(), "int") ||
     STRINGS_EQUAL(val.c_str(), "short") ||
+    STRINGS_EQUAL(val.c_str(), "bool") ||
     STRINGS_EQUAL(val.c_str(), "float") ||
     STRINGS_EQUAL(val.c_str(), "double") ||
     STRINGS_EQUAL(val.c_str(), "long") ||

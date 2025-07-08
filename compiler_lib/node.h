@@ -189,7 +189,6 @@ protected:
 	//used by: function nodes
 	std::shared_ptr < node > m_body_node;
 	std::shared_ptr < datatype > m_return_datatype;
-	bool m_is_global;
 	std::list < std::shared_ptr < node > > m_function_arguemnt;
 	int m_stack_size;
 	//size of ebp and esp, migth be bigger when returning structs
