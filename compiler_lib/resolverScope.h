@@ -22,6 +22,8 @@ public:
   void setStack(bool is_stack) { m_is_stack = is_stack; }
   void follow(std::shared_ptr < node > node, std::shared_ptr<resolverResult> result);
   void followName(std::shared_ptr < node > node, std::shared_ptr<resolverResult> result);
+  void followExpression(std::shared_ptr < node > node, std::shared_ptr<resolverResult> result);
+  void followFunctionCall(std::shared_ptr < node > node_, std::shared_ptr<resolverResult> result);
 private:
   std::shared_ptr <resolverScope> m_next_scope;
   std::shared_ptr <resolverScope> m_prev_scope;

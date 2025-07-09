@@ -50,13 +50,21 @@ void asmWriter::asmGenPushEbp(int stack_subtraction)
   m_stack_monitor.pushElement(BASE_POINTER,0,0);
   asmGen("push ebp");
   asmGen("mov ebp, esp");
-  asmGen("sub esp, " + std::to_string(stack_subtraction));
+  bool has_stack_size = stack_subtraction != 0;
+  if (has_stack_size)
+  {
+    asmGen("sub esp, " + std::to_string(stack_subtraction));
+  }
 }
 
 void asmWriter::asmGenPopEbp(int stack_addition)
 {
   m_stack_monitor.popElement(BASE_POINTER);
-  asmGen("add esp, " + std::to_string(stack_addition));
+  bool has_stack_size = stack_addition != 0;
+  if (has_stack_size)
+  {
+    asmGen("add esp, " + std::to_string(stack_addition));
+  }
   asmGen("pop ebp");
   asmGen("ret");
 }

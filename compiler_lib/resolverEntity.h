@@ -7,7 +7,11 @@
 enum entityType
 {
 	E_NONE,
-	E_FUNCTION
+	E_FUNCTION,
+	E_VARIABLE,
+	E_FUNCTION_CALL,
+	E_POINTER,
+	E_ARRAY
 };	
 class resolverEntity
 {
@@ -22,12 +26,14 @@ public:
 	std::shared_ptr < resolverEntityData > getResolverEntityData() { return m_entity_data; }
 	std::shared_ptr < node > getNode() { return m_node; }
 	void setEntityType(entityType entity_type) { m_type = entity_type; }
+	entityType getEntityType() { return m_type;  }
 	void setGlobalEntity(bool global_entity) { m_is_global = global_entity; }
 	//void setScope(std::shared_ptr < resolverScope> scope) { m_scope = scope; }
 	std::shared_ptr < resolverEntity > getPrev() { return m_prev; }
 	void setPrev(std::shared_ptr < resolverEntity > prev) { m_prev = prev; }
 	std::shared_ptr < resolverEntity > getNext() { return m_next; }
 	void setNext(std::shared_ptr < resolverEntity > next) { m_next = next; }
+	std::shared_ptr < datatype > getDatatype() { return m_datatype; }
 
 //private:
 	int type;

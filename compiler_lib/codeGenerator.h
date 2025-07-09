@@ -15,8 +15,6 @@ enum
 
 /*
 * todo
-* symbol resolver in parser
-* function parameters and fix stack offset
 * pointers
 * finish operators
 * logical operators
@@ -48,6 +46,10 @@ public:
   void generateExpressionArithmetic(std::shared_ptr < node > node_);
   void generateExpressionLogicalArithmetic(std::shared_ptr < node > node);
   bool resolveNodeForValue(std::shared_ptr < node > node);
+  void generateEntityAccess(std::shared_ptr < node > node, std::shared_ptr<resolverResult> result);
+  void generateEntityAccessForEntity(std::shared_ptr<resolverEntity> entity, std::shared_ptr<resolverResult> result);
+  void generateEntityAccessForFunctionCall(std::shared_ptr<resolverEntity> entity, std::shared_ptr<resolverResult> result);
+  void generateEntityAccessStart(std::shared_ptr<resolverEntity> root_entity, std::shared_ptr<resolverResult> result);
   void generateAssignmentExpression(std::shared_ptr < node > node);
   void generateNumber(std::shared_ptr<node> node, int flags);
   void generateIdentifier(std::shared_ptr<node> node);

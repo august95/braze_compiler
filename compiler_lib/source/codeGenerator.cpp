@@ -97,6 +97,8 @@ void codeGenerator::generateRootNode(std::shared_ptr<node> node)
     std::string function_name = node->getStringValue();
     m_asm_writer.asmGen("global " + function_name);
     m_asm_writer.asmGen(function_name + ":");
+
+    bool has_stack_size = C_ALIGN(node->getBodyNode()->getBodySize()) != 0;
     m_asm_writer.asmGenPushEbp(C_ALIGN(node->getBodyNode()->getBodySize()));
     m_resolver.createNewScope(true, false);
     generateFunctionParameters(node);
@@ -307,12 +309,63 @@ bool codeGenerator::resolveNodeForValue(std::shared_ptr<node> node)
   {
     return false;
   }
+  generateEntityAccess(node , result);
+  m_asm_writer.asmGenPopIns("eax");
+  return true;
+}
+
+void codeGenerator::generateEntityAccess(std::shared_ptr<node> node, std::shared_ptr<resolverResult> result)
+{
+  std::shared_ptr<resolverEntity> root_entity = result->getRootEntity();
+  generateEntityAccessStart(root_entity, result);
+
+  while (std::shared_ptr<resolverEntity> entity = result->nextEntity())
+  {
+    generateEntityAccessForEntity(entity, result);
+  }
+}
+
+void codeGenerator::generateEntityAccessForEntity(std::shared_ptr<resolverEntity> entity, std::shared_ptr<resolverResult> result)
+{
+  if (entity->getEntityType() == E_FUNCTION_CALL)
+  {
+    generateEntityAccessForFunctionCall(entity, result);
+  }
+}
+
+void codeGenerator::generateEntityAccessForFunctionCall(std::shared_ptr<resolverEntity> entity, std::shared_ptr<resolverResult> result)
+{
+  //move function address to ecx
+  m_asm_writer.asmGenPopIns("ebx");
+  m_asm_writer.asmGen("mov ecx, ebx");
+  //FIXME: handle funciton arguments
+  //iterate over arguments and call generateExpressionable() to push variables to stack
+  m_asm_writer.asmGen("call ecx");
+  m_asm_writer.asmGenPushIns("eax", entity->getDatatype(), 0);
+
+
+
+}
+
+void codeGenerator::generateEntityAccessStart(std::shared_ptr<resolverEntity> root_entity, std::shared_ptr<resolverResult> result)
+{
+  //if E_POINTER  asm_push_ins_push_with_data("dword [%s]", STACK_FRAME_ELEMENT_TYPE_PUSHED_VALUE, "result_value", 0, &(struct stack_frame_data){.dtype = root_assignment_entity->dtype}, result->base.address);
+
+  if (root_entity->getEntityType() == E_POINTER)
+  {
+    // push dword ptr address
+  }
+  else if (root_entity->getEntityType() == E_FUNCTION)
+  {
+    m_asm_writer.asmGen("lea ebx, [" + result->getRootAddress() + "]");
+    m_asm_writer.asmGenPushIns("ebx", root_entity->getDatatype(), 0);
+  }
+  else if (root_entity->getEntityType() == E_ARRAY)
+  {
+    m_asm_writer.asmGen("mov ebx, [" + result->getRootAddress() + "]");
+    m_asm_writer.asmGenPushIns("ebx", root_entity->getDatatype(), 0);
+  }
   
-  /*
-  add resolver code
-  return true;  
-  */
-  return false;
 }
 
 void codeGenerator::generateAssignmentExpression(std::shared_ptr<node> node)

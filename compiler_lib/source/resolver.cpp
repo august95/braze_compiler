@@ -34,6 +34,7 @@ std::shared_ptr<resolverEntity> resolver::addEntity(std::shared_ptr<node> node, 
     entity->createResolverEntityData();
     entity->addAddress(node, is_local_stack);
     m_current_scope->addScopeEntity(entity);
+    entity->setEntityType(E_VARIABLE);
     //std::cout << "resolver: added variable " << node->getStringValue()<< "  add addess: " << entity->getAddress() << std::endl;
   }
   return entity;
