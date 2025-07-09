@@ -1157,6 +1157,76 @@ TEST(codegen, functionArguments3) {
 
 }
 
+
+TEST(codegen, functionCall) {
+
+//	int test()
+//	{
+//		int a = 0;
+//	}
+//
+//	int main()
+//	{
+//		test();
+//	}
+
+
+
+
+
+
+
+	std::string target =
+		"section .data\n"
+		"section .text\n"
+		"global test\n"
+//		"; test function\n"
+		"test:\n"
+		"push ebp\n"
+		"mov ebp, esp\n"
+		"sub esp, 16\n"
+		"push dword 0\n"
+		"pop eax\n"
+		"mov dword [ebp-4], eax\n"
+		"add esp, 16\n"
+		"pop ebp\n"
+		"ret\n"
+		"global main\n"
+//		"; main function\n"
+		"main:\n"
+		"push ebp\n"
+		"mov ebp, esp\n"
+		"lea ebx, [test]\n"
+		"push ebx\n"
+		"pop ebx\n"
+		"mov ecx, ebx\n"
+		"call ecx\n"
+		"push eax\n"
+		"pop eax\n"
+		/* //fixme adde discard stack
+		"push eax\n"
+		"add esp, 4\n"
+		"pop ebp\n"
+		"ret\n"
+		"section .rodata\n"
+		*/;
+
+
+
+
+	std::string file_name = "codegeneration/test_codegen_function_call.c";
+	std::string asm_file = file_name + ".asm";
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+	//	compareFiles(target, asm_file);
+	EXPECT_TRUE(compareFiles(target, asm_file));
+
+}
+
 /*
 
 TEST(parser, unaryOperator) {

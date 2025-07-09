@@ -184,7 +184,78 @@ void parser::parseOperand()
 
 void parser::parseOperator()
 {
+	std::shared_ptr <token> operatort_token = peekToken();
+	if (STRINGS_EQUAL(operatort_token->getStringValue().c_str(), "("))
+	{
+		parseParenthesesExpressionOrFunctionCall();
+		return;
+	}
+	else if (STRINGS_EQUAL(operatort_token->getStringValue().c_str(), ","))
+	{
+		parseComma();
+		return;
+	}
 	parseNormalExpression();
+
+}
+
+void parser::parseParenthesesExpressionOrFunctionCall()
+{
+	std::shared_ptr <token> token = nextToken();
+	assert(STRINGS_EQUAL(token->getStringValue().c_str(), "("));
+	token = peekToken();
+	if (token->isTokenTypeKeyword())
+	{
+		// (int)
+		//FIXME: handle cast
+	}
+	std::shared_ptr <node> function_call;
+	//true for test(50+30) function call
+	// 50 + (30 + 20 is not capured here because of the operator
+	if (peekLastNode()->isValueNode())
+	{
+		function_call = popLastNode();
+	}
+	std::shared_ptr <node> expression_node;
+	token = peekToken();
+	if (token->isTokenTypeKeyword() && !STRINGS_EQUAL(token->getStringValue().c_str(), ")"))
+	{
+		// we have content between '(' & ')'
+		parseExpression();
+		expression_node = popLastNode();
+	}
+	token = nextToken();
+	assert(token->getCharValue() == ')');
+
+	std::shared_ptr<node> parentheses_node = std::make_shared<node>(NODE_TYPE_EXPRESSION_PARANTHESES, token->getFilePosition());
+	parentheses_node->setParenthesesNode(expression_node);
+	if (function_call)
+	{
+		//having function calls as expression type makes precedence much more easer!!! function calls is recognized by having "()" as op
+		std::shared_ptr<node> node_ = std::make_shared<node>(NODE_TYPE_EXPRESSION, token->getFilePosition());
+		node_->setLeftNode(function_call);
+		node_->setRightNode(parentheses_node);
+		node_->setStringValue("()"); 
+		pushNode(node_);
+	}
+	else
+	{
+		pushNode(parentheses_node);
+	}
+
+	//the expression continues:
+	// 50 + func(50) * 30;
+	// 50 + (30 +20) - 4
+	token = peekToken();
+	if (token->isTokenTypeOperator())
+	{
+		parseExpression();
+	}
+
+}
+
+void parser::parseComma()
+{
 }
 
 void parser::parseNormalExpression()

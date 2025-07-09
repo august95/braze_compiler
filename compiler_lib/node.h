@@ -158,13 +158,15 @@ public:
 	std::list < std::shared_ptr < node > > getFunctionArguments() { return m_function_arguemnt; }
 	void setIsFunctionArgument(bool is_function_argument) { m_is_function_argument = is_function_argument; }
 	bool getIsFunctionArgument() { return m_is_function_argument; }
+	void setParenthesesNode(std::shared_ptr < node > node) { m_parentheses_node = node; }
+	std::shared_ptr < node > getParenthesesNode() { return m_parentheses_node; }
 
 	void calculateStackOffset(int& stack_offset);
 
 
-    bool isArray() { return m_node_type == nodeType::NODE_TYPE_EXPRESSION && m_string_value == "[]"; }
-    bool isAssignmentNode() { return m_node_type == nodeType::NODE_TYPE_EXPRESSION && (m_string_value == "=" || m_string_value == "+=" || m_string_value == "-=" || m_string_value == "/=" || m_string_value == "*="); }
-
+  bool isArray() { return m_node_type == nodeType::NODE_TYPE_EXPRESSION && m_string_value == "[]"; }
+  bool isAssignmentNode() { return m_node_type == nodeType::NODE_TYPE_EXPRESSION && (m_string_value == "=" || m_string_value == "+=" || m_string_value == "-=" || m_string_value == "/=" || m_string_value == "*="); }
+	bool isValueNode() { return m_node_type == NODE_TYPE_IDENTIFIER || m_node_type == NODE_TYPE_NUMBER || m_node_type == NODE_TYPE_UNARY || m_node_type == NODE_TYPE_TENARY || m_node_type == NODE_TYPE_STRING; }
 	void setIsGlobal(bool is_global) { m_is_global = is_global; }	
 	bool getIsGlobal() { return m_is_global; }
 protected:
@@ -197,6 +199,9 @@ protected:
 
 	//used by: identifiers
 	std::shared_ptr < node > m_declaration_node;
+
+	//used by: parentheses node
+	std::shared_ptr < node > m_parentheses_node;
 
 	//used by: multiple node types
 	nodeType m_node_type;
