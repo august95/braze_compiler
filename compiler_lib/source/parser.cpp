@@ -141,7 +141,7 @@ void parser::parseExpressionOperatorOrOperand(bool& continue_to_parse_exp)
 		continue_to_parse_exp = false;
 		return;
 	}
-	if (token->isTokenTypeNumber() || token->isTokenTypeIdentifier())
+	if (token->isTokenTypeNumber() || token->isTokenTypeIdentifier() || token->isTokenTypeString())
 	{
 		continue_to_parse_exp = true;
 		parseOperand();

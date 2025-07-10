@@ -56,7 +56,6 @@ bool compareFiles(std::string target, std::string asm_file)
 
 
 
-
 TEST(lexer, symbols) {
 
 	std::string file_name = "lexer/test_lexer_symbol.c";
@@ -579,6 +578,24 @@ TEST(lexer, ordinaryCFile) {
 
 
 
+TEST(parser, string) {
+
+	std::string file_name = "parser/test_parser_string.c";
+
+	//"test string"
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.__unit_test_no_code_generation = true;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+
+	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+	std::shared_ptr < node > node = ast.front();
+	EXPECT_EQ( node->getStringValue(), "test string");
+}
+
+
 TEST(parser, expression) {
 
 	std::string file_name = "parser/test_parser_test.c";
@@ -596,7 +613,7 @@ TEST(parser, expression) {
 
 	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
 	std::shared_ptr < node > node = ast.front();
-	EXPECT_EQ( node->getStringValue(), "=");
+	EXPECT_EQ(node->getStringValue(), "=");
 	EXPECT_EQ(node->getLeftNode()->getStringValue(), "a");
 	EXPECT_EQ(node->getRightNode()->getStringValue(), "+");
 	EXPECT_EQ(node->getRightNode()->getRightNode()->getNumberValue(), 20);
