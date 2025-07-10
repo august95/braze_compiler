@@ -232,11 +232,9 @@ void parser::parseParenthesesExpressionOrFunctionCall()
 	}
 	std::shared_ptr <node> expression_node;
 	token = peekToken();
-	if (token->isTokenTypeKeyword() && !STRINGS_EQUAL(token->getStringValue().c_str(), ")"))
 	if ( !STRINGS_EQUAL(token->getStringValue().c_str(), ")"))
 	{
 		// we have content between '(' & ')'
-		parseExpression();
 		parseNextToken();
 		expression_node = popLastNode();
 	}
@@ -370,7 +368,6 @@ void parser::parseVariableOrFunction()
 		_node->setReturnDatatype(datatype);
 		pushNode(_node); //_node is popped inside parseFunction
 		parseFunction();
-		nextToken(); //pop off '}'
 
 		m_symbol_resolver.addNodeToCurrentScope(peekLastNode());
 		return; //function node already pushed
@@ -494,6 +491,11 @@ void parser::parseFunctionParameters()
 		{
 		}
 		token = nextToken();
+		if (STRINGS_EQUAL(token->getStringValue().c_str(), "..."))
+		{
+			nextToken(); //pop off ')'
+			return;
+		}
 		assert(token->isTokenTypeIdentifier() && "expected variable name or function name");
 		std::shared_ptr < node > _node = std::make_shared < node >(token->getFilePosition());
 		_node->setStringValue(token->getStringValue());
@@ -506,7 +508,7 @@ void parser::parseFunctionParameters()
 
 		if (STRINGS_EQUAL(token->getStringValue().c_str(), ","))
 		{
-			//token = nextToken();
+//			token = nextToken();
 		}
 	}
 	
@@ -527,10 +529,6 @@ void parser::parseUnary()
 {
 	cerror("parsing of unaries is not yet supported!");
 	assert(0);
-}
-
-void parser::parseString()
-{
 }
 
 std::shared_ptr<datatype> parser::parseDatatype()

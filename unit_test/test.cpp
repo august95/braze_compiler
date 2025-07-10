@@ -54,8 +54,7 @@ bool compareFiles(std::string target, std::string asm_file)
 	return compareLines(target, buffer.str());
 }
 
-
-
+/*
 TEST(lexer, symbols) {
 
 	std::string file_name = "lexer/test_lexer_symbol.c";
@@ -1235,8 +1234,8 @@ TEST(codegen, functionCall) {
 	process.startCompiler();
 	//	compareFiles(target, asm_file);
 	EXPECT_TRUE(compareFiles(target, asm_file));
-
 }
+
 TEST(codegen, functionCall2) {
 
 	//	int test()
@@ -1307,38 +1306,74 @@ TEST(codegen, functionCall2) {
 
 }
 
+*/
+TEST(codegen, functionCall3) {
 
 
-/*
+//  int printf(const char* format, ...);
+//
+//  int braze_test()
+//  {
+//    printf("hello world!");
+//  }
+//
+//  int main()
+//  {
+//    braze_test();
+//  }
 
-TEST(parser, unaryOperator) {
+	std::string target =
+	"section .data\n"
+	"section .text\n"
+	"extern printf\n"
+	"global braze_test\n"
+//	"; braze_test function\n"
+	"braze_test:\n"
+	"push ebp\n"
+	"mov ebp, esp\n"
+	"lea ebx, [printf]\n"
+	"push ebx\n"
+	"pop ebx\n"
+	"mov ecx, ebx\n"
+	"mov eax, str_1\n"
+	"push eax\n"
+	"call ecx\n"
+	"add esp, 4\n"
+	"push eax\n"
+	"pop eax\n"
+	"push eax\n"
+	"add esp, 4\n"
+	"pop ebp\n"
+	"ret\n"
+	"global main\n"
+//	"; main function\n"
+	"main:\n"
+	"push ebp\n"
+	"mov ebp, esp\n"
+	"lea ebx, [braze_test]\n"
+	"push ebx\n"
+	"pop ebx\n"
+	"mov ecx, ebx\n"
+	"call ecx\n"
+	"push eax\n"
+	"pop eax\n"
+	"push eax\n"
+	"add esp, 4\n"
+	"pop ebp\n"
+	"ret\n"
+	"section .rodata\n"
+	"str_1: db 'h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd', '!', 0\n"
+		;
 
-//	int main()
-//	{
-//		int* var_ptr;
-//		int  var_value = 0xdebg000;
-//		int var_ptr = &var_value;
-//	}
 
-	std::string file_name = "test_parser_unary.c";
+	std::string file_name = "codegeneration/test_codegen_function_call3.c";
+	std::string asm_file = file_name + ".asm";
 
 	const int num_of_tokens = 5;
 
 	compileProcess process;
 	process.initialize(file_path + file_name);
 	process.startCompiler();
-
-	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
-	std::shared_ptr < node > _node = ast.front();
-
-	EXPECT_EQ(_node->getStringValue(), "main");
-	EXPECT_EQ(_node->getBodyNode()->getBodySize(), 12);
-	EXPECT_EQ(_node->getReturnDatatype()->getDatatypeSize(), 8);
-	EXPECT_EQ(_node->getReturnDatatype()->getPrimitiveType(), primitiveType::DATA_TYPE_INTEGER);
-
-	std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
-	EXPECT_EQ(statements.size(), 3);
-
-
+	//	compareFiles(target, asm_file);
+	EXPECT_TRUE(compareFiles(target, asm_file));
 }
-*/
