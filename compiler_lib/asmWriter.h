@@ -16,6 +16,7 @@ public:
   void asmGenPopEbp(int stack_addition);
   void asmGenReduceRegister(std::string reg, int size, bool is_signed=false);
   int initialize(std::string filename);
+  void discardUnusedStack();
   void close();
   std::shared_ptr <datatype> getDatatypeOnStack(int index = 0);
 

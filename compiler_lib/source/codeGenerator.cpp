@@ -100,11 +100,14 @@ void codeGenerator::generateRootNode(std::shared_ptr<node> node)
 
     bool has_stack_size = C_ALIGN(node->getBodyNode()->getBodySize()) != 0;
     m_asm_writer.asmGenPushEbp(C_ALIGN(node->getBodyNode()->getBodySize()));
+
     m_resolver.createNewScope(true, false);
     generateFunctionParameters(node);
+    
     m_resolver.createNewScope(true, false); 
     generateBody(node->getBodyNode());
     m_resolver.removeScope();
+   
     m_resolver.removeScope();
     m_asm_writer.asmGenPopEbp(C_ALIGN(node->getBodyNode()->getBodySize()));
   }
@@ -153,16 +156,13 @@ void codeGenerator::generateStatement(std::shared_ptr<node> node)
   if (node->getNodeType() == NODE_TYPE_VARIABLE)
   {
     generateScopedVariable(node);
-    return;
   }
   if (node->getNodeType() == NODE_TYPE_EXPRESSION)
   {
     generateExpNode(node);
-    return;
   }
-  std::cout << "Codegen: statement not yet implemented" << std::endl;
+  m_asm_writer.discardUnusedStack();
 }
-
 
 void codeGenerator::generateGlobalVariable(std::shared_ptr < node > node)
 {
@@ -311,6 +311,7 @@ bool codeGenerator::resolveNodeForValue(std::shared_ptr<node> node)
   }
   generateEntityAccess(node , result);
   m_asm_writer.asmGenPopIns("eax");
+  m_asm_writer.asmGenPushIns("eax", entity->getDatatype(), 0);
   return true;
 }
 

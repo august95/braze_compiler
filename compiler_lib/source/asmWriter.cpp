@@ -90,6 +90,16 @@ int asmWriter::initialize(std::string filename)
   return fopen_s(&file, filename.c_str(), "w");
 }
 
+void asmWriter::discardUnusedStack()
+{
+  int stack_addition = m_stack_monitor.discardUnusedStack();
+  if (stack_addition == 0)
+  {
+    return;
+  }
+  asmGen("add esp, " + std::to_string(stack_addition));
+}
+
 void asmWriter::close()
 {
     _fcloseall();

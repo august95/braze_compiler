@@ -34,3 +34,22 @@ std::shared_ptr<datatype> stackMonitor::getDatatypeOnStack(int index)
   return std::shared_ptr<datatype>();
 }
 
+int stackMonitor::discardUnusedStack()
+{
+  int stack_addition = 0;
+  for (auto it = m_stack.rbegin(); it != m_stack.rend();) {
+    std::shared_ptr<stackElement> element = (*it);
+    if (element->m_element_type != BASE_POINTER)
+    {
+      stack_addition += DATA_SIZE_DWORD;
+      m_stack.pop_back();
+      it = m_stack.rbegin();
+      //fixme: add custom datatsize
+    }
+    else
+    {
+      return stack_addition;
+    }
+  }
+}
+

@@ -34,7 +34,7 @@ public:
 	std::shared_ptr < resolverEntity > getNext() { return m_next; }
 	void setNext(std::shared_ptr < resolverEntity > next) { m_next = next; }
 	std::shared_ptr < datatype > getDatatype() { return m_datatype; }
-
+	void setDatatype(std::shared_ptr < datatype > datatype) { m_datatype = datatype; }
 //private:
 	int type;
 	int flag;

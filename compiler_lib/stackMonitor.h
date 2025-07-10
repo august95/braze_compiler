@@ -19,6 +19,7 @@ public:
   void pushElement(stackElementType type, std::shared_ptr < datatype > datatype, int offset_from_bp);
   void popElement(stackElementType type);
   std::shared_ptr < datatype > getDatatypeOnStack(int index=0);
+  int discardUnusedStack();
 
   struct stackElement
   {
