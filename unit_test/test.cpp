@@ -991,7 +991,7 @@ TEST(codegen, functionArguments) {
 		"mov ebp, esp\n"
 		"sub esp, 16\n"
 		"mov eax, [ebp+8]\n"
-		"movsx eax, al\n"
+		"movzx eax, al\n"
 		"push eax\n"
 		"pop eax\n"
 		"mov byte [ebp-1], al\n"
@@ -1054,7 +1054,7 @@ TEST(codegen, functionArguments2) {
 		"mov ebp, esp\n"
 		"sub esp, 32\n"
 		"mov eax, [ebp+8]\n"
-		"movsx eax, al\n"
+		"movzx eax, al\n"
 		"push eax\n"
 		"pop eax\n"
 		"mov byte [ebp-1], al\n"
@@ -1071,7 +1071,7 @@ TEST(codegen, functionArguments2) {
 		"pop eax\n"
 		"mov dword [ebp-20], eax\n"
 		"mov eax, [ebp+16]\n"
-		"movsx eax, al\n"
+		"movzx eax, al\n"
 		"push eax\n"
 		"pop eax\n"
 		"mov byte [ebp-21], al\n"
@@ -1102,19 +1102,21 @@ TEST(codegen, functionArguments2) {
 
 }
 
-
 TEST(codegen, functionArguments3) {
 
+
+	//  int var = 0;
 	//
-	//int var = 0;
-	//
-	//int main(bool c, int d)
-	//{
-	//	bool b = c;
-	//	long a = d;
-	//  int e = 5;
-	//	var = d;
-	//}
+	//  int main(char c, int d, char x, long y)
+	//  {
+	//    char b = c;
+	//    long a = d;
+	//    int e = 5;
+	//    d = e;
+	//    x = 'a';
+	//    var = d;
+	//    y = 10;
+	//  }
 
 
 
@@ -1130,7 +1132,7 @@ TEST(codegen, functionArguments3) {
 		"mov ebp, esp\n"
 		"sub esp, 16\n"
 		"mov eax, [ebp+8]\n"
-		"movsx eax, al\n"
+		"movzx eax, al\n"
 		"push eax\n"
 		"pop eax\n"
 		"mov byte [ebp-1], al\n"
@@ -1146,7 +1148,7 @@ TEST(codegen, functionArguments3) {
 		"push dword 97\n"
 		"pop eax\n"
     "mov byte [ebp+16], eax\n"	
-// "mov byte [ebp+16], al\n"
+    //"mov byte [ebp+16], al\n"
 		"push dword [ebp+12]\n"
 		"pop eax\n"
 		"mov dword [var], eax\n"
@@ -1187,12 +1189,6 @@ TEST(codegen, functionCall) {
 //		test();
 //	}
 
-
-
-
-
-
-
 	std::string target =
 		"section .data\n"
 		"section .text\n"
@@ -1220,15 +1216,13 @@ TEST(codegen, functionCall) {
 		"call ecx\n"
 		"push eax\n"
 		"pop eax\n"
-		/* //fixme adde discard stack
+		 //fixme adde discard stack
 		"push eax\n"
 		"add esp, 4\n"
 		"pop ebp\n"
 		"ret\n"
 		"section .rodata\n"
-		*/;
-
-
+		;
 
 
 	std::string file_name = "codegeneration/test_codegen_function_call.c";
@@ -1243,6 +1237,77 @@ TEST(codegen, functionCall) {
 	EXPECT_TRUE(compareFiles(target, asm_file));
 
 }
+TEST(codegen, functionCall2) {
+
+	//	int test()
+	//	{
+	//		int a = 0;
+	//	}
+	//
+	//	int main()
+	//	{
+	//		test();
+	//	}
+
+
+	std::string target =
+		"section .data\n"
+		"section .text\n"
+		"global test\n"
+		//		"; test function\n"
+		"test:\n"
+		"push ebp\n"
+		"mov ebp, esp\n"
+		"sub esp, 16\n"
+		"push dword 0\n"
+		"pop eax\n"
+		"mov dword [ebp-4], eax\n"
+		"add esp, 16\n"
+		"pop ebp\n"
+		"ret\n"
+		"global main\n"
+		//		"; main function\n"
+		"main:\n"
+		"push ebp\n"
+		"mov ebp, esp\n"
+		"sub esp, 16\n"
+		"push dword 0\n"
+		"pop eax\n"
+		"mov dword [ebp-4], eax\n"
+		"lea ebx, [test]\n"
+		"push ebx\n"
+		"pop ebx\n"
+		"mov ecx, ebx\n"
+		"call ecx\n"
+		"push eax\n"
+		"pop eax\n"
+		"movzx eax, al\n"
+		//fixme adde discard stack
+		"push eax\n"
+		"add esp, 4\n"
+		"add esp, 16\n"
+		"pop ebp\n"
+		"ret\n"
+		"section .rodata\n"
+		;
+
+
+
+
+	std::string file_name = "codegeneration/test_codegen_function_call2.c";
+	std::string asm_file = file_name + ".asm";
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+	//	compareFiles(target, asm_file);
+	EXPECT_TRUE(compareFiles(target, asm_file));
+
+}
+
+
 
 /*
 

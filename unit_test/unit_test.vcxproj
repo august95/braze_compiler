@@ -110,6 +110,9 @@
     <None Include="test_files\parser\test_parser_string.c">
       <FileType>CppCode</FileType>
     </None>
+    <None Include="test_files\codegeneration\test_codegen_function_call2.c">
+      <FileType>CppCode</FileType>
+    </None>
     <None Include="test_files\codegeneration\test_codegen_function_call.c">
       <FileType>CppCode</FileType>
     </None>
