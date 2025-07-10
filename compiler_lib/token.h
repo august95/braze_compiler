@@ -15,7 +15,8 @@ enum tokenType
 	TOKEN_TYPE_NUMBER,
 	TOKEN_TYPE_STRING,
 	TOKEN_TYPE_COMMENT,
-	TOKEN_TYPE_NEWLINE
+	TOKEN_TYPE_NEWLINE,
+	TOKEN_TYPE_CHAR
 };
 
 class token
@@ -52,9 +53,11 @@ public:
 	bool isTokenTypeKeyword()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_KEYWORD; }
 	bool isTokenTypeOperator()	{ return m_token_tyoe == tokenType::TOKEN_TYPE_OPERATOR; }
 	bool isTokenTypeSymbol()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_SYMBOL; }
-	bool isTokenTypeNumber()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_NUMBER; }
+	//treat char as number
+	bool isTokenTypeNumber()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_NUMBER || m_token_tyoe == tokenType::TOKEN_TYPE_CHAR; }
 	bool isTokenTypeString()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_STRING; }
 	bool isTokenTypeComment()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_COMMENT; }
 	bool isTokenTypeNewLine()		{ return m_token_tyoe == tokenType::TOKEN_TYPE_NEWLINE; }
+	bool isTokenTypeChar()			{ return m_token_tyoe == tokenType::TOKEN_TYPE_CHAR; }
 };
 

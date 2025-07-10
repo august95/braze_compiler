@@ -14,7 +14,8 @@ datatype::datatype()
   m_extern(0),
   m_has_secondary_primitive_type(0),
   m_pointer_depth(0),
-  m_datatype_size(0)
+  m_datatype_size(0),
+  m_r_value(0)
 {
 }
 
@@ -30,7 +31,8 @@ datatype::datatype(filePosition file_position)
   m_has_secondary_primitive_type(0),
   m_pointer_depth(0),
   m_file_position(file_position), 
-  m_datatype_size(0)
+  m_datatype_size(0),
+  m_r_value(0)
 {
 }
 
@@ -79,6 +81,8 @@ void datatype::setDataType(std::string data_type)
   else if (STRINGS_EQUAL(data_type.c_str(), "char"))
   {
     primitive_type = primitiveType::DATA_TYPE_CHAR;
+    m_unsigned = true;
+    m_signed = false;
   }
   else if (STRINGS_EQUAL(data_type.c_str(), "int"))
   {

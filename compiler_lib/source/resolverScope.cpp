@@ -80,6 +80,8 @@ void resolverScope::followFunctionCall(std::shared_ptr<node> node_, std::shared_
   std::shared_ptr < resolverEntity > function_call_entity = std::make_shared < resolverEntity >();
   function_call_entity->setEntityType(E_FUNCTION_CALL);
   result->addEntity(function_call_entity);
+  //add fucntion return datatype to entity function call
+  function_call_entity->setDatatype(function_entity->getDatatype());
   
 }
 

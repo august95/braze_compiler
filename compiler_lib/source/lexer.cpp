@@ -396,7 +396,7 @@ std::shared_ptr < token > lexer::makeQuoteToken()
 	}
 	_assert_(nextChar() == '\'', "expected ending of quote ''");
 
-	return std::make_shared < token >(tokenType::TOKEN_TYPE_NUMBER, getFilePostiion(), c);
+	return std::make_shared < token >(tokenType::TOKEN_TYPE_CHAR, getFilePostiion(), c);
 
 }
 

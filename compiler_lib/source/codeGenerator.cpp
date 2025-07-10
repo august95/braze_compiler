@@ -227,6 +227,8 @@ void codeGenerator::generateExpressionable(std::shared_ptr<node> node, int flags
   }
   else if (node->getNodeType() == NODE_TYPE_NUMBER)
   {
+    //nameless value like '50' without it's own stack offset within the resolver system:  int a = 50;
+    assert(node->getDatatype()->isRValue()); 
     generateNumber(node, flags);
   }
   else if (node->getNodeType() == NODE_TYPE_EXPRESSION)
@@ -311,7 +313,11 @@ bool codeGenerator::resolveNodeForValue(std::shared_ptr<node> node)
   }
   generateEntityAccess(node , result);
   m_asm_writer.asmGenPopIns("eax");
+
+  m_asm_writer.asmGenReduceRegister("eax", entity->getDatatype()->getDatatypeSize(), entity->getDatatype()->isSigned());
   m_asm_writer.asmGenPushIns("eax", entity->getDatatype(), 0);
+
+  
   return true;
 }
 
@@ -431,7 +437,7 @@ void codeGenerator::generateMemoryAccess(std::shared_ptr<node> node, std::shared
     //alignment in memory is always 4 bytes
     //we need to reduce the number of bytes we are using in the register
     m_asm_writer.asmGen("mov eax, [" + entity->getResolverEntityData()->getAddress() + "]");
-    m_asm_writer.asmGenReduceRegister("eax", node->getDatatype()->getDatatypeSize(), true);
+    m_asm_writer.asmGenReduceRegister("eax", node->getDatatype()->getDatatypeSize(), node->getDatatype()->isSigned());
     m_asm_writer.asmGenPushIns("eax",node->getDatatype(), node->getStackOffset());
 
   }

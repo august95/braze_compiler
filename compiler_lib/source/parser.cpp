@@ -163,9 +163,23 @@ void parser::parseOperand()
 	std::shared_ptr < token > token = nextToken();
 	std::shared_ptr < node > node_;
 
-	if (token->isTokenTypeNumber())
+	if (token->isTokenTypeChar())
+	{
+		//we want the char to be handled as a number in expressions and precedence handling, int a[e]; is allowed
+		node_ = std::make_shared<node>(nodeType::NODE_TYPE_NUMBER, token->getFilePosition());
+		std::shared_ptr < datatype > datatype_ = std::make_shared <datatype>(token->getFilePosition());
+		datatype_->setDataType("char");
+		datatype_->setRValue(true);
+		node_->setDatatype(datatype_);
+		node_->setNumberValue(token->getNumberValue());
+	}
+	else if (token->isTokenTypeNumber())
 	{
 		node_ = std::make_shared<node>(nodeType::NODE_TYPE_NUMBER, token->getFilePosition());
+		std::shared_ptr < datatype > datatype_ = std::make_shared <datatype>(token->getFilePosition());
+		datatype_->setDataType("int");
+		datatype_->setRValue(true);
+		node_->setDatatype(datatype_);
 		node_->setNumberValue(token->getNumberValue());
 	}
 	else if (token->isTokenTypeIdentifier())
@@ -498,6 +512,10 @@ void parser::parseUnary()
 {
 	cerror("parsing of unaries is not yet supported!");
 	assert(0);
+}
+
+void parser::parseString()
+{
 }
 
 std::shared_ptr<datatype> parser::parseDatatype()
