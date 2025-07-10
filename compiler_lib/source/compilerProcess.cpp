@@ -15,12 +15,13 @@ void compileProcess::initialize(std::string filename)
 	code_generator.setFileName(filename);
 }
 
-void compileProcess::startCompiler()
+int compileProcess::startCompiler()
 {
 	int ret = lexer.startLexer();
 	if (ret != 0)
 	{
 		cerror("failed to lex file!");
+		return ret;
 	}
 
 	parser.setTokenList(lexer.getTokens());
@@ -28,16 +29,19 @@ void compileProcess::startCompiler()
 	if (ret != 0)
 	{
 		cerror("failed to parse tokens into abstract syntax tree!");
+		return ret;
 	}
 
-	if (__unit_test_no_code_generation) return;
+	if (__unit_test_no_code_generation) return 0;
 
 	code_generator.setAbstractSyntaxTree(parser.getAbstractSyntaxTree());
 	ret = code_generator.startCodeGeneration();
 	if (ret != 0)
 	{
 		cerror("failed to generate code from abstract syntax tree!");
+		return ret;
 	}
+	return ret;
 
 	//TODO: invoke nasm assembler with obj file containing assembly as parameter
 }

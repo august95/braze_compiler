@@ -12,7 +12,7 @@ class compileProcess
 public:
 	compileProcess();
 	void initialize(std::string filename);
-	void startCompiler();
+	int startCompiler();
 
 	//for unit tests
 	std::list < std::shared_ptr < token > > getTokens() { return lexer.getTokens(); }
