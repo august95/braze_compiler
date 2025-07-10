@@ -169,6 +169,8 @@ public:
 	bool isValueNode() { return m_node_type == NODE_TYPE_IDENTIFIER || m_node_type == NODE_TYPE_NUMBER || m_node_type == NODE_TYPE_UNARY || m_node_type == NODE_TYPE_TENARY || m_node_type == NODE_TYPE_STRING; }
 	void setIsGlobal(bool is_global) { m_is_global = is_global; }	
 	bool getIsGlobal() { return m_is_global; }
+	bool isFunctionPrototype() { return m_function_prototype; }
+	void setFunctionPrototype(bool function_prototype) { m_function_prototype = function_prototype;	}
 protected:
 	//for expression nodes
 	std::shared_ptr < node > m_left_node; 
@@ -194,6 +196,7 @@ protected:
 	std::shared_ptr < datatype > m_return_datatype;
 	std::list < std::shared_ptr < node > > m_function_arguemnt;
 	int m_stack_size;
+	bool m_function_prototype;
 	//size of ebp and esp, migth be bigger when returning structs
 	int m_stack_addition; 
 

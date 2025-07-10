@@ -93,23 +93,31 @@ void codeGenerator::generateRootNode(std::shared_ptr<node> node)
 {
   if (node->getNodeType() == NODE_TYPE_FUNCTION)
   {
-    m_resolver.registerFunction(node);
-    std::string function_name = node->getStringValue();
-    m_asm_writer.asmGen("global " + function_name);
-    m_asm_writer.asmGen(function_name + ":");
+      m_resolver.registerFunction(node);
 
-    bool has_stack_size = C_ALIGN(node->getBodyNode()->getBodySize()) != 0;
-    m_asm_writer.asmGenPushEbp(C_ALIGN(node->getBodyNode()->getBodySize()));
+    if (!node->isFunctionPrototype())
+    {
+      std::string function_name = node->getStringValue();
+      m_asm_writer.asmGen("global " + function_name);
+      m_asm_writer.asmGen(function_name + ":");
 
-    m_resolver.createNewScope(true, false);
-    generateFunctionParameters(node);
+      bool has_stack_size = C_ALIGN(node->getBodyNode()->getBodySize()) != 0;
+      m_asm_writer.asmGenPushEbp(C_ALIGN(node->getBodyNode()->getBodySize()));
+
+      m_resolver.createNewScope(true, false);
+      generateFunctionParameters(node);
     
-    m_resolver.createNewScope(true, false); 
-    generateBody(node->getBodyNode());
-    m_resolver.removeScope();
+      m_resolver.createNewScope(true, false); 
+      generateBody(node->getBodyNode());
+      m_resolver.removeScope();
    
-    m_resolver.removeScope();
-    m_asm_writer.asmGenPopEbp(C_ALIGN(node->getBodyNode()->getBodySize()));
+      m_resolver.removeScope();
+      m_asm_writer.asmGenPopEbp(C_ALIGN(node->getBodyNode()->getBodySize()));
+    }
+    else if (node->isFunctionPrototype())
+    {
+      m_asm_writer.asmGen("extern " + node->getStringValue());
+    }
   }
 }
 

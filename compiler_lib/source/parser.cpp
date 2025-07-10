@@ -233,9 +233,11 @@ void parser::parseParenthesesExpressionOrFunctionCall()
 	std::shared_ptr <node> expression_node;
 	token = peekToken();
 	if (token->isTokenTypeKeyword() && !STRINGS_EQUAL(token->getStringValue().c_str(), ")"))
+	if ( !STRINGS_EQUAL(token->getStringValue().c_str(), ")"))
 	{
 		// we have content between '(' & ')'
 		parseExpression();
+		parseNextToken();
 		expression_node = popLastNode();
 	}
 	token = nextToken();
@@ -369,6 +371,7 @@ void parser::parseVariableOrFunction()
 		pushNode(_node); //_node is popped inside parseFunction
 		parseFunction();
 		nextToken(); //pop off '}'
+
 		m_symbol_resolver.addNodeToCurrentScope(peekLastNode());
 		return; //function node already pushed
 	}
@@ -396,11 +399,23 @@ void parser::parseFunction()
 	{
 		nextToken(); //pop ')'
 	}
-	popLastNode(); // function node
-	parseBody();
-	std::shared_ptr < node > body_node = popLastNode();
-	function_node->setBodyNode(body_node);
-	pushNode(function_node);	
+	popLastNode(); // function_node
+	token = peekToken();
+	if (token->isTokenTypeSymbol() && token->getCharValue() == '{')
+	{
+		parseBody();
+		std::shared_ptr < node > body_node = popLastNode();
+		function_node->setBodyNode(body_node);	
+		token = nextToken(); //pop off '}'
+	}
+	else
+	{
+		//pre declaration of function
+		token = nextToken();
+		assert(token->isTokenTypeSymbol() && token->getCharValue() == ';');
+		function_node->setFunctionPrototype(true);
+	}
+	pushNode(function_node);
 	m_symbol_resolver.finishScope();
 	m_symbol_resolver.finishScope();
 }

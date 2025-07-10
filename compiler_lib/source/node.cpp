@@ -12,7 +12,8 @@ node::node()
   m_exp_type(EXPRESSION_FLAG_NONE),
   m_stack_size(0),
   m_stack_addition(4),
-  m_padding(0)
+  m_padding(0),
+  m_function_prototype(0)
 {
 
 }
@@ -28,7 +29,8 @@ node::node(filePosition file_position)
   m_exp_type(EXPRESSION_FLAG_NONE),
   m_stack_size(0),
   m_stack_addition(4),
-  m_padding(0)
+  m_padding(0),
+  m_function_prototype(0)
 {
 }
 
@@ -43,7 +45,8 @@ node::node(nodeType node_type, filePosition file_position)
   m_exp_type(EXPRESSION_FLAG_NONE),
   m_stack_size(0),
   m_stack_addition(4),
-  m_padding(0)
+  m_padding(0),
+  m_function_prototype(0)
 {
 
 }
