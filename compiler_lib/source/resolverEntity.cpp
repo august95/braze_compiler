@@ -18,6 +18,7 @@ resolverEntity::resolverEntity(std::shared_ptr<node> node)
 	type(0),
 	flag(0),
 	offest(0),
+	m_function_call_stack_size(0)
 {
 }
 

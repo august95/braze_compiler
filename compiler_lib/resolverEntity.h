@@ -1,8 +1,10 @@
 #pragma once
 #include <string>
+#include <list>
 #include "resolverEntityData.h"
 //#include "resolverscope.h"
 #include "node.h"
+#include <memory>
 
 enum entityType
 {

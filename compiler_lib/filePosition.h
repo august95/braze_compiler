@@ -2,6 +2,7 @@
 //stores location in a file
 
 #include <string>
+#include <memory>
 
 class filePosition
 {

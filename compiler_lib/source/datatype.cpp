@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "../datatype.h"
-#include <assert.h>
 #include "../braze_compiler.h"
+#include <assert.h>
+#include <cstring>
 
 datatype::datatype()
 

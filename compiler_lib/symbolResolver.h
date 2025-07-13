@@ -1,5 +1,6 @@
 #pragma once
 #include "scope.h"
+#include <memory>
 
 class symbolResolver
 {

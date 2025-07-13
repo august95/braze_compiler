@@ -1,6 +1,6 @@
 #pragma once
 #include "filePosition.h"
-
+#include <memory>
 //A single entity. A collection of tokens will represents all the content inside a source file,
 //but in a format that makes it easier for the parser.
 

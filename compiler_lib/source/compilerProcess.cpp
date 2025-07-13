@@ -11,21 +11,21 @@ compileProcess::compileProcess()
 }
 void compileProcess::initialize(std::string filename)
 {
-	lexer.initialize(filename);
-	code_generator.setFileName(filename);
+	m_lexer.initialize(filename);
+	m_code_generator.setFileName(filename);
 }
 
 int compileProcess::startCompiler()
 {
-	int ret = lexer.startLexer();
+	int ret = m_lexer.startLexer();
 	if (ret != 0)
 	{
 		cerror("failed to lex file!");
 		return ret;
 	}
 
-	parser.setTokenList(lexer.getTokens());
-	ret = parser.startParser();
+	m_parser.setTokenList(m_lexer.getTokens());
+	ret = m_parser.startParser();
 	if (ret != 0)
 	{
 		cerror("failed to parse tokens into abstract syntax tree!");
@@ -34,8 +34,8 @@ int compileProcess::startCompiler()
 
 	if (__unit_test_no_code_generation) return 0;
 
-	code_generator.setAbstractSyntaxTree(parser.getAbstractSyntaxTree());
-	ret = code_generator.startCodeGeneration();
+	m_code_generator.setAbstractSyntaxTree(m_parser.getAbstractSyntaxTree());
+	ret = m_code_generator.startCodeGeneration();
 	if (ret != 0)
 	{
 		cerror("failed to generate code from abstract syntax tree!");

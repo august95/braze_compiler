@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include <list>
+#include <memory>
 
 #include "filePosition.h"
 #include "token.h"

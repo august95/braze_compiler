@@ -1,5 +1,6 @@
 #pragma once
 #include "node.h"
+#include <memory>
 
 const static unsigned int TOTAL_OPERATOR_GROUPS = 14;
 struct expresssionable_op_precedence_group {

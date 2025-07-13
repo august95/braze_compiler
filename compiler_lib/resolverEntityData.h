@@ -2,6 +2,7 @@
 #include "node.h"
 #include "datatype.h"
 #include <string>
+#include <memory>
 
 enum entityDataType
 {

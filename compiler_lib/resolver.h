@@ -5,6 +5,7 @@
 #include "node.h"
 #include <vector>
 #include <iostream>
+#include <memory>
 class resolver
 {
 public:

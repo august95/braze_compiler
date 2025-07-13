@@ -6,6 +6,7 @@
 #include "datatype.h"
 #include <iostream>
 #include <list>
+#include <memory>
 
 
 enum nodeType

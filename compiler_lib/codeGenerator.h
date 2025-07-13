@@ -5,6 +5,7 @@
 #include "asmWriter.h"
 #include "resolver.h"
 #include <unordered_map>
+#include <memory>
 
 enum
 {
@@ -20,7 +21,7 @@ enum
 * finish operators
 * logical operators
 * check that unsigned logic is correct
-* controll flow parsing
+* control flow parsing & generation
 * 
 */
 class codeGenerator

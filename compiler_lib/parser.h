@@ -9,6 +9,7 @@
 #include "symbolResolver.h"
 #include <list>
 #include <iostream>
+#include <memory>
 
 /*
 * FIXME: 

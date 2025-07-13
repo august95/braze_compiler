@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "filePosition.h"
+#include <memory>
 
 enum primitiveType
 {

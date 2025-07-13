@@ -2,6 +2,7 @@
 #include "resolverEntity.h"
 #include <list>
 #include <string>
+#include <memory>
 class resolverResult
 {
 public:

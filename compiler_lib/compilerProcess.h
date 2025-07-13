@@ -5,6 +5,7 @@
 #include "lexer.h"
 #include "parser.h"
 #include "codeGenerator.h"
+#include <memory>
 
 
 class compileProcess
@@ -15,15 +16,15 @@ public:
 	int startCompiler();
 
 	//for unit tests
-	std::list < std::shared_ptr < token > > getTokens() { return lexer.getTokens(); }
-	std::list < std::shared_ptr < node > > getAbstractSyntaxTree() { return parser.getAbstractSyntaxTree(); }
+	std::list < std::shared_ptr < token > > getTokens() { return m_lexer.getTokens(); }
+	std::list < std::shared_ptr < node > > getAbstractSyntaxTree() { return m_parser.getAbstractSyntaxTree(); }
 
 	bool __unit_test_no_code_generation;
 private:
 
-	lexer lexer;
-	parser parser;
-	codeGenerator code_generator;
+	lexer m_lexer;
+	parser m_parser;
+	codeGenerator m_code_generator;
 
 };
 

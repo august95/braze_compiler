@@ -3,6 +3,10 @@
 #include <list>
 #include "datatype.h"
 #include <iostream>
+#include <cstring>
+#include <memory>
+
+
 
 //todo, add more types
 enum stackElementType

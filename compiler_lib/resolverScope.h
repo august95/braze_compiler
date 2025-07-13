@@ -3,6 +3,7 @@
 #include "resolverResult.h"
 #include <iostream>
 #include <list>
+#include <memory>
 
 class resolverScope
 {

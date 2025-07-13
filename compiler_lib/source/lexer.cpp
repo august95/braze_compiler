@@ -3,7 +3,8 @@
 #include "../braze_compiler.h"
 #include <iostream>
 #include <assert.h>
-
+#include <fstream>
+#include <string>
 
 
 #define CASE_NUMERIC \
@@ -103,8 +104,12 @@ void lexer::pushChar(char ch)
 void lexer::initialize(std::string filename)
 {
 	m_filename = filename;
-	m_file.open(m_filename);
 	m_file_position.setFileName(m_filename);
+	m_file.open(m_filename);
+	if (!m_file.is_open()) {
+    std::cerr << "Failed to open file: " << m_filename << std::endl;
+    // Handle error here
+	}	
 }
 
 int lexer::startLexer()

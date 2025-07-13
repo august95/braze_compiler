@@ -98,7 +98,18 @@ void asmWriter::asmGenReduceRegister(std::string reg, int size, bool is_signed)
 int asmWriter::initialize(std::string filename)
 {
   m_filename = filename;
+#if defined(_MSC_VER)
+  //Microsoft Visual Studio Compile
   return fopen_s(&file, filename.c_str(), "w");
+#else
+  //GCC
+  file = fopen(filename.c_str(), "w");
+  if (file == nullptr) {
+    perror("Error opening file");
+    return -1;
+  }
+  return 0;
+#endif
 }
 
 void asmWriter::discardUnusedStack()
@@ -123,7 +134,11 @@ void asmWriter::addStack(int stack_size)
 
 void asmWriter::close()
 {
-    _fcloseall();
+#if defined(_MSC_VER)
+  _fcloseall();
+#else
+  fcloseall();
+#endif
 }
 
 std::shared_ptr <datatype> asmWriter::getDatatypeOnStack(int index)

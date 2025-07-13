@@ -2,6 +2,7 @@
 #include <iostream>
 #include <list>
 #include "node.h"
+#include <memory>
 
 //maybe calculate all scope offsets after parsing in the future?
 class scope
