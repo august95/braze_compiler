@@ -63,3 +63,22 @@ jobs:
 
     - name: Run Unit Tests
       run: D:\a\braze_compiler\braze_compiler\unit_test\x64\Release\unit_test.exe
+
+  make-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4
+
+    - name: Install build tools
+      run: sudo apt-get update && sudo apt-get install -y build-essential && sudo apt-get gcc make gcc-multilib g++-multilib nasm
+
+    - name: Clean build
+      run: make clean
+
+    - name: Build with make
+      run: make
+
+    - name: Compile test file with Braze
+      run: ./bin/braze_compiler
