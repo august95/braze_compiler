@@ -54,7 +54,7 @@ bool compareFiles(std::string target, std::string asm_file)
 	return compareLines(target, buffer.str());
 }
 
-/*
+
 TEST(lexer, symbols) {
 
 	std::string file_name = "lexer/test_lexer_symbol.c";
@@ -1306,7 +1306,6 @@ TEST(codegen, functionCall2) {
 
 }
 
-*/
 TEST(codegen, functionCall3) {
 
 
