@@ -1,0 +1,38 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "WSL Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/mnt/c/repositories/braze_compiler/bin/braze_compiler",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "/mnt/c/repositories/braze_compiler",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build with Makefile",
+            "logging" : {
+                "engineLogging" : true
+            },
+            "pipeTransport": {
+                "debuggerPath": "",
+                "pipeProgram": "C:\\Users\\me403\\AppData\\Local\\Microsoft\\WindowsApps\\bash.exe",
+                "pipeArgs": ["-c", "\"/usr/bin/gdb --interpreter=mi\""],
+                "pipeCwd": ""
+            },
+            "sourceFileMap": {
+                "/mnt/c/repositories/braze_compiler" : "C:/repositories/braze_compiler"
+            }
+        }
+    ]
+}
