@@ -38,3 +38,5 @@
 x64/
 
 
+bin/braze_compiler
+test_file
