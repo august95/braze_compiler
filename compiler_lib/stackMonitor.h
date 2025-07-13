@@ -20,6 +20,7 @@ public:
   void popElement(stackElementType type);
   std::shared_ptr < datatype > getDatatypeOnStack(int index=0);
   int discardUnusedStack();
+  void addStack(int stack_size);
 
   struct stackElement
   {

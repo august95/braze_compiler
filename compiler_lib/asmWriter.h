@@ -3,6 +3,7 @@
 #include <string>
 #include "stackMonitor.h"
 #include "datatype.h"
+#include <memory>
 
 class asmWriter
 {
@@ -18,6 +19,7 @@ public:
   void asmGenReduceRegister(std::string reg, int size, bool is_signed=false);
   int initialize(std::string filename);
   void discardUnusedStack();
+  void addStack(int stack_size);
   void close();
   std::shared_ptr <datatype> getDatatypeOnStack(int index = 0);
 

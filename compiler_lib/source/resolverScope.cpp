@@ -80,8 +80,45 @@ void resolverScope::followFunctionCall(std::shared_ptr<node> node_, std::shared_
   std::shared_ptr < resolverEntity > function_call_entity = std::make_shared < resolverEntity >();
   function_call_entity->setEntityType(E_FUNCTION_CALL);
   result->addEntity(function_call_entity);
-  //add fucntion return datatype to entity function call
+
+  if( node_->getRightNode())
+  {
+    int function_call_stack_size = 0;
+    buildFunctionCallArguments(node_->getRightNode(), function_call_entity, result, function_call_stack_size);
+    function_call_entity->setFunctionCallStacksize(function_call_stack_size);
+  }
   function_call_entity->setDatatype(function_entity->getDatatype());
   
 }
+void resolverScope::buildFunctionCallArguments(std::shared_ptr<node> node_, std::shared_ptr < resolverEntity > function_call_entity, std::shared_ptr<resolverResult> result, int& function_call_stack_size)
+{
+  //we have multiple arguments separated by opertaor node wiht op ",
+  if (!node_)
+  {
+    return;
+  }
+  if (STRINGS_EQUAL(node_->getStringValue().c_str(), ","))
+  {
+    buildFunctionCallArguments(node_->getLeftNode(), function_call_entity, result, function_call_stack_size);
+    buildFunctionCallArguments(node_->getRightNode(), function_call_entity, result, function_call_stack_size);
+  }
+  else if (node_->getNodeType() == NODE_TYPE_EXPRESSION_PARANTHESES)
+  {
+    buildFunctionCallArguments(node_->getParenthesesNode(), function_call_entity, result, function_call_stack_size);
+  }
+  else
+  {
+    function_call_entity->addFunctionArgumnet(node_);
+    int datatype_size = 0;
+    if (node_->getDatatype())
+    {
+      datatype_size = node_->getDatatype()->getDatatypeSize();
+    }
+    else
+    {
+      cerror("function argument dont have a dataype size!!");
+    }
+    function_call_stack_size += (datatype_size + datatype::Padding(datatype_size, DATA_SIZE_DWORD));
+  }
 
+}

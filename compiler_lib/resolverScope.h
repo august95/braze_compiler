@@ -24,6 +24,7 @@ public:
   void followName(std::shared_ptr < node > node, std::shared_ptr<resolverResult> result);
   void followExpression(std::shared_ptr < node > node, std::shared_ptr<resolverResult> result);
   void followFunctionCall(std::shared_ptr < node > node_, std::shared_ptr<resolverResult> result);
+  void buildFunctionCallArguments(std::shared_ptr < node > node_, std::shared_ptr < resolverEntity > function_call_entity, std::shared_ptr<resolverResult> result, int& function_call_stack_size);
 private:
   std::shared_ptr <resolverScope> m_next_scope;
   std::shared_ptr <resolverScope> m_prev_scope;

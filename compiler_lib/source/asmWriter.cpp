@@ -111,6 +111,16 @@ void asmWriter::discardUnusedStack()
   asmGen("add esp, " + std::to_string(stack_addition));
 }
 
+void asmWriter::addStack(int stack_size)
+{
+  if (stack_size == 0)
+  {
+    return;
+  }
+  m_stack_monitor.addStack(stack_size);
+  asmGen("add esp, " + std::to_string(stack_size));
+}
+
 void asmWriter::close()
 {
     _fcloseall();

@@ -274,6 +274,12 @@ void parser::parseParenthesesExpressionOrFunctionCall()
 
 void parser::parseComma()
 {
+	std::shared_ptr <token> operatort_token = nextToken();
+	assert(STRINGS_EQUAL(operatort_token->getStringValue().c_str(), ","));
+	std::shared_ptr < node > left_node = popLastNode();
+	parseExpression();
+	std::shared_ptr < node > right_node = popLastNode();
+	makeExpressionNode(operatort_token->getFilePosition(), ",", left_node, right_node);
 }
 
 void parser::parseNormalExpression()
@@ -406,7 +412,7 @@ void parser::parseFunction()
 	{
 		parseBody();
 		std::shared_ptr < node > body_node = popLastNode();
-		function_node->setBodyNode(body_node);	
+ 		function_node->setBodyNode(body_node);	
 		token = nextToken(); //pop off '}'
 	}
 	else

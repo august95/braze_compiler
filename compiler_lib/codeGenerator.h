@@ -73,6 +73,7 @@ private:
   std::list < std::shared_ptr < node > > m_ast;
   asmWriter m_asm_writer;
   resolver m_resolver;
+  std::unordered_map < std::string, std::string > m_strings;
 
 
 };

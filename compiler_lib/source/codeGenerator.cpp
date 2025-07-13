@@ -31,19 +31,6 @@ void codeGenerator::setFileName(std::string filename)
 
 int codeGenerator::startCodeGeneration()
 {
-  /*
-
-  1. generate root scope
-
-  2. generate data section
-
-  3. generate root
-
-  4. finish scope
-
-  5. generate read only data
-
-  */
 
   initialize();
 
@@ -101,10 +88,14 @@ void codeGenerator::generateRootNode(std::shared_ptr<node> node)
 {
   if (node->getNodeType() == NODE_TYPE_FUNCTION)
   {
-      m_resolver.registerFunction(node);
-
-    if (!node->isFunctionPrototype())
+    m_resolver.registerFunction(node);
+	if (node->isFunctionPrototype())
+	{
+	  m_asm_writer.asmGen("extern " + node->getStringValue());
+	}
+    else
     {
+      //function declaration
       std::string function_name = node->getStringValue();
       m_asm_writer.asmGen("global " + function_name);
       m_asm_writer.asmGen(function_name + ":");
@@ -122,10 +113,7 @@ void codeGenerator::generateRootNode(std::shared_ptr<node> node)
       m_resolver.removeScope();
       m_asm_writer.asmGenPopEbp(C_ALIGN(node->getBodyNode()->getBodySize()));
     }
-    else if (node->isFunctionPrototype())
-    {
-      m_asm_writer.asmGen("extern " + node->getStringValue());
-    }
+
   }
 }
 
@@ -253,7 +241,6 @@ void codeGenerator::generateExpressionable(std::shared_ptr<node> node, int flags
   }
   else if (node->getNodeType() == NODE_TYPE_STRING)
   {
-
     generateString(node);
   }
 
@@ -363,8 +350,16 @@ void codeGenerator::generateEntityAccessForFunctionCall(std::shared_ptr<resolver
   m_asm_writer.asmGenPopIns("ebx");
   m_asm_writer.asmGen("mov ecx, ebx");
   //FIXME: handle funciton arguments
+  std::list < std::shared_ptr < node > > function_arguments = entity->getFunctionArguments();
+  for (auto argument : function_arguments)
+  {
+    generateExpressionable(argument, 0 );
+  }
   //iterate over arguments and call generateExpressionable() to push variables to stack
   m_asm_writer.asmGen("call ecx");
+  
+  m_asm_writer.addStack(entity->getFunctionCallStacksize());
+  //m_asm_writer.
   m_asm_writer.asmGenPushIns("eax", entity->getDatatype(), 0);
 
 
@@ -420,12 +415,6 @@ void codeGenerator::generateAssignmentPart(std::shared_ptr<node> node, std::stri
   std::shared_ptr<resolverEntity> entity = result->peekEntity();
   std::string reg_to_use = "eax";
   std::string mov_type = entity->getNode()->getDatatype()->getDatatypeRegisterSize();
-  if (entity->getNext())
-  {
-    //requires extra accesses
-    assert(0);
-  }
-
   //fixme: add support for asignment of structs!
 
   m_asm_writer.asmGenPopIns("eax");

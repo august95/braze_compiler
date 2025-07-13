@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "../stackMonitor.h"
 #include <assert.h>
+#include "../braze_compiler.h"
 
 stackMonitor::stackMonitor()
 {
@@ -49,6 +50,31 @@ int stackMonitor::discardUnusedStack()
     else
     {
       return stack_addition;
+    }
+  }
+}
+
+void stackMonitor::addStack(int stack_size)
+{
+  int stack_added = 0;
+  for (auto it = m_stack.rbegin(); it != m_stack.rend();) {
+    std::shared_ptr<stackElement> element = (*it);
+    if (element->m_element_type != BASE_POINTER)
+    {
+      stack_added += DATA_SIZE_DWORD;
+      m_stack.pop_back();
+      it = m_stack.rbegin();
+      if (stack_added == stack_size)
+      {
+        return;
+      }
+      //fixme: add custom datatsize
+    }
+    else
+    {
+      cerror("invalid stack after function call clean up!!");
+      return;
+      //assert(0);
     }
   }
 }
