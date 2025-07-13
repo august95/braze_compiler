@@ -236,7 +236,7 @@ void parser::parseParenthesesExpressionOrFunctionCall()
 	}
 	std::shared_ptr <node> expression_node;
 	token = peekToken();
-	if ( !STRINGS_EQUAL(token->getStringValue().c_str(), ")"))
+	if ( token->getCharValue() !=  ')')
 	{
 		// we have content between '(' & ')'
 		parseNextToken();
