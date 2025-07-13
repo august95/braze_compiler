@@ -69,6 +69,17 @@ void asmWriter::asmGenPopEbp(int stack_addition)
   asmGen("ret");
 }
 
+void asmWriter::asmGenNoNewLine(std::string ins)
+{
+
+  fprintf(stdout, ins.c_str());
+  if (file)
+  {
+    fprintf(file, ins.c_str());
+  }
+}
+
+
 void asmWriter::asmGenReduceRegister(std::string reg, int size, bool is_signed)
 {
   if (size != DATA_SIZE_DWORD)

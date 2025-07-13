@@ -191,6 +191,10 @@ void parser::parseOperand()
 	else if (token->isTokenTypeString())
 	{
 		node_ = std::make_shared<node>(nodeType::NODE_TYPE_STRING, token->getFilePosition());
+		std::shared_ptr < datatype > datatype_ = std::make_shared <datatype>(token->getFilePosition());
+		datatype_->setDataType("__internal_only_string__");
+		datatype_->setRValue(true);
+		node_->setDatatype(datatype_);
 		node_->setStringValue(token->getStringValue());
 	}	
 	pushNode(node_);	

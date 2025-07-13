@@ -4,6 +4,7 @@
 #include "scope.h"
 #include "asmWriter.h"
 #include "resolver.h"
+#include <unordered_map>
 
 enum
 {
@@ -32,6 +33,7 @@ public:
   int startCodeGeneration();
   void generateDataSection();
   void generateRoot();
+  void generateReadOnlySection();
   void generateRootNode(std::shared_ptr < node > node);
   void generateFunction(std::shared_ptr < node > node);
   void generateFunctionParameters(std::shared_ptr < node > node_);
@@ -59,6 +61,10 @@ public:
   void generateAssignmentInstructionForOperator(std::string mov_type, std::string address, std::string reg_to_use, std::string _operator);
   void generateMath(std::string reg1, std::string reg2, ExpressionType exp_type, bool is_signed=false);
   void generateCompare(std::string reg1, std::string reg2);
+  void generateWriteStrings();
+  void generateString(std::shared_ptr < node > node);
+  std::string registerString(std::string str);
+  int generateLableCount();
 private:
 
   scope m_root_scope;

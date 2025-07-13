@@ -116,6 +116,16 @@ void datatype::setDataType(std::string data_type)
   {
     primitive_type = primitiveType::DATA_TYPE_BOOL;
   }
+  else if (STRINGS_EQUAL(data_type.c_str(), "__internal_only_string__"))
+  {
+    // R value string dont have any datatype delcaration:
+    //function_call("r_value_string");
+    primitive_type = primitiveType::DATA_TYPE_CHAR;
+    incrementPointerDepth();
+    m_const = true;
+    m_unsigned = true;
+    m_signed = false;
+  }
   else
   {
     cerror("expected primitive data type");

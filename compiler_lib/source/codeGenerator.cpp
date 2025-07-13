@@ -53,6 +53,8 @@ int codeGenerator::startCodeGeneration()
 
   generateRoot();
 
+  generateReadOnlySection();
+
   m_asm_writer.close();
 
 
@@ -87,6 +89,12 @@ void codeGenerator::generateRoot()
       generateFunction(node);
     }
   }
+}
+
+void codeGenerator::generateReadOnlySection()
+{
+  m_asm_writer.asmGen("section .rodata");
+  generateWriteStrings();
 }
 
 void codeGenerator::generateRootNode(std::shared_ptr<node> node)
@@ -246,6 +254,7 @@ void codeGenerator::generateExpressionable(std::shared_ptr<node> node, int flags
   else if (node->getNodeType() == NODE_TYPE_STRING)
   {
 
+    generateString(node);
   }
 
 }
@@ -576,4 +585,44 @@ void codeGenerator::generateMath(std::string reg1, std::string reg2, ExpressionT
 void codeGenerator::generateCompare(std::string reg1, std::string reg2)
 {
   assert(0);
+}
+
+void codeGenerator::generateWriteStrings()
+{
+  for (const auto& pair : m_strings) {
+    std::string str = pair.first;
+    m_asm_writer.asmGenNoNewLine(pair.second + ": db ");
+    for (int i = 0; i < str.size(); i++)
+    {
+      char char_[10];
+      std::snprintf(char_, sizeof(char_), "'%c', ", str.c_str()[i]);
+      m_asm_writer.asmGenNoNewLine(char_);
+    }
+    m_asm_writer.asmGenNoNewLine("0");
+    m_asm_writer.asmGen(""); //new line
+  }
+}
+
+void codeGenerator::generateString(std::shared_ptr<node> node)
+{
+  std::string label = registerString(node->getStringValue());
+  m_asm_writer.asmGen("mov eax, " + label);
+  m_asm_writer.asmGenPushIns("eax",node->getDatatype(), 0);
+}
+
+std::string codeGenerator::registerString(std::string str)
+{
+  if(m_strings.find(str) != m_strings.end())
+  {
+    return m_strings[str];
+  }
+  m_strings[str] = "str_" + std::to_string(generateLableCount());
+  return m_strings[str];
+}
+
+int codeGenerator::generateLableCount()
+{
+  static int count = 0;
+  count++;
+  return count;
 }

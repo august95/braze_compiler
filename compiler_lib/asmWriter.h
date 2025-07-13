@@ -14,6 +14,7 @@ public:
   void asmGenPopIns(std::string reg);
   void asmGenPushEbp(int stack_subtraction);
   void asmGenPopEbp(int stack_addition);
+  void asmGenNoNewLine(std::string ins);
   void asmGenReduceRegister(std::string reg, int size, bool is_signed=false);
   int initialize(std::string filename);
   void discardUnusedStack();
