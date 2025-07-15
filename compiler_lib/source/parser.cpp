@@ -129,6 +129,7 @@ void parser::parseExpression()
 	bool continue_to_parse_exp = false;
 	do 
 	{
+
 		parseExpressionOperatorOrOperand(continue_to_parse_exp);
 	} while (continue_to_parse_exp);
 }
@@ -239,7 +240,7 @@ void parser::parseParenthesesExpressionOrFunctionCall()
 	if ( token->getCharValue() !=  ')')
 	{
 		// we have content between '(' & ')'
-		parseNextToken();
+		parseExpression();
 		expression_node = popLastNode();
 	}
 	token = nextToken();
@@ -279,7 +280,8 @@ void parser::parseComma()
 	std::shared_ptr < node > left_node = popLastNode();
 	parseExpression();
 	std::shared_ptr < node > right_node = popLastNode();
-	makeExpressionNode(operatort_token->getFilePosition(), ",", left_node, right_node);
+	pushNode(makeExpressionNode(operatort_token->getFilePosition(), ",", left_node, right_node));
+
 }
 
 void parser::parseNormalExpression()
@@ -324,6 +326,7 @@ void parser::parseKeyword()
 
 	}
 }
+
 
 void parser::parseGlobalKeyword()
 {
@@ -413,7 +416,6 @@ void parser::parseFunction()
 		parseBody();
 		std::shared_ptr < node > body_node = popLastNode();
  		function_node->setBodyNode(body_node);	
-		token = nextToken(); //pop off '}'
 	}
 	else
 	{
@@ -452,7 +454,7 @@ void parser::parseBody()
 
 	}
 	m_last_scope;
-	token = peekToken(); // '}', parseGlobalKeyword will pop this symbol
+	token = nextToken(); //pop off '}'(); // '}', parseGlobalKeyword will pop this symbol
 	if (!token->isTokenTypeSymbol() || token->getCharValue() != '}')
 	{
 		cerror("expected symbol '}' at ending of body", token->getFilePosition());
@@ -478,7 +480,7 @@ void parser::parseStatement()
 	if (token->isTokenTypeSymbol() && token->getCharValue() == '{')
 	{
 		parseSymbol();
-		nextToken(); //pop off '}'
+		//nextToken(); //pop off '}'
 		//Nested scope, return because ';' is not expected {{}}
 		return;
 	}
