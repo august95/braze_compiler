@@ -417,8 +417,8 @@ void codeGenerator::generateAssignmentPart(std::shared_ptr<node> node, std::stri
   std::string reg_to_use = "eax";
   std::string mov_type = entity->getNode()->getDatatype()->getDatatypeRegisterSize();
   //fixme: add support for asignment of structs!
-
-  m_asm_writer.asmGenPopIns("eax");
+  m_asm_writer.asmGenPopIns(reg_to_use);
+  entity->getNode()->getDatatype()->getRegToUse(reg_to_use);
   generateAssignmentInstructionForOperator(mov_type, entity->getAddress(), reg_to_use, operator_);
 }
 
