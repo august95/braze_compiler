@@ -574,7 +574,10 @@ void codeGenerator::generateMath(std::string reg1, std::string reg2, ExpressionT
 
 void codeGenerator::generateCompare(std::string reg1, std::string reg2)
 {
-  assert(0);
+  m_asm_writer.asmGen("cmp eax, " + reg1);
+  m_asm_writer.asmGen(reg2 + " al");
+  m_asm_writer.asmGen("movzx eax, al");
+
 }
 
 void codeGenerator::generateWriteStrings()
