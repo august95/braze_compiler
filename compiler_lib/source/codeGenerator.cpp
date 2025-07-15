@@ -161,7 +161,7 @@ void codeGenerator::generateStatement(std::shared_ptr<node> node)
   {
     generateScopedVariable(node);
   }
-  if (node->getNodeType() == NODE_TYPE_EXPRESSION)
+  else if (node->getNodeType() == NODE_TYPE_EXPRESSION)
   {
     generateExpNode(node);
   }
@@ -351,8 +351,9 @@ void codeGenerator::generateEntityAccessForFunctionCall(std::shared_ptr<resolver
   m_asm_writer.asmGen("mov ecx, ebx");
   //FIXME: handle funciton arguments
   std::list < std::shared_ptr < node > > function_arguments = entity->getFunctionArguments();
-  for (auto argument : function_arguments)
+  for (auto it = function_arguments.rbegin(); it != function_arguments.rend(); ++it)
   {
+    std::shared_ptr < node > argument = (*it);
     generateExpressionable(argument, 0 );
   }
   //iterate over arguments and call generateExpressionable() to push variables to stack

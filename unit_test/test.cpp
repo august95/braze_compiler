@@ -1376,3 +1376,92 @@ TEST(codegen, functionCall3) {
 	//	compareFiles(target, asm_file);
 	EXPECT_TRUE(compareFiles(target, asm_file));
 }
+
+
+TEST(codegen, functionCall4) {
+
+
+	//int function(int a, int b, char c, char d)
+	//{
+	//  int e = a;
+	//  int f = b;
+	//  c = 'c';
+	//}
+	//
+	//int main()
+	//{
+	//  int g = 0;
+	//
+	//  char h = 'r';
+	//  function(g, 20, h, 'f');
+	//}
+
+	std::string target =
+
+		"section .data\n"
+		"section .text\n"
+		"global function\n"
+		"function:\n"
+		"push ebp\n"
+		"mov ebp, esp\n"
+		"sub esp, 16\n"
+		"push dword [ebp+8]\n"
+		"pop eax\n"
+		"mov dword [ebp-4], eax\n"
+		"push dword [ebp+12]\n"
+		"pop eax\n"
+		"mov dword [ebp-8], eax\n"
+		"push dword 99\n"
+		"pop eax\n"
+		"mov byte [ebp+16], al\n"
+		"add esp, 16\n"
+		"pop ebp\n"
+		"ret\n"
+		"global main\n"
+		"main:\n"
+		"push ebp\n"
+		"mov ebp, esp\n"
+		"sub esp, 16\n"
+		"push dword 0\n"
+		"pop eax\n"
+		"mov dword [ebp-4], eax\n"
+		"push dword 114\n"
+		"pop eax\n"
+		"mov byte [ebp-5], al\n"
+		"lea ebx, [function]\n"
+		"push ebx\n"
+		"pop ebx\n"
+		"mov ecx, ebx\n"
+		"push dword 102\n"
+		"mov eax, [ebp-5]\n"
+		"movzx eax, al\n"
+		"push eax\n"
+		"push dword 20\n"
+		"push dword [ebp-4]\n"
+		"call ecx\n"
+		"add esp, 16\n"
+		"push eax\n"
+		"pop eax\n"
+		"push eax\n"
+		"add esp, 4\n"
+		"add esp, 16\n"
+		"pop ebp\n"
+		"ret\n"
+		"section .rodata\n"
+		;
+
+
+	std::string file_name = "codegeneration/test_codegen_function_call4.c";
+	std::string asm_file = file_name + ".asm";
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+	//	compareFiles(target, asm_file);
+	EXPECT_TRUE(compareFiles(target, asm_file));
+	process.stop();
+
+}
+
