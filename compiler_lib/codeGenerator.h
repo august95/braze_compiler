@@ -41,9 +41,12 @@ public:
   void generateBody(std::shared_ptr < node > node);
   void generateScope(std::shared_ptr<node> node);
   void generateStatement(std::shared_ptr<node> node);
+  void generateStatementFor(std::shared_ptr<node> node);
+  void generateStatementWhile(std::shared_ptr<node> node);
   void generateStatementIf(std::shared_ptr<node> node);
   void generateStatementIf_(std::shared_ptr<node> node, int end_label);
   void generateStatementIfElse(std::shared_ptr<node> node, int end_label);
+  void generateStatementElse(std::shared_ptr<node> node, int end_label);
   void generateGlobalVariable(std::shared_ptr < node > node);
   void generateGlobalVariablePrimitive(std::shared_ptr < node > node);
   void generateScopedVariable(std::shared_ptr < node > node);

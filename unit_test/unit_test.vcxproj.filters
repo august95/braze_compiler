@@ -78,11 +78,32 @@
     <None Include="test_files\codegeneration\test_codegen_function_call3.c">
       <Filter>codegeneration</Filter>
     </None>
+    <None Include="test_files\codegeneration\test_codegen_function_call4.c">
+      <Filter>codegeneration</Filter>
+    </None>
     <None Include="test_files\codegeneration\test_codegen_if_statement.c">
       <Filter>codegeneration</Filter>
     </None>
     <None Include="test_files\parser\test_parser_if_statement.c">
       <Filter>parser</Filter>
+    </None>
+    <None Include="test_files\parser\test_parser_if_else_statement.c">
+      <Filter>parser</Filter>
+    </None>
+    <None Include="test_files\codegeneration\test_codegen_if_else_statement.c">
+      <Filter>codegeneration</Filter>
+    </None>
+    <None Include="test_files\codegeneration\test_codegen_while_statement.c">
+      <Filter>codegeneration</Filter>
+    </None>
+    <None Include="test_files\parser\test_parser_for_statement.c">
+      <Filter>parser</Filter>
+    </None>
+    <None Include="test_files\parser\test_parser_while_statement.c">
+      <Filter>parser</Filter>
+    </None>
+    <None Include="test_files\codegeneration\test_codegen_for_statement.c">
+      <Filter>codegeneration</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

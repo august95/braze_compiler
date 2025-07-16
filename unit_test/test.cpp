@@ -740,6 +740,107 @@ TEST(parser, ifstatement) {
 }
 
 
+
+
+TEST(parser, whilestatement) {
+
+	std::string file_name = "parser/test_parser_while_statement.c";
+
+	//int main()
+	//{
+	//  int a = 5;
+	//  if (a > 10)
+	//  {
+	//    int a = 10;
+	//  }
+	//  else if (a < 10)
+	//  {
+	//    int b = a;
+	//  }
+	//  else
+	//  {
+	//    int c = 3;
+	//  }
+	//}
+
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.__unit_test_no_code_generation = true;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+
+	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+	std::shared_ptr < node > _node = ast.front();
+
+	EXPECT_EQ(_node->getStringValue(), "main");
+	EXPECT_EQ(_node->getBodyNode()->getBodySize(), 4);
+
+	std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
+	EXPECT_EQ(statements.size(), 1);
+
+	std::shared_ptr < node > while_node = statements.back();
+
+	EXPECT_TRUE(while_node->getNodeType() == NODE_TYPE_STATEMENT_WHILE);
+	EXPECT_EQ(while_node->getBodyNode()->getBodySize(), 4);
+	EXPECT_TRUE(while_node->getConditionNode()->getNodeType() == NODE_TYPE_NUMBER);
+	EXPECT_TRUE(while_node->getConditionNode()->getNumberValue() == 1);
+
+	process.stop();
+}
+
+TEST(parser, forstatement) {
+
+	std::string file_name = "parser/test_parser_for_statement.c";
+
+	//int main()
+	//{
+	//  for (int i = 0; i < 10; i = i + 1)
+	//  {
+	//    int a = 5;
+	//  }
+	//}
+
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.__unit_test_no_code_generation = true;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+
+	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+	std::shared_ptr < node > _node = ast.front();
+
+	EXPECT_EQ(_node->getStringValue(), "main");
+	EXPECT_EQ(_node->getBodyNode()->getBodySize(), 8);
+
+	std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
+	EXPECT_EQ(statements.size(), 1);
+
+	std::shared_ptr < node > for_node = statements.back();
+
+	EXPECT_TRUE(for_node->getNodeType() == NODE_TYPE_STATEMENT_FOR);
+	EXPECT_EQ(for_node->getBodyNode()->getBodySize(), 4);
+
+	EXPECT_TRUE(for_node->getConditionNode()->getNodeType() == NODE_TYPE_EXPRESSION);
+	EXPECT_TRUE(STRINGS_EQUAL(for_node->getConditionNode()->getStringValue().c_str(), "<"));
+
+
+	EXPECT_TRUE(for_node->getInitNode()->getNodeType() == NODE_TYPE_VARIABLE);
+	EXPECT_TRUE(STRINGS_EQUAL(for_node->getInitNode()->getStringValue().c_str(), "i"));
+
+	EXPECT_TRUE(for_node->getLoopNode()->getNodeType() == NODE_TYPE_EXPRESSION);
+	EXPECT_TRUE(STRINGS_EQUAL(for_node->getLoopNode()->getStringValue().c_str(), "="));
+
+
+
+	process.stop();
+}
+
+
+
 TEST(parser, globalAccesFromFunction) {
 
 	std::string file_name = "parser/test_parser_global_access_from_function.c";
@@ -1186,8 +1287,7 @@ TEST(codegen, functionArguments3) {
 		"mov dword [ebp+12], eax\n"
 		"push dword 97\n"
 		"pop eax\n"
-    "mov byte [ebp+16], eax\n"	
-    //"mov byte [ebp+16], al\n"
+    "mov byte [ebp+16], al\n"
 		"push dword [ebp+12]\n"
 		"pop eax\n"
 		"mov dword [var], eax\n"
@@ -1504,4 +1604,274 @@ TEST(codegen, functionCall4) {
 	process.stop();
 
 }
+
+TEST(codegen, ifstatement) {
+
+
+	//int main()
+	//{
+	//  if (1)
+	//  {
+	//    int a = 0;
+	//  }
+	//}
+
+	std::string target =
+		"section .data\n"
+		"section .text\n"
+		"global main\n"
+		"main:\n"
+		"push ebp\n"
+		"mov ebp, esp\n"
+		"sub esp, 16\n"
+		"push dword 1\n"
+		"pop eax\n"
+		"cmp eax, 0\n"
+		"je .if_2\n"
+		"push dword 0\n"
+		"pop eax\n"
+		"mov dword [ebp-4], eax\n"
+		"jmp .if_end_1\n"
+		".if_2:\n"
+		".if_end_1:\n"
+		"add esp, 16\n"
+		"pop ebp\n"
+		"ret\n"
+		"section .rodata\n"
+		;
+
+
+	std::string file_name = "codegeneration/test_codegen_if_statement.c";
+	std::string asm_file = file_name + ".asm";
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+	//	compareFiles(target, asm_file);
+	EXPECT_TRUE(compareFiles(target, asm_file));
+	process.stop();
+}
+
+
+
+TEST(codegen, ifelsestatement) {
+
+
+//	main()
+		//{
+		//  int a = 5;
+		//  if (a > 10)
+		//  {
+		//    int a = 10;
+		//  }
+		//  else if (a < 10)
+		//  {
+		//    int b = a;
+		//  }
+		//  else
+		//  {
+		//    int c = 3;
+		//  }
+		//}
+
+	std::string target =
+		"section .data\n"
+		"section .text\n"
+		"global main\n"
+		"main:\n"
+		"push ebp\n"
+		"mov ebp, esp\n"
+		"sub esp, 16\n"
+		"push dword 5\n"
+		"pop eax\n"
+		"mov dword [ebp-4], eax\n"
+		"push dword [ebp-4]\n"
+		"push dword 10\n"
+		"pop ecx\n"
+		"pop eax\n"
+		"cmp eax, ecx\n"
+		"setg al\n"
+		"movzx eax, al\n"
+		"push eax\n"
+		"pop eax\n"
+		"cmp eax, 0\n"
+		"je .if_2\n"
+		"push dword 10\n"
+		"pop eax\n"
+		"mov dword [ebp-8], eax\n"
+		"jmp .if_end_1\n"
+		".if_2:\n"
+		"push dword [ebp-4]\n"
+		"push dword 10\n"
+		"pop ecx\n"
+		"pop eax\n"
+		"cmp eax, ecx\n"
+		"setl al\n"
+		"movzx eax, al\n"
+		"push eax\n"
+		"pop eax\n"
+		"cmp eax, 0\n"
+		"je .if_3\n"
+		"push dword [ebp-4]\n"
+		"pop eax\n"
+		//"mov dword [ebp-8], eax\n"
+		"mov dword [ebp-12], eax\n"
+		"jmp .if_end_1\n"
+		".if_3:\n"
+		"push dword 3\n"
+		"pop eax\n"
+		//"mov dword [ebp-8], eax\n"
+		"mov dword [ebp-16], eax\n"
+		".if_end_1:\n"
+		"add esp, 16\n"
+		"pop ebp\n"
+		"ret\n"
+		"section .rodata\n"
+		;
+
+
+	std::string file_name = "codegeneration/test_codegen_if_else_statement.c";
+	std::string asm_file = file_name + ".asm";
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+	//	compareFiles(target, asm_file);
+	EXPECT_TRUE(compareFiles(target, asm_file));
+
+	process.stop();
+}
+
+
+TEST(codegen, whilestatement) {
+
+//int main()
+//{
+//  while (1)
+//  {
+//    int a = 4;
+//  }
+//}
+	std::string target =
+		"section .data\n"
+		"section .text\n"
+		"global main\n"
+		"main:\n"
+		"push ebp\n"
+		"mov ebp, esp\n"
+		"sub esp, 16\n"
+//		".entry_point_1:\n"
+		".while_start_1:\n"
+		"push dword 1\n"
+		"pop eax\n"
+		"cmp eax, 0\n"
+		"je .while_end_2\n"
+		"push dword 4\n"
+		"pop eax\n"
+		"mov dword [ebp-4], eax\n"
+		"jmp .while_start_1\n"
+		".while_end_2:\n"
+//		".exit_point_2:\n"
+		"add esp, 16\n"
+		"pop ebp\n"
+		"ret\n"
+		"section .rodata\n"
+		;
+
+	std::string file_name = "codegeneration/test_codegen_while_statement.c";
+	std::string asm_file = file_name + ".asm";
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+	//	compareFiles(target, asm_file);
+	EXPECT_TRUE(compareFiles(target, asm_file));
+
+	process.stop();
+}
+
+
+
+TEST(codegen, forstatement) {
+
+	//int main()
+	//{
+	//  for (int i = 0; i < 10; i = i + 1)
+	//  {
+	//    int a = 5;
+	//  }
+	//}
+	std::string target =
+		"section .data\n"
+		"section .text\n"
+		"global main\n"
+		"main:\n"
+		"push ebp\n"
+		"mov ebp, esp\n"
+		"sub esp, 16\n"
+		"push dword 0\n"
+		"pop eax\n"
+		"mov dword [ebp-4], eax\n"
+		"jmp .for_loop1\n"
+//		".entry_point_3:\n"
+		"push dword [ebp-4]\n"
+		"push dword 1\n"
+		"pop ecx\n"
+		"pop eax\n"
+		"add eax, ecx\n"
+		"push eax\n"
+		"pop eax\n"
+		"mov dword [ebp-4], eax\n"
+		".for_loop1:\n"
+		"push dword [ebp-4]\n"
+		"push dword 10\n"
+		"pop ecx\n"
+		"pop eax\n"
+		"cmp eax, ecx\n"
+		"setl al\n"
+		"movzx eax, al\n"
+		"push eax\n"
+		"pop eax\n"
+		"cmp eax, 0\n"
+		"je .for_loop_end2\n"
+		"push dword 5\n"
+		"pop eax\n"
+		"mov dword [ebp-8], eax\n"
+		"push dword [ebp-4]\n"
+		"push dword 1\n"
+		"pop ecx\n"
+		"pop eax\n"
+		"add eax, ecx\n"
+		"push eax\n"
+		"pop eax\n"
+		"mov dword [ebp-4], eax\n"
+		"jmp .for_loop1\n"
+		".for_loop_end2:\n"
+//		".exit_point_4:\n"
+		"add esp, 16\n"
+		"pop ebp\n"
+		"ret\n"
+		"section .rodata\n"
+		;
+
+	std::string file_name = "codegeneration/test_codegen_for_statement.c";
+	std::string asm_file = file_name + ".asm";
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+	//	compareFiles(target, asm_file);
+	EXPECT_TRUE(compareFiles(target, asm_file));
+
+	process.stop();
+}
+
 

@@ -169,7 +169,71 @@ void codeGenerator::generateStatement(std::shared_ptr<node> node)
   {
     generateStatementIf(node);
   }
+  else if (node->getNodeType() == NODE_TYPE_STATEMENT_WHILE)
+  {
+    generateStatementWhile(node);
+  }
+  else if (node->getNodeType() == NODE_TYPE_STATEMENT_FOR)
+  {
+    generateStatementFor(node);
+  }
   m_asm_writer.discardUnusedStack();
+}
+
+void codeGenerator::generateStatementFor(std::shared_ptr<node> node)
+{
+  int for_loop_start = generateLableCount();
+  int for_loop_end = generateLableCount();
+  if (node->getInitNode())
+  {
+    generateScopedVariable(node->getInitNode());
+    //m_asm_writer.asmGenPopIns("eax");
+  }
+
+  m_asm_writer.asmGen("jmp .for_loop" + std::to_string(for_loop_start));
+  if (node->getLoopNode())
+  {
+    generateExpressionable(node->getLoopNode(), 0);
+    //m_asm_writer.asmGenPopIns("eax");
+  }
+  m_asm_writer.asmGen(".for_loop" + std::to_string(for_loop_start) + ":");
+  if (node->getConditionNode())
+  {
+    generateExpressionable(node->getConditionNode(),0);
+    m_asm_writer.asmGenPopIns("eax");
+    m_asm_writer.asmGen("cmp eax, 0");
+    m_asm_writer.asmGen("je .for_loop_end" + std::to_string(for_loop_end));
+  }
+
+  if (node->getBodyNode())
+  {
+    generateBody(node->getBodyNode());
+  }
+
+  if (node->getLoopNode())
+  {
+    generateExpressionable(node->getLoopNode(), 0);
+    //m_asm_writer.asmGenPopIns("eax");
+  }
+
+  m_asm_writer.asmGen("jmp .for_loop" + std::to_string(for_loop_start));
+  m_asm_writer.asmGen(".for_loop_end"+ std::to_string(for_loop_end)+ ":");
+
+}
+
+void codeGenerator::generateStatementWhile(std::shared_ptr<node> node)
+{
+  int while_start = generateLableCount();
+  int while_end = generateLableCount();
+
+  m_asm_writer.asmGen(".while_start_" +  std::to_string(while_start) +":");
+  generateExpressionable(node->getConditionNode(), 0);
+  m_asm_writer.asmGenPopIns("eax");
+  m_asm_writer.asmGen("cmp eax, 0");
+  m_asm_writer.asmGen("je .while_end_"+ std::to_string(while_end));
+  generateBody(node->getBodyNode());
+  m_asm_writer.asmGen("jmp .while_start_" + std::to_string(while_start));
+  m_asm_writer.asmGen(".while_end_" + std::to_string(while_end) + ":");
 }
 
 void codeGenerator::generateStatementIf(std::shared_ptr<node> node)

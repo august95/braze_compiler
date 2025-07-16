@@ -165,6 +165,10 @@ public:
 	bool getIsFunctionArgument() { return m_is_function_argument; }
 	void setParenthesesNode(std::shared_ptr < node > node) { m_parentheses_node = node; }
 	std::shared_ptr < node > getParenthesesNode() { return m_parentheses_node; }
+	void setInitNode(std::shared_ptr < node > init_node) { m_init_node = init_node; }
+	std::shared_ptr < node > getInitNode() { return m_init_node; }
+	void setLoopNode(std::shared_ptr < node > loop_node) { m_loop_node = loop_node; }
+	std::shared_ptr < node > getLoopNode() { return m_loop_node; }
 
 	void calculateStackOffset(int& stack_offset);
 
@@ -214,6 +218,9 @@ protected:
 	//used by: if statmenets and loops 
 	std::shared_ptr < node > m_condition_node;
 	std::shared_ptr < node > m_next_else_node;
+	std::shared_ptr < node > m_init_node;//for loop
+	std::shared_ptr < node > m_loop_node;//for loop
+
 	//used by: multiple node types
 	nodeType m_node_type;
 	filePosition m_file_position;

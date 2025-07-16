@@ -328,6 +328,83 @@ void parser::parseKeyword()
 	{
 		parseIfStatement();
 	}
+	else if (STRINGS_EQUAL(token->getStringValue().c_str(), "while"))
+	{
+		parseWhileStatement();
+	}
+	else if (STRINGS_EQUAL(token->getStringValue().c_str(), "for"))
+	{
+		parseForStatement();
+	}
+}
+
+void parser::parseWhileStatement()
+{
+	std::shared_ptr<token> token = nextToken();
+	assert(STRINGS_EQUAL(token->getStringValue().c_str(), "while"));
+	token = nextToken();
+	assert(STRINGS_EQUAL(token->getStringValue().c_str(), "("));
+	std::shared_ptr < node > while_node = std::make_shared < node >(nodeType::NODE_TYPE_STATEMENT_WHILE, token->getFilePosition());
+	std::shared_ptr < node > condition_node;
+	parseExpression();
+	condition_node = popLastNode();
+	while_node->setConditionNode(condition_node);
+	token = nextToken();
+	assert(token->getCharValue() == ')');
+	std::shared_ptr < node > body_node;
+	parseBody();
+	body_node = popLastNode();
+	while_node->setBodyNode(body_node);
+	pushNode(while_node);
+}
+
+void parser::parseForStatement()
+{
+	//for (init; condition; loop)
+	std::shared_ptr<token> token = nextToken();
+	assert(STRINGS_EQUAL(token->getStringValue().c_str(), "for"));
+	token = nextToken();
+	assert(STRINGS_EQUAL(token->getStringValue().c_str(), "("));
+
+
+	std::shared_ptr < node > for_node = std::make_shared < node >(nodeType::NODE_TYPE_STATEMENT_FOR, token->getFilePosition());
+
+	std::shared_ptr < node > init_node;
+	token = peekToken();
+	if (token->isTokenTypeKeyword())
+	{
+		parseKeyword();
+	}
+	else
+	{
+		parseExpression();
+		assert(token->getCharValue() == ';');		
+	}
+	init_node = popLastNode();
+	for_node->setInitNode(init_node);
+
+	std::shared_ptr < node > condition_node;
+	parseExpression();
+	condition_node = popLastNode();
+	for_node->setConditionNode(condition_node);
+	token = nextToken();
+	assert(token->getCharValue() == ';');
+
+	std::shared_ptr < node > loop_node;
+	parseExpression();
+	loop_node = popLastNode();
+	for_node->setLoopNode(loop_node);
+
+	//body part
+	token = nextToken();
+	assert(token->getCharValue() == ')');
+	std::shared_ptr < node > body_node;
+	parseBody();
+	body_node = popLastNode();
+	for_node->setBodyNode(body_node);
+	pushNode(for_node);
+}
+
 void parser::parseIfStatement()
 {
 	std::shared_ptr<token> token = nextToken();
