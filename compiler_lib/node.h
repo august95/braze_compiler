@@ -138,6 +138,10 @@ public:
 	int getBodySize() { return m_body_size; }
 	void setDeclarationNode(std::shared_ptr < node > declaration_node) { m_declaration_node = declaration_node; }
 	std::shared_ptr < node > getDeclarationNode() { return m_declaration_node; }
+	void setConditionNode(std::shared_ptr < node > condition_node) { m_condition_node = condition_node; }
+	std::shared_ptr < node > getConditionNode() { return m_condition_node; }
+	void setNextElseNode(std::shared_ptr < node > next_else_node) { m_next_else_node = next_else_node; }
+	std::shared_ptr < node > getNextElseNode() { return m_next_else_node; }
 
 	void setDatatype(std::shared_ptr < datatype > dtype) { m_datatype = dtype; }
 	std::shared_ptr < datatype > getDatatype();
@@ -207,6 +211,9 @@ protected:
 	//used by: parentheses node
 	std::shared_ptr < node > m_parentheses_node;
 
+	//used by: if statmenets and loops 
+	std::shared_ptr < node > m_condition_node;
+	std::shared_ptr < node > m_next_else_node;
 	//used by: multiple node types
 	nodeType m_node_type;
 	filePosition m_file_position;

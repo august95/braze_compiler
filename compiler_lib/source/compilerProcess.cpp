@@ -45,3 +45,8 @@ int compileProcess::startCompiler()
 
 	//TODO: invoke nasm assembler with obj file containing assembly as parameter
 }
+
+void compileProcess::stop()
+{
+	m_code_generator.generateLableCount(true);
+}

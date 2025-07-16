@@ -56,6 +56,7 @@ private:
 	void parseComma();
 	void parseNormalExpression();
 	void parseKeyword();
+	void parseIfStatement();
 	void parseGlobalKeyword();
 	void parseVariableOrFunction();
 	void parseFunction();

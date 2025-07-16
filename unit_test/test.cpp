@@ -700,6 +700,46 @@ TEST(parser, function) {
 
 }
 
+
+TEST(parser, ifstatement) {
+
+	std::string file_name = "parser/test_parser_if_statement.c";
+
+
+	//int main()
+	//{
+	//  if (1)
+	//  {
+	//    int a = 0;
+	//  }
+	//}
+
+
+	const int num_of_tokens = 5;
+
+	compileProcess process;
+	process.__unit_test_no_code_generation = true;
+	process.initialize(file_path + file_name);
+	process.startCompiler();
+
+	std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+	std::shared_ptr < node > _node = ast.front();
+
+	EXPECT_EQ(_node->getStringValue(), "main");
+	EXPECT_EQ(_node->getBodyNode()->getBodySize(), 4 );
+
+	std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
+	EXPECT_EQ(statements.size(), 1 );
+
+	std::shared_ptr < node > if_node = statements.back();
+
+	EXPECT_TRUE(if_node->getNodeType() == NODE_TYPE_STATEMENT_IF);
+	EXPECT_EQ(if_node->getBodyNode()->getBodySize(), 4);
+	EXPECT_TRUE(if_node->getConditionNode()->getNodeType() == NODE_TYPE_NUMBER);
+	EXPECT_TRUE(if_node->getConditionNode()->getNumberValue() == 1);
+}
+
+
 TEST(parser, globalAccesFromFunction) {
 
 	std::string file_name = "parser/test_parser_global_access_from_function.c";

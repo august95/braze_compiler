@@ -165,7 +165,34 @@ void codeGenerator::generateStatement(std::shared_ptr<node> node)
   {
     generateExpNode(node);
   }
+  else if (node->getNodeType() == NODE_TYPE_STATEMENT_IF)
+  {
+    generateStatementIf(node);
+  }
   m_asm_writer.discardUnusedStack();
+}
+
+void codeGenerator::generateStatementIf(std::shared_ptr<node> node)
+{
+  int end_label = generateLableCount();
+  generateStatementIf_(node, end_label);
+
+  m_asm_writer.asmGen(".if_end_" + std::to_string(end_label) + ":");
+}
+
+void codeGenerator::generateStatementIf_(std::shared_ptr<node> node, int end_label)
+{
+  int if_label = generateLableCount();
+
+  generateExpressionable(node->getConditionNode(), 0);
+  m_asm_writer.asmGenPopIns("eax");
+  m_asm_writer.asmGen("cmp eax, 0"); // if equal, sets zero flag in CPU
+  m_asm_writer.asmGen("je .if_" + std::to_string(if_label)); // if zero flag is set in CPU, perfores jump. We dont want to jump when if(0)
+  generateBody(node->getBodyNode());
+  m_asm_writer.asmGen("jmp .if_end_" + std::to_string(end_label));
+  m_asm_writer.asmGen(".if_" + std::to_string(if_label) + ":");
+
+
 }
 
 void codeGenerator::generateGlobalVariable(std::shared_ptr < node > node)
@@ -613,9 +640,16 @@ std::string codeGenerator::registerString(std::string str)
   return m_strings[str];
 }
 
-int codeGenerator::generateLableCount()
+int codeGenerator::generateLableCount(bool reset)
 {
   static int count = 0;
   count++;
+
+  //static counter lives during all unit tests, needs to be cleared after each tests
+  if (reset)
+  {
+    count = 0;
+  }
   return count;
 }
+

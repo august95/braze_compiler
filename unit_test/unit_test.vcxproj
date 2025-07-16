@@ -107,6 +107,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <None Include="test_files\parser\test_parser_if_statement.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\codegeneration\test_codegen_if_statement.c">
+      <FileType>CppCode</FileType>
+    </None>
     <None Include="test_files\codegeneration\test_codegen_function_call3.c">
       <FileType>CppCode</FileType>
     </None>

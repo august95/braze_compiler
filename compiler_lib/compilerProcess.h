@@ -14,6 +14,7 @@ public:
 	compileProcess();
 	void initialize(std::string filename);
 	int startCompiler();
+	void stop();
 
 	//for unit tests
 	std::list < std::shared_ptr < token > > getTokens() { return m_lexer.getTokens(); }

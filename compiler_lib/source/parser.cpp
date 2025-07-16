@@ -323,6 +323,31 @@ void parser::parseKeyword()
 	{
 		//static const int func_or_variable ...
 		parseVariableOrFunction();
+	}
+	else if (STRINGS_EQUAL(token->getStringValue().c_str(), "if"))
+	{
+		parseIfStatement();
+	}
+void parser::parseIfStatement()
+{
+	std::shared_ptr<token> token = nextToken();
+	assert(STRINGS_EQUAL(token->getStringValue().c_str(), "if"));
+	token = nextToken();
+	assert(STRINGS_EQUAL(token->getStringValue().c_str(), "("));
+	std::shared_ptr < node > if_node = std::make_shared < node >(nodeType::NODE_TYPE_STATEMENT_IF, token->getFilePosition());
+	std::shared_ptr < node > condition_node;
+	parseExpression();
+	condition_node = popLastNode();
+	token = nextToken();
+	assert(token->getCharValue() == ')');
+	std::shared_ptr < node > body_node;
+	parseBody();
+	body_node = popLastNode();
+	if_node->setConditionNode(condition_node);
+	if_node->setBodyNode(body_node);
+	pushNode(if_node);
+}
+
 
 	}
 }
