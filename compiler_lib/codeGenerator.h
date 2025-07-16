@@ -43,6 +43,7 @@ public:
   void generateStatement(std::shared_ptr<node> node);
   void generateStatementIf(std::shared_ptr<node> node);
   void generateStatementIf_(std::shared_ptr<node> node, int end_label);
+  void generateStatementIfElse(std::shared_ptr<node> node, int end_label);
   void generateGlobalVariable(std::shared_ptr < node > node);
   void generateGlobalVariablePrimitive(std::shared_ptr < node > node);
   void generateScopedVariable(std::shared_ptr < node > node);

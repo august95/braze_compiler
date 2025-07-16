@@ -57,6 +57,7 @@ private:
 	void parseNormalExpression();
 	void parseKeyword();
 	void parseIfStatement();
+	void parseElseIfOrElseStatement();
 	void parseGlobalKeyword();
 	void parseVariableOrFunction();
 	void parseFunction();

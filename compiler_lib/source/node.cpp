@@ -167,6 +167,10 @@ void node::calculateStackOffset(int& stack_offset)
       m_next_else_node->calculateStackOffset(stack_offset);
     }
   }
+  else if (m_node_type == NODE_TYPE_STATEMENT_ELSE)
+  {
+    m_body_node->calculateStackOffset(stack_offset);
+  }
 
 }
 

@@ -192,7 +192,33 @@ void codeGenerator::generateStatementIf_(std::shared_ptr<node> node, int end_lab
   m_asm_writer.asmGen("jmp .if_end_" + std::to_string(end_label));
   m_asm_writer.asmGen(".if_" + std::to_string(if_label) + ":");
 
+  if (node->getNextElseNode())
+  {
+    generateStatementIfElse(node->getNextElseNode(), end_label);
+  }
 
+}
+
+void codeGenerator::generateStatementIfElse(std::shared_ptr<node> node, int end_label)
+{
+  if (node->getNodeType() == NODE_TYPE_STATEMENT_IF)
+  {
+    generateStatementIf_(node, end_label);
+  }
+  else if (node->getNodeType() == NODE_TYPE_STATEMENT_ELSE)
+  {
+    generateStatementElse(node, end_label);
+  }
+  else
+  {
+    assert(0);
+  }
+
+}
+
+void codeGenerator::generateStatementElse(std::shared_ptr<node> node, int end_label)
+{
+  generateBody(node->getBodyNode());
 }
 
 void codeGenerator::generateGlobalVariable(std::shared_ptr < node > node)

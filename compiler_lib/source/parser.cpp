@@ -346,8 +346,52 @@ void parser::parseIfStatement()
 	if_node->setConditionNode(condition_node);
 	if_node->setBodyNode(body_node);
 	pushNode(if_node);
+
+	parseElseIfOrElseStatement();
 }
 
+void parser::parseElseIfOrElseStatement()
+{
+	std::shared_ptr < node > if_node = peekLastNode();
+	std::shared_ptr<token> token_ = peekToken();
+	bool is_else = false;
+	while (STRINGS_EQUAL(token_->getStringValue().c_str(), "else"))
+	{
+		token_ = nextToken();
+		std::shared_ptr<token> token_next = peekToken();
+		if (STRINGS_EQUAL(token_next->getStringValue().c_str(), "if"))
+		{
+			is_else = false;
+			token_ = nextToken();
+		}
+		else
+		{
+			is_else = true;
+		}
+
+		std::shared_ptr < node > else_node = std::make_shared < node >(is_else?NODE_TYPE_STATEMENT_ELSE:NODE_TYPE_STATEMENT_IF, token_->getFilePosition());
+		std::shared_ptr < node > condition_node;
+		if (!is_else)
+		{
+			token_ = nextToken(); //pop of '('
+			parseExpression();
+			condition_node = popLastNode();
+			token_ = nextToken();
+			assert(token_->getCharValue() == ')');
+		}
+		std::shared_ptr < node > body_node;
+		parseBody();
+		body_node = popLastNode();
+		else_node->setConditionNode(condition_node);
+		else_node->setBodyNode(body_node);
+		if_node->setNextElseNode(else_node);
+		if_node = else_node;
+		token_ = peekToken();
+
+		if (is_else == true)
+		{
+			break;
+		}
 
 	}
 }
