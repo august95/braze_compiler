@@ -3,14 +3,14 @@
 #include "../braze_compiler.h"
 
 resolverScope::resolverScope()
-  : m_root_scope(false),
-  m_is_local_stack(false),
-  m_is_stack(false),
-  flags(false)
+    : m_root_scope(false),
+      m_is_local_stack(false),
+      m_is_stack(false),
+      flags(false)
 {
 }
 
-void resolverScope::addScopeEntity(std::shared_ptr < resolverEntity > scope_data)
+void resolverScope::addScopeEntity(std::shared_ptr<resolverEntity> scope_data)
 {
   m_scope_entities.push_back(scope_data);
 }
@@ -31,7 +31,7 @@ void resolverScope::follow(std::shared_ptr<node> node, std::shared_ptr<resolverR
   }
   else if (node->getNodeType() == NODE_TYPE_EXPRESSION_PARANTHESES)
   {
-    followExpression(node->getParenthesesNode() , result);
+    followExpression(node->getParenthesesNode(), result);
   }
 }
 
@@ -69,30 +69,29 @@ void resolverScope::followExpression(std::shared_ptr<node> node, std::shared_ptr
 void resolverScope::followFunctionCall(std::shared_ptr<node> node_, std::shared_ptr<resolverResult> result)
 {
   assert(node_->getLeftNode()->getNodeType() == NODE_TYPE_IDENTIFIER);
-  std::shared_ptr< node > func_name = node_->getLeftNode();
+  std::shared_ptr<node> func_name = node_->getLeftNode();
 
   follow(func_name, result);
-  std::shared_ptr < resolverEntity > function_entity = result->peekEntity();
+  std::shared_ptr<resolverEntity> function_entity = result->peekEntity();
   if (!function_entity)
   {
     cerror("could not resolve function!");
   }
-  std::shared_ptr < resolverEntity > function_call_entity = std::make_shared < resolverEntity >();
+  std::shared_ptr<resolverEntity> function_call_entity = std::make_shared<resolverEntity>();
   function_call_entity->setEntityType(E_FUNCTION_CALL);
   result->addEntity(function_call_entity);
 
-  if( node_->getRightNode())
+  if (node_->getRightNode())
   {
     int function_call_stack_size = 0;
     buildFunctionCallArguments(node_->getRightNode(), function_call_entity, result, function_call_stack_size);
     function_call_entity->setFunctionCallStacksize(function_call_stack_size);
   }
   function_call_entity->setDatatype(function_entity->getDatatype());
-  
 }
-void resolverScope::buildFunctionCallArguments(std::shared_ptr<node> node_, std::shared_ptr < resolverEntity > function_call_entity, std::shared_ptr<resolverResult> result, int& function_call_stack_size)
+void resolverScope::buildFunctionCallArguments(std::shared_ptr<node> node_, std::shared_ptr<resolverEntity> function_call_entity, std::shared_ptr<resolverResult> result, int &function_call_stack_size)
 {
-  //we have multiple arguments separated by opertaor node wiht op ",
+  // we have multiple arguments separated by opertaor node wiht op ",
   if (!node_)
   {
     return;
@@ -120,5 +119,4 @@ void resolverScope::buildFunctionCallArguments(std::shared_ptr<node> node_, std:
     }
     function_call_stack_size += (datatype_size + datatype::Padding(datatype_size, DATA_SIZE_DWORD));
   }
-
 }

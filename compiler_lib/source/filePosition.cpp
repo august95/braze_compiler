@@ -3,11 +3,10 @@
 #include <iostream>
 
 filePosition::filePosition()
-	:m_line(1),
-	m_col(1),
-	m_filename()
+	: m_line(1),
+	  m_col(1),
+	  m_filename()
 {
-
 }
 
 void filePosition::setFileName(std::string filename)

@@ -10,5 +10,4 @@
 void fncompilerlib()
 {
 	std::cout << "lib running \n";
-
 }

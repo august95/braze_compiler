@@ -34,7 +34,6 @@ public:
   datatype();
   datatype(filePosition file_position);
 
-
   void setKeyVariableModifier(std::string modifier);
   void setDataType(std::string data_type);
 
@@ -52,23 +51,22 @@ public:
   bool isStruct() { return m_first == primitiveType::DATA_TYPE_STRUCT; }
   primitiveType getPrimitiveType() { return m_first; }
   primitiveType getSecondPrimitiveType() { return m_second; }
-  bool isPrimitiveType() { return m_first != primitiveType::DATA_TYPE_STRUCT && 
-                                  m_first != primitiveType::DATA_TYPE_UNION && 
-                                  m_first != primitiveType::DATA_TYPE_NONE && 
+  bool isPrimitiveType() { return m_first != primitiveType::DATA_TYPE_STRUCT &&
+                                  m_first != primitiveType::DATA_TYPE_UNION &&
+                                  m_first != primitiveType::DATA_TYPE_NONE &&
                                   m_first != primitiveType::DATA_TYPE_UNKNOWN; }
   void calcualteDatatypeSize();
   static int getPrimitiveTypeSize(primitiveType primitive_type);
   int getDatatypeSize() { return m_datatype_size; }
   std::string getStringForPrimitiveSize();
   std::string getDatatypeRegisterSize();
-  void getRegToUse(std::string& reg_to_use);
+  void getRegToUse(std::string &reg_to_use);
 
   static bool IsKeywordDatatype(std::string val);
   static bool isKeywordVariableModifier(std::string val);
   static int Padding(int val, int to);
 
 private:
-
   primitiveType m_first;
   primitiveType m_second;
   bool m_has_secondary_primitive_type;
@@ -81,6 +79,5 @@ private:
   bool m_extern;
   unsigned int m_pointer_depth;
   filePosition m_file_position;
-  int m_datatype_size; //in bytes
-
+  int m_datatype_size; // in bytes
 };

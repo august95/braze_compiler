@@ -1,5 +1,5 @@
 #pragma once
-//stores location in a file
+// stores location in a file
 
 #include <string>
 #include <memory>
@@ -7,15 +7,15 @@
 class filePosition
 {
 public:
-	filePosition();
-	void setFileName(std::string filename);
-	void incrementLine();
-	void incrementCol();
-	void printFileLocation();
-	std::string getLocationString();
+  filePosition();
+  void setFileName(std::string filename);
+  void incrementLine();
+  void incrementCol();
+  void printFileLocation();
+  std::string getLocationString();
 
-private:	
-	std::string m_filename;
-	int m_line;
-	int m_col;
+private:
+  std::string m_filename;
+  int m_line;
+  int m_col;
 };

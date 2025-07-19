@@ -2,23 +2,23 @@
 #include "../resolverEntity.h"
 
 resolverEntity::resolverEntity()
-	:m_type(E_NONE),
-	m_is_global(false),
-  type(0),
-  flag(0),
-  offest(0),
-  m_function_call_stack_size(0)
+	: m_type(E_NONE),
+	  m_is_global(false),
+	  type(0),
+	  flag(0),
+	  offest(0),
+	  m_function_call_stack_size(0)
 {
 }
 
 resolverEntity::resolverEntity(std::shared_ptr<node> node)
-	:m_type(E_NONE),
-	m_node(node),
-	m_is_global(false),
-	type(0),
-	flag(0),
-	offest(0),
-	m_function_call_stack_size(0)
+	: m_type(E_NONE),
+	  m_node(node),
+	  m_is_global(false),
+	  type(0),
+	  flag(0),
+	  offest(0),
+	  m_function_call_stack_size(0)
 {
 }
 
@@ -29,7 +29,7 @@ void resolverEntity::createResolverEntityData()
 
 void resolverEntity::addAddress(std::shared_ptr<node> node, bool is_local_stack)
 {
-	if(m_entity_data)
+	if (m_entity_data)
 		m_entity_data->setVariableNode(node, is_local_stack);
 }
 void resolverEntity::registerFunction(std::shared_ptr<node> node)

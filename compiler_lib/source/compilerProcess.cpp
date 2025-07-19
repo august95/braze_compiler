@@ -1,13 +1,11 @@
 #include "pch.h"
 #include "../compilerProcess.h"
 #include "../braze_compiler.h"
-#include <cstdio>  // For fopen, fclose, fread, fwrite, etc.
-
+#include <cstdio> // For fopen, fclose, fread, fwrite, etc.
 
 compileProcess::compileProcess()
-	:__unit_test_no_code_generation(false)
+	: __unit_test_no_code_generation(false)
 {
-
 }
 void compileProcess::initialize(std::string filename)
 {
@@ -32,7 +30,8 @@ int compileProcess::startCompiler()
 		return ret;
 	}
 
-	if (__unit_test_no_code_generation) return 0;
+	if (__unit_test_no_code_generation)
+		return 0;
 
 	m_code_generator.setAbstractSyntaxTree(m_parser.getAbstractSyntaxTree());
 	ret = m_code_generator.startCodeGeneration();
@@ -43,7 +42,7 @@ int compileProcess::startCompiler()
 	}
 	return ret;
 
-	//TODO: invoke nasm assembler with obj file containing assembly as parameter
+	// TODO: invoke nasm assembler with obj file containing assembly as parameter
 }
 
 void compileProcess::stop()

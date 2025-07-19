@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "../resolverResult.h"
 
-
 void resolverResult::addEntity(std::shared_ptr<resolverEntity> entity)
 {
   if (m_entities.empty())

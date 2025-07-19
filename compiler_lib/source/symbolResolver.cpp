@@ -4,7 +4,7 @@
 #include "../braze_compiler.h"
 
 symbolResolver::symbolResolver()
-	:m_root_scope(std::make_shared< scope >())
+	: m_root_scope(std::make_shared<scope>())
 {
 	m_root_scope->init(std::shared_ptr<scope>(), true);
 	m_last_scope = m_root_scope;

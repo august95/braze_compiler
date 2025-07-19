@@ -3,11 +3,10 @@
 #include "../braze_compiler.h"
 
 scope::scope()
-  :m_size(0),
-  m_flags(0),
-  m_is_root_scope(false)
+    : m_size(0),
+      m_flags(0),
+      m_is_root_scope(false)
 {
-
 }
 
 void scope::init(std::shared_ptr<scope> last_scope, bool is_root_scope)
@@ -40,6 +39,4 @@ std::shared_ptr<node> scope::find(std::shared_ptr<node> identifier)
     return m_parent->find(identifier);
   }
   return std::shared_ptr<node>();
-
-
 }

@@ -3,7 +3,7 @@
 #include <stdarg.h>
 
 asmWriter::asmWriter()
-  : file(0)
+    : file(0)
 {
 }
 
@@ -19,7 +19,7 @@ void asmWriter::asmGen(std::string ins)
   }
 }
 
-void asmWriter::asmGenArgs(const char* ins, va_list args)
+void asmWriter::asmGenArgs(const char *ins, va_list args)
 {
   va_list args2;
   va_copy(args2, args);
@@ -32,7 +32,7 @@ void asmWriter::asmGenArgs(const char* ins, va_list args)
   }
 }
 
-void asmWriter::asmGenPushIns(std::string reg, std::shared_ptr < datatype > datatype, int offset_from_bp)
+void asmWriter::asmGenPushIns(std::string reg, std::shared_ptr<datatype> datatype, int offset_from_bp)
 {
   m_stack_monitor.pushElement(PUSHED_VAUE, datatype, offset_from_bp);
   asmGen("push " + reg);
@@ -44,10 +44,9 @@ void asmWriter::asmGenPopIns(std::string reg)
   asmGen("pop " + reg);
 }
 
-
 void asmWriter::asmGenPushEbp(int stack_subtraction)
 {
-  m_stack_monitor.pushElement(BASE_POINTER,0,0);
+  m_stack_monitor.pushElement(BASE_POINTER, 0, 0);
   asmGen("push ebp");
   asmGen("mov ebp, esp");
   bool has_stack_size = stack_subtraction != 0;
@@ -79,7 +78,6 @@ void asmWriter::asmGenNoNewLine(std::string ins)
   }
 }
 
-
 void asmWriter::asmGenReduceRegister(std::string reg, int size, bool is_signed)
 {
   if (size != DATA_SIZE_DWORD)
@@ -92,19 +90,19 @@ void asmWriter::asmGenReduceRegister(std::string reg, int size, bool is_signed)
 
     asmGen(ins + " eax, " + getSubRegister(reg, size));
   }
-
 }
 
 int asmWriter::initialize(std::string filename)
 {
   m_filename = filename;
 #if defined(_MSC_VER)
-  //Microsoft Visual Studio Compile
+  // Microsoft Visual Studio Compile
   return fopen_s(&file, filename.c_str(), "w");
 #else
-  //GCC
+  // GCC
   file = fopen(filename.c_str(), "w");
-  if (file == nullptr) {
+  if (file == nullptr)
+  {
     perror("Error opening file");
     return -1;
   }
@@ -141,76 +139,74 @@ void asmWriter::close()
 #endif
 }
 
-std::shared_ptr <datatype> asmWriter::getDatatypeOnStack(int index)
+std::shared_ptr<datatype> asmWriter::getDatatypeOnStack(int index)
 {
   return m_stack_monitor.getDatatypeOnStack(index);
 }
 
 std::string asmWriter::getSubRegister(std::string reg, int size)
 {
-    std::string sub_register;
-    if (STRINGS_EQUAL(reg.c_str(), "eax"))
+  std::string sub_register;
+  if (STRINGS_EQUAL(reg.c_str(), "eax"))
+  {
+    if (size == DATA_SIZE_BYTE)
     {
-      if (size == DATA_SIZE_BYTE)
-      {
-        sub_register = "al";
-      }
-      else if (size == DATA_SIZE_WORD)
-      {
-        sub_register = "ax";
-      }
-      else if (size == DATA_SIZE_DWORD)
-      {
-        sub_register = "eax";
-      }
+      sub_register = "al";
     }
-    else if (STRINGS_EQUAL(reg.c_str(), "ebx"))
+    else if (size == DATA_SIZE_WORD)
     {
-      if (size == DATA_SIZE_BYTE)
-      {
-        sub_register = "bl";
-      }
-      else if (size == DATA_SIZE_WORD)
-      {
-        sub_register = "bx";
-      }
-      else if (size == DATA_SIZE_DWORD)
-      {
-        sub_register = "ebx";
-      }
+      sub_register = "ax";
     }
-    else if (STRINGS_EQUAL(reg.c_str(), "ecx"))
+    else if (size == DATA_SIZE_DWORD)
     {
-      if (size == DATA_SIZE_BYTE)
-      {
-        sub_register = "cl";
-      }
-      else if (size == DATA_SIZE_WORD)
-      {
-        sub_register = "cx";
-      }
-      else if (size == DATA_SIZE_DWORD)
-      {
-        sub_register = "ecx";
-      }
+      sub_register = "eax";
     }
-    else if (STRINGS_EQUAL(reg.c_str(), "edx"))
+  }
+  else if (STRINGS_EQUAL(reg.c_str(), "ebx"))
+  {
+    if (size == DATA_SIZE_BYTE)
     {
-      if (size == DATA_SIZE_BYTE)
-      {
-        sub_register = "dl";
-      }
-      else if (size == DATA_SIZE_WORD)
-      {
-        sub_register = "dx";
-      }
-      else if (size == DATA_SIZE_DWORD)
-      {
-        sub_register = "edx";
-      }
+      sub_register = "bl";
     }
+    else if (size == DATA_SIZE_WORD)
+    {
+      sub_register = "bx";
+    }
+    else if (size == DATA_SIZE_DWORD)
+    {
+      sub_register = "ebx";
+    }
+  }
+  else if (STRINGS_EQUAL(reg.c_str(), "ecx"))
+  {
+    if (size == DATA_SIZE_BYTE)
+    {
+      sub_register = "cl";
+    }
+    else if (size == DATA_SIZE_WORD)
+    {
+      sub_register = "cx";
+    }
+    else if (size == DATA_SIZE_DWORD)
+    {
+      sub_register = "ecx";
+    }
+  }
+  else if (STRINGS_EQUAL(reg.c_str(), "edx"))
+  {
+    if (size == DATA_SIZE_BYTE)
+    {
+      sub_register = "dl";
+    }
+    else if (size == DATA_SIZE_WORD)
+    {
+      sub_register = "dx";
+    }
+    else if (size == DATA_SIZE_DWORD)
+    {
+      sub_register = "edx";
+    }
+  }
 
   return sub_register;
 }
-
-

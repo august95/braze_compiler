@@ -6,34 +6,33 @@
 
 datatype::datatype()
 
-  :m_first(primitiveType::DATA_TYPE_NONE),
-  m_second(primitiveType::DATA_TYPE_NONE),
-  m_unsigned(0),
-  m_signed(0),
-  m_static(0),
-  m_const(0),
-  m_extern(0),
-  m_has_secondary_primitive_type(0),
-  m_pointer_depth(0),
-  m_datatype_size(0),
-  m_r_value(0)
+    : m_first(primitiveType::DATA_TYPE_NONE),
+      m_second(primitiveType::DATA_TYPE_NONE),
+      m_unsigned(0),
+      m_signed(0),
+      m_static(0),
+      m_const(0),
+      m_extern(0),
+      m_has_secondary_primitive_type(0),
+      m_pointer_depth(0),
+      m_datatype_size(0),
+      m_r_value(0)
 {
 }
 
-
 datatype::datatype(filePosition file_position)
-  :m_first(primitiveType::DATA_TYPE_NONE),
-  m_second(primitiveType::DATA_TYPE_NONE),
-  m_unsigned(0),
-  m_signed(0),
-  m_static(0),
-  m_const(0),
-  m_extern(0),
-  m_has_secondary_primitive_type(0),
-  m_pointer_depth(0),
-  m_file_position(file_position), 
-  m_datatype_size(0),
-  m_r_value(0)
+    : m_first(primitiveType::DATA_TYPE_NONE),
+      m_second(primitiveType::DATA_TYPE_NONE),
+      m_unsigned(0),
+      m_signed(0),
+      m_static(0),
+      m_const(0),
+      m_extern(0),
+      m_has_secondary_primitive_type(0),
+      m_pointer_depth(0),
+      m_file_position(file_position),
+      m_datatype_size(0),
+      m_r_value(0)
 {
 }
 
@@ -69,7 +68,6 @@ void datatype::setKeyVariableModifier(std::string modifier)
     cerror("expected variable modifier");
     assert(false);
   }
-
 }
 
 void datatype::setDataType(std::string data_type)
@@ -120,7 +118,7 @@ void datatype::setDataType(std::string data_type)
   else if (STRINGS_EQUAL(data_type.c_str(), "__internal_only_string__"))
   {
     // R value string dont have any datatype delcaration:
-    //function_call("r_value_string");
+    // function_call("r_value_string");
     primitive_type = primitiveType::DATA_TYPE_CHAR;
     incrementPointerDepth();
     m_const = true;
@@ -142,13 +140,12 @@ void datatype::setDataType(std::string data_type)
   m_has_secondary_primitive_type = true;
   calcualteDatatypeSize();
 
-  //FIXME: perform validation?
-
+  // FIXME: perform validation?
 }
 
 void datatype::incrementPointerDepth()
-{ 
-  m_pointer_depth++; 
+{
+  m_pointer_depth++;
   calcualteDatatypeSize();
 }
 
@@ -161,7 +158,7 @@ void datatype::calcualteDatatypeSize()
   }
   if (m_pointer_depth > 0)
   {
-    m_datatype_size = 4;  //Fixme: for now 32 bit architecture, pointer size is 4 bytes
+    m_datatype_size = 4; // Fixme: for now 32 bit architecture, pointer size is 4 bytes
   }
 }
 
@@ -209,7 +206,6 @@ int datatype::getPrimitiveTypeSize(primitiveType primitive_type)
   case primitiveType::DATA_TYPE_UNKNOWN:
     size = DATA_SIZE_DDWORD;
     break;
-  
   }
   return size;
 }
@@ -256,7 +252,7 @@ std::string datatype::getDatatypeRegisterSize()
   }
 }
 
-void datatype::getRegToUse(std::string& reg_to_use)
+void datatype::getRegToUse(std::string &reg_to_use)
 {
   if (STRINGS_EQUAL(reg_to_use.c_str(), "eax"))
   {
@@ -318,33 +314,30 @@ void datatype::getRegToUse(std::string& reg_to_use)
       reg_to_use = "edx";
     }
   }
-
 }
-
 
 bool datatype::IsKeywordDatatype(std::string val)
 {
   return STRINGS_EQUAL(val.c_str(), "void") ||
-    STRINGS_EQUAL(val.c_str(), "char") ||
-    STRINGS_EQUAL(val.c_str(), "int") ||
-    STRINGS_EQUAL(val.c_str(), "short") ||
-    STRINGS_EQUAL(val.c_str(), "bool") ||
-    STRINGS_EQUAL(val.c_str(), "float") ||
-    STRINGS_EQUAL(val.c_str(), "double") ||
-    STRINGS_EQUAL(val.c_str(), "long") ||
-    STRINGS_EQUAL(val.c_str(), "struct") ||
-    STRINGS_EQUAL(val.c_str(), "union");
+         STRINGS_EQUAL(val.c_str(), "char") ||
+         STRINGS_EQUAL(val.c_str(), "int") ||
+         STRINGS_EQUAL(val.c_str(), "short") ||
+         STRINGS_EQUAL(val.c_str(), "bool") ||
+         STRINGS_EQUAL(val.c_str(), "float") ||
+         STRINGS_EQUAL(val.c_str(), "double") ||
+         STRINGS_EQUAL(val.c_str(), "long") ||
+         STRINGS_EQUAL(val.c_str(), "struct") ||
+         STRINGS_EQUAL(val.c_str(), "union");
 }
-
 
 bool datatype::isKeywordVariableModifier(std::string val)
 {
   return STRINGS_EQUAL(val.c_str(), "unsigned") ||
-    STRINGS_EQUAL(val.c_str(), "signed") ||
-    STRINGS_EQUAL(val.c_str(), "static") ||
-    STRINGS_EQUAL(val.c_str(), "const") ||
-    STRINGS_EQUAL(val.c_str(), "extern") ||
-    STRINGS_EQUAL(val.c_str(), "__ignore_typecheck__");
+         STRINGS_EQUAL(val.c_str(), "signed") ||
+         STRINGS_EQUAL(val.c_str(), "static") ||
+         STRINGS_EQUAL(val.c_str(), "const") ||
+         STRINGS_EQUAL(val.c_str(), "extern") ||
+         STRINGS_EQUAL(val.c_str(), "__ignore_typecheck__");
 }
 
 int datatype::Padding(int val, int to)
@@ -359,5 +352,3 @@ int datatype::Padding(int val, int to)
   }
   return to - (val % to) % to;
 }
-
-

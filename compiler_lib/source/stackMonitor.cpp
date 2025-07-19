@@ -7,14 +7,14 @@ stackMonitor::stackMonitor()
 {
 }
 
-void stackMonitor::pushElement(stackElementType type, std::shared_ptr < datatype > datatype, int offset_from_bp)
+void stackMonitor::pushElement(stackElementType type, std::shared_ptr<datatype> datatype, int offset_from_bp)
 {
-  m_stack.push_back(std::make_shared< stackElement >(type, datatype, offset_from_bp));
+  m_stack.push_back(std::make_shared<stackElement>(type, datatype, offset_from_bp));
 }
 
 void stackMonitor::popElement(stackElementType type)
 {
-  std::shared_ptr < stackElement > stack_element = m_stack.back();
+  std::shared_ptr<stackElement> stack_element = m_stack.back();
   m_stack.pop_back();
   if (type != stack_element->m_element_type)
   {
@@ -25,7 +25,8 @@ void stackMonitor::popElement(stackElementType type)
 std::shared_ptr<datatype> stackMonitor::getDatatypeOnStack(int index)
 {
   int i = 0;
-  for (auto it = m_stack.rbegin(); it != m_stack.rend(); ++it) {
+  for (auto it = m_stack.rbegin(); it != m_stack.rend(); ++it)
+  {
     if (i == index)
     {
       return (*it)->m_datatype;
@@ -38,14 +39,15 @@ std::shared_ptr<datatype> stackMonitor::getDatatypeOnStack(int index)
 int stackMonitor::discardUnusedStack()
 {
   int stack_addition = 0;
-  for (auto it = m_stack.rbegin(); it != m_stack.rend();) {
+  for (auto it = m_stack.rbegin(); it != m_stack.rend();)
+  {
     std::shared_ptr<stackElement> element = (*it);
     if (element->m_element_type != BASE_POINTER)
     {
       stack_addition += DATA_SIZE_DWORD;
       m_stack.pop_back();
       it = m_stack.rbegin();
-      //fixme: add custom datatsize
+      // fixme: add custom datatsize
     }
     else
     {
@@ -57,7 +59,8 @@ int stackMonitor::discardUnusedStack()
 void stackMonitor::addStack(int stack_size)
 {
   int stack_added = 0;
-  for (auto it = m_stack.rbegin(); it != m_stack.rend();) {
+  for (auto it = m_stack.rbegin(); it != m_stack.rend();)
+  {
     std::shared_ptr<stackElement> element = (*it);
     if (element->m_element_type != BASE_POINTER)
     {
@@ -68,14 +71,13 @@ void stackMonitor::addStack(int stack_size)
       {
         return;
       }
-      //fixme: add custom datatsize
+      // fixme: add custom datatsize
     }
     else
     {
       cerror("invalid stack after function call clean up!!");
       return;
-      //assert(0);
+      // assert(0);
     }
   }
 }
-

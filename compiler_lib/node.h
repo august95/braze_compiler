@@ -1,5 +1,5 @@
 #pragma once
-//node created by the parser,  is leafs in the abstract syntax tree
+// node created by the parser,  is leafs in the abstract syntax tree
 
 #include <string>
 #include "filePosition.h"
@@ -7,7 +7,6 @@
 #include <iostream>
 #include <list>
 #include <memory>
-
 
 enum nodeType
 {
@@ -43,7 +42,6 @@ enum nodeType
 	NODE_TYPE_CAST,
 	NODE_TYPE_BLANK
 };
-
 
 enum ExpressionType
 {
@@ -82,36 +80,33 @@ enum ExpressionType
 	EXPRESSION_IS_MODULUS = 0b10000000000000000000000000000000,
 };
 
-#define EXPRESSION_GEN_MATHABLE (       \
-    EXPRESSION_IS_ADDITION |           \
-    EXPRESSION_IS_SUBTRACTION |        \
-    EXPRESSION_IS_MULTPILICATION |     \
-    EXPRESSION_IS_DIVISION |           \
-    EXPRESSION_IS_MODULUS |            \
-    EXPRESSION_IS_FUNCTION_CALL |      \
-    EXPRESSION_INDIRECTION |           \
-    EXPRESSION_GET_ADDRESS |           \
-    EXPRESSION_IS_ABOVE |              \
-    EXPRESSION_IS_ABOVE_OR_EQUAL |     \
-    EXPRESSION_IS_BELOW |              \
-    EXPRESSION_IS_BELOW_OR_EQUAL |     \
-    EXPRESSION_IS_EQUAL |              \
-    EXPRESSION_IS_NOT_EQUAL |          \
-    EXPRESSION_LOGICAL_AND |           \
-    EXPRESSION_LOGICAL_OR |            \
-    EXPRESSION_IN_LOGICAL_EXPRESSION | \
-    EXPRESSION_BITSHIFT_LEFT |      \
-    EXPRESSION_BITSHIFT_RIGHT |     \
-    EXPRESSION_IS_BITWISE_OR |         \
-    EXPRESSION_IS_BITWISE_AND |        \
-    EXPRESSION_IS_BITWISE_XOR)
+#define EXPRESSION_GEN_MATHABLE (      \
+		EXPRESSION_IS_ADDITION |           \
+		EXPRESSION_IS_SUBTRACTION |        \
+		EXPRESSION_IS_MULTPILICATION |     \
+		EXPRESSION_IS_DIVISION |           \
+		EXPRESSION_IS_MODULUS |            \
+		EXPRESSION_IS_FUNCTION_CALL |      \
+		EXPRESSION_INDIRECTION |           \
+		EXPRESSION_GET_ADDRESS |           \
+		EXPRESSION_IS_ABOVE |              \
+		EXPRESSION_IS_ABOVE_OR_EQUAL |     \
+		EXPRESSION_IS_BELOW |              \
+		EXPRESSION_IS_BELOW_OR_EQUAL |     \
+		EXPRESSION_IS_EQUAL |              \
+		EXPRESSION_IS_NOT_EQUAL |          \
+		EXPRESSION_LOGICAL_AND |           \
+		EXPRESSION_LOGICAL_OR |            \
+		EXPRESSION_IN_LOGICAL_EXPRESSION | \
+		EXPRESSION_BITSHIFT_LEFT |         \
+		EXPRESSION_BITSHIFT_RIGHT |        \
+		EXPRESSION_IS_BITWISE_OR |         \
+		EXPRESSION_IS_BITWISE_AND |        \
+		EXPRESSION_IS_BITWISE_XOR)
 
-#define EXPRESSION_LOGICAL_OPERATOR (       \
-    EXPRESSION_LOGICAL_AND |           \
-    EXPRESSION_LOGICAL_OR)
-
-
-
+#define EXPRESSION_LOGICAL_OPERATOR ( \
+		EXPRESSION_LOGICAL_AND |          \
+		EXPRESSION_LOGICAL_OR)
 
 class node
 {
@@ -123,33 +118,33 @@ public:
 	bool isValidExpressionType();
 	int getDatatypeSize();
 
-	nodeType getNodeType() { return m_node_type;	}
+	nodeType getNodeType() { return m_node_type; }
 	void setNodeType(nodeType node_type) { m_node_type = node_type; }
 	filePosition getFilePosition() { return m_file_position; }
 
-	std::shared_ptr < node > getLeftNode() { return m_left_node; }
-	void setLeftNode(std::shared_ptr < node > left_node) { m_left_node = left_node; }
-	std::shared_ptr < node > getRightNode() { return m_right_node; }
-	void setRightNode(std::shared_ptr < node > right_node) { m_right_node = right_node; }
-	void setValueNode(std::shared_ptr < node > val_node) { m_value_node = val_node; }
-	std::shared_ptr < node > getValueNode() { return m_value_node; }
-	void setBodyNode(std::shared_ptr < node > body_node) { m_body_node = body_node; }
-	std::shared_ptr < node > getBodyNode() { return m_body_node; }
+	std::shared_ptr<node> getLeftNode() { return m_left_node; }
+	void setLeftNode(std::shared_ptr<node> left_node) { m_left_node = left_node; }
+	std::shared_ptr<node> getRightNode() { return m_right_node; }
+	void setRightNode(std::shared_ptr<node> right_node) { m_right_node = right_node; }
+	void setValueNode(std::shared_ptr<node> val_node) { m_value_node = val_node; }
+	std::shared_ptr<node> getValueNode() { return m_value_node; }
+	void setBodyNode(std::shared_ptr<node> body_node) { m_body_node = body_node; }
+	std::shared_ptr<node> getBodyNode() { return m_body_node; }
 	int getBodySize() { return m_body_size; }
-	void setDeclarationNode(std::shared_ptr < node > declaration_node) { m_declaration_node = declaration_node; }
-	std::shared_ptr < node > getDeclarationNode() { return m_declaration_node; }
-	void setConditionNode(std::shared_ptr < node > condition_node) { m_condition_node = condition_node; }
-	std::shared_ptr < node > getConditionNode() { return m_condition_node; }
-	void setNextElseNode(std::shared_ptr < node > next_else_node) { m_next_else_node = next_else_node; }
-	std::shared_ptr < node > getNextElseNode() { return m_next_else_node; }
+	void setDeclarationNode(std::shared_ptr<node> declaration_node) { m_declaration_node = declaration_node; }
+	std::shared_ptr<node> getDeclarationNode() { return m_declaration_node; }
+	void setConditionNode(std::shared_ptr<node> condition_node) { m_condition_node = condition_node; }
+	std::shared_ptr<node> getConditionNode() { return m_condition_node; }
+	void setNextElseNode(std::shared_ptr<node> next_else_node) { m_next_else_node = next_else_node; }
+	std::shared_ptr<node> getNextElseNode() { return m_next_else_node; }
 
-	void setDatatype(std::shared_ptr < datatype > dtype) { m_datatype = dtype; }
-	std::shared_ptr < datatype > getDatatype();
-	void setReturnDatatype(std::shared_ptr < datatype > dtype) { m_return_datatype = dtype; }
-	std::shared_ptr < datatype > getReturnDatatype() {return m_return_datatype; }
+	void setDatatype(std::shared_ptr<datatype> dtype) { m_datatype = dtype; }
+	std::shared_ptr<datatype> getDatatype();
+	void setReturnDatatype(std::shared_ptr<datatype> dtype) { m_return_datatype = dtype; }
+	std::shared_ptr<datatype> getReturnDatatype() { return m_return_datatype; }
 	void addStatement(std::shared_ptr<node> statement);
-//	void setStatements(std::list < std::shared_ptr < node > > statements);
-	std::list < std::shared_ptr < node > > getStatements() { return m_statements; }
+	//	void setStatements(std::list < std::shared_ptr < node > > statements);
+	std::list<std::shared_ptr<node>> getStatements() { return m_statements; }
 
 	void setStringValue(std::string string_value) { m_string_value = string_value; }
 	std::string getStringValue() { return m_string_value; }
@@ -159,75 +154,74 @@ public:
 	int getStackOffset() { return m_stack_offset; }
 	void generateExpressionFlag();
 	ExpressionType getExpressionType() { return m_exp_type; }
-	void addFunctionArgumentNode(std::shared_ptr < node > node) { m_function_arguemnt.push_back(node); }
-	std::list < std::shared_ptr < node > > getFunctionArguments() { return m_function_arguemnt; }
+	void addFunctionArgumentNode(std::shared_ptr<node> node) { m_function_arguemnt.push_back(node); }
+	std::list<std::shared_ptr<node>> getFunctionArguments() { return m_function_arguemnt; }
 	void setIsFunctionArgument(bool is_function_argument) { m_is_function_argument = is_function_argument; }
 	bool getIsFunctionArgument() { return m_is_function_argument; }
-	void setParenthesesNode(std::shared_ptr < node > node) { m_parentheses_node = node; }
-	std::shared_ptr < node > getParenthesesNode() { return m_parentheses_node; }
-	void setInitNode(std::shared_ptr < node > init_node) { m_init_node = init_node; }
-	std::shared_ptr < node > getInitNode() { return m_init_node; }
-	void setLoopNode(std::shared_ptr < node > loop_node) { m_loop_node = loop_node; }
-	std::shared_ptr < node > getLoopNode() { return m_loop_node; }
+	void setParenthesesNode(std::shared_ptr<node> node) { m_parentheses_node = node; }
+	std::shared_ptr<node> getParenthesesNode() { return m_parentheses_node; }
+	void setInitNode(std::shared_ptr<node> init_node) { m_init_node = init_node; }
+	std::shared_ptr<node> getInitNode() { return m_init_node; }
+	void setLoopNode(std::shared_ptr<node> loop_node) { m_loop_node = loop_node; }
+	std::shared_ptr<node> getLoopNode() { return m_loop_node; }
 
-	void calculateStackOffset(int& stack_offset);
+	void calculateStackOffset(int &stack_offset);
 
-
-  bool isArray() { return m_node_type == nodeType::NODE_TYPE_EXPRESSION && m_string_value == "[]"; }
-  bool isAssignmentNode() { return m_node_type == nodeType::NODE_TYPE_EXPRESSION && (m_string_value == "=" || m_string_value == "+=" || m_string_value == "-=" || m_string_value == "/=" || m_string_value == "*="); }
+	bool isArray() { return m_node_type == nodeType::NODE_TYPE_EXPRESSION && m_string_value == "[]"; }
+	bool isAssignmentNode() { return m_node_type == nodeType::NODE_TYPE_EXPRESSION && (m_string_value == "=" || m_string_value == "+=" || m_string_value == "-=" || m_string_value == "/=" || m_string_value == "*="); }
 	bool isValueNode() { return m_node_type == NODE_TYPE_IDENTIFIER || m_node_type == NODE_TYPE_NUMBER || m_node_type == NODE_TYPE_UNARY || m_node_type == NODE_TYPE_TENARY || m_node_type == NODE_TYPE_STRING; }
-	void setIsGlobal(bool is_global) { m_is_global = is_global; }	
+	void setIsGlobal(bool is_global) { m_is_global = is_global; }
 	bool getIsGlobal() { return m_is_global; }
 	bool isFunctionPrototype() { return m_function_prototype; }
-	void setFunctionPrototype(bool function_prototype) { m_function_prototype = function_prototype;	}
+	void setFunctionPrototype(bool function_prototype) { m_function_prototype = function_prototype; }
+
 protected:
-	//for expression nodes
-	std::shared_ptr < node > m_left_node; 
-	std::shared_ptr < node > m_right_node;
+	// for expression nodes
+	std::shared_ptr<node> m_left_node;
+	std::shared_ptr<node> m_right_node;
 	ExpressionType m_exp_type;
 
-	//used by: variable nodes
-	std::shared_ptr < node > m_value_node;
-	std::shared_ptr < datatype > m_datatype;
+	// used by: variable nodes
+	std::shared_ptr<node> m_value_node;
+	std::shared_ptr<datatype> m_datatype;
 	bool m_is_global;
 	bool m_is_function_argument;
 	int m_padding;
 
-	//used by: variable nodes and body nodes
+	// used by: variable nodes and body nodes
 	int m_stack_offset;
 
-	//used by: body nodes
-	std::list < std::shared_ptr < node > > m_statements;
+	// used by: body nodes
+	std::list<std::shared_ptr<node>> m_statements;
 	int m_body_size;
 
-	//used by: function nodes
-	std::shared_ptr < node > m_body_node;
-	std::shared_ptr < datatype > m_return_datatype;
-	std::list < std::shared_ptr < node > > m_function_arguemnt;
+	// used by: function nodes
+	std::shared_ptr<node> m_body_node;
+	std::shared_ptr<datatype> m_return_datatype;
+	std::list<std::shared_ptr<node>> m_function_arguemnt;
 	int m_stack_size;
 	bool m_function_prototype;
-	//size of ebp and esp, migth be bigger when returning structs
-	int m_stack_addition; 
+	// size of ebp and esp, migth be bigger when returning structs
+	int m_stack_addition;
 
-	//used by: identifiers
-	std::shared_ptr < node > m_declaration_node;
+	// used by: identifiers
+	std::shared_ptr<node> m_declaration_node;
 
-	//used by: parentheses node
-	std::shared_ptr < node > m_parentheses_node;
+	// used by: parentheses node
+	std::shared_ptr<node> m_parentheses_node;
 
-	//used by: if statmenets and loops 
-	std::shared_ptr < node > m_condition_node;
-	std::shared_ptr < node > m_next_else_node;
-	std::shared_ptr < node > m_init_node;//for loop
-	std::shared_ptr < node > m_loop_node;//for loop
+	// used by: if statmenets and loops
+	std::shared_ptr<node> m_condition_node;
+	std::shared_ptr<node> m_next_else_node;
+	std::shared_ptr<node> m_init_node; // for loop
+	std::shared_ptr<node> m_loop_node; // for loop
 
-	//used by: multiple node types
+	// used by: multiple node types
 	nodeType m_node_type;
 	filePosition m_file_position;
 	std::string m_string_value;
 	unsigned long m_number_val;
 };
-
 
 /*
  for future use
@@ -268,4 +262,3 @@ enum nodeType
 	NODE_TYPE_BLANK						= 0b0000000000000000000000000000000000000000,
 };
 */
-
