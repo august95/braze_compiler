@@ -36,10 +36,10 @@ int main(int argc, char* argv[]) {
 
   std::string nasm_output_file = output_file + ".o";
 
-	compileProcess process;
-	process.initialize(input_file);
+  compileProcess process;
+  process.initialize(input_file);
   
-	int ret = process.startCompiler();
+  int ret = process.startCompiler();
   if (ret != 0)
   {
     std::cout << "failed to compile " + input_file + "result: " + std::to_string(ret);

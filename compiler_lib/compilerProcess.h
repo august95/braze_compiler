@@ -10,19 +10,19 @@
 class compileProcess
 {
 public:
-	compileProcess();
-	void initialize(std::string filename);
-	int startCompiler();
-	void stop();
+  compileProcess();
+  void initialize(std::string filename);
+  int startCompiler();
+  void stop();
 
-	// for unit tests
-	std::list<std::shared_ptr<token>> getTokens() { return m_lexer.getTokens(); }
-	std::list<std::shared_ptr<node>> getAbstractSyntaxTree() { return m_parser.getAbstractSyntaxTree(); }
+  // for unit tests
+  std::list<std::shared_ptr<token>> getTokens() { return m_lexer.getTokens(); }
+  std::list<std::shared_ptr<node>> getAbstractSyntaxTree() { return m_parser.getAbstractSyntaxTree(); }
 
-	bool __unit_test_no_code_generation;
+  bool __unit_test_no_code_generation;
 
 private:
-	lexer m_lexer;
-	parser m_parser;
-	codeGenerator m_code_generator;
+  lexer m_lexer;
+  parser m_parser;
+  codeGenerator m_code_generator;
 };
