@@ -72,13 +72,25 @@ void parser::pushNode(std::shared_ptr<node> node)
   m_nodes.push_back(node);
 }
 
+std::shared_ptr<node> parser::peekLastNode()
+{
+  if (!m_nodes.empty())
+    return m_nodes.back();
+  return std::shared_ptr<node>();
+}
+
 std::shared_ptr<node> parser::peekLastNodeExpect(nodeType node_type)
 {
   std::shared_ptr<node> node = peekLastNode();
   _assert_(node->getNodeType() & node_type, "expected other node type");
   return node;
 }
-
+std::shared_ptr<node> parser::popLastNode()
+{
+  auto node = m_nodes.back();
+  m_nodes.pop_back();
+  return node;
+}
 std::shared_ptr<node> parser::makeExpressionNode(filePosition file_position, std::string operator_, std::shared_ptr<node> left_node, std::shared_ptr<node> right_node)
 {
 
@@ -673,8 +685,47 @@ void parser::parseSymbol()
 
 void parser::parseUnary()
 {
-  cerror("parsing of unaries is not yet supported!");
-  assert(0);
+  std::shared_ptr<token> operator_token = peekToken();
+  if (STRINGS_EQUAL( operator_token->getStringValue().c_str(),"*"))
+  {
+    parseIndirectionUnary();
+    return;
+  }
+  parseNormalUnary();
+}
+
+void parser::parseNormalUnary()
+{
+  std::shared_ptr<token> operator_token = nextToken();
+  std::string operator_ = operator_token->getStringValue();
+  parseExpression();
+  std::shared_ptr<node> operand_node = popLastNode();
+  std::shared_ptr<node> unary_node = std::make_shared<node>(NODE_TYPE_UNARY, operand_node->getFilePosition());
+  unary_node->setValueNode(operand_node);
+  unary_node->setStringValue(operator_token->getStringValue());
+  pushNode(unary_node);
+}
+
+void parser::parseIndirectionUnary()
+{
+  std::shared_ptr<token> operator_token;
+  std::shared_ptr<token> it_token;
+  int pointer_depth = 0;
+  do
+  {
+    pointer_depth++;
+    operator_token = nextToken();
+    it_token = peekToken();
+  } while (STRINGS_EQUAL(it_token->getStringValue().c_str(), "*"));
+
+  std::string operator_ = operator_token->getStringValue();
+  parseExpression();
+  std::shared_ptr<node> operand_node = popLastNode();
+  std::shared_ptr<node> unary_node = std::make_shared<node>(NODE_TYPE_UNARY, operand_node->getFilePosition());
+  unary_node->setValueNode(operand_node);
+  unary_node->setStringValue(operator_);
+  unary_node->setUnaryIndirectionDepth(pointer_depth);
+  pushNode(unary_node);
 }
 
 std::shared_ptr<datatype> parser::parseDatatype()

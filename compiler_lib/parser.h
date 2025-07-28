@@ -28,28 +28,16 @@ public:
   std::shared_ptr<scope> lastScope() { return m_last_scope; }
 
 private:
-  // returns next tokens and pops the token of the token list
   std::shared_ptr<token> nextToken();
-  // peeks at the next token
   std::shared_ptr<token> peekToken();
-  std::shared_ptr<scope> newScope();
-  void finishScope();
-  void addNodeToCurrentScope(std::shared_ptr<node> node);
   void pushNode(std::shared_ptr<node> node);
-  std::shared_ptr<node> peekLastNode()
-  {
-    if (!m_nodes.empty())
-      return m_nodes.back();
-    return std::shared_ptr<node>();
-  }
+  std::shared_ptr<node> peekLastNode();
   std::shared_ptr<node> peekLastNodeExpect(nodeType node_type);
-  std::shared_ptr<node> popLastNode()
-  {
-    auto node = m_nodes.back();
-    m_nodes.pop_back();
-    return node;
-  }
+  std::shared_ptr<node> popLastNode();
   std::shared_ptr<node> makeExpressionNode(filePosition file_position, std::string operator_, std::shared_ptr<node> left_node, std::shared_ptr<node> right_node);
+  std::shared_ptr<scope> newScope();
+  void addNodeToCurrentScope(std::shared_ptr<node> node);
+  void finishScope();
 
   template <class nodeType>
   std::shared_ptr<nodeType> cast_node(std::shared_ptr<node> node_);
@@ -77,6 +65,8 @@ private:
   void parseFunctionParameters();
   void parseSymbol();
   void parseUnary();
+  void parseNormalUnary();
+  void parseIndirectionUnary();
 
   std::shared_ptr<datatype> parseDatatype();
 
