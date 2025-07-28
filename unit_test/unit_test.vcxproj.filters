@@ -105,6 +105,9 @@
     <None Include="test_files\codegeneration\test_codegen_for_statement.c">
       <Filter>codegeneration</Filter>
     </None>
+    <None Include="test_files\codegeneration\test_codegen_unary.c">
+      <Filter>codegeneration</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="lexer">
