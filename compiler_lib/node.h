@@ -174,6 +174,8 @@ public:
   bool getIsGlobal() { return m_is_global; }
   bool isFunctionPrototype() { return m_function_prototype; }
   void setFunctionPrototype(bool function_prototype) { m_function_prototype = function_prototype; }
+  void setUnaryIndirectionDepth(int unary_indirection_depth) { m_unary_indirection_depth = unary_indirection_depth; }
+  int getUnaryIndirectionDepth() { return m_unary_indirection_depth;  }
 
 protected:
   // for expression nodes
@@ -215,6 +217,9 @@ protected:
   std::shared_ptr<node> m_next_else_node;
   std::shared_ptr<node> m_init_node; // for loop
   std::shared_ptr<node> m_loop_node; // for loop
+
+  //used by: unary
+  int m_unary_indirection_depth;
 
   // used by: multiple node types
   nodeType m_node_type;

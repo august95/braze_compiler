@@ -13,7 +13,8 @@ node::node()
       m_stack_size(0),
       m_stack_addition(4),
       m_padding(0),
-      m_function_prototype(0)
+      m_function_prototype(0),
+      m_unary_indirection_depth(0)
 {
 }
 
@@ -29,7 +30,8 @@ node::node(filePosition file_position)
       m_stack_size(0),
       m_stack_addition(4),
       m_padding(0),
-      m_function_prototype(0)
+      m_function_prototype(0),
+      m_unary_indirection_depth(0)
 {
 }
 
@@ -45,7 +47,8 @@ node::node(nodeType node_type, filePosition file_position)
       m_stack_size(0),
       m_stack_addition(4),
       m_padding(0),
-      m_function_prototype(0)
+      m_function_prototype(0),
+      m_unary_indirection_depth(0)
 {
 }
 
