@@ -3,57 +3,19 @@
 #include "../compiler_lib/source/compiler_lib.cpp"
 #include "../compiler_lib/compilerProcess.h"
 #include "../compiler_lib/scope.h"
+#include "test_helper.cpp"
 #include <string>
 #include <list>
 #include <iostream>
 #include <sstream>
-#define __UNIT_TEST__
 
+//__LOCAL__ is defined in unit_test.vcxproj preprocessor definitions, and is defined if the project was opened with the sln visual studio file.
+//The github action requires another filepath to the test files. 
 #ifdef __LOCAL__
 std::string file_path = "test_files/";
-#else // __GTEST__
+#else //Github action
 std::string file_path = "D:/a/braze_compiler/braze_compiler/unit_test/test_files/";
 #endif // __LOCAL__
-
-
-bool compareLines(std::string file_name, std::string  asm_file) {
-  std::istringstream stream1(file_name.c_str());
-  std::istringstream stream2(asm_file.c_str());
-  std::string line1, line2;
-  int lineNumber = 1;
-  bool areEqual = true;
-
-  while (std::getline(stream1, line1) && std::getline(stream2, line2)) {
-    if (stream1.eof() && !stream2.eof()) line1 = "";
-    if (stream2.eof() && !stream1.eof()) line2 = "";
-
-    if (line1 != line2) {
-      std::cout << "Difference at line " << lineNumber << ":\n";
-      std::cout << "  target   : \"" << line1 << "\"\n";
-      std::cout << "  asm_file : \"" << line2 << "\"\n";
-      areEqual = false;
-    }
-    lineNumber++;
-  }
-
-  return areEqual;
-}
-
-
-
-bool compareFiles(std::string target, std::string asm_file)
-{
-  std::ifstream file;
-  file.open(file_path + asm_file);
-  if (!file) {
-    std::cerr << "Failed to open the file.\n";
-  }
-  std::stringstream buffer;
-  buffer << file.rdbuf(); // Read entire file at once
-
-  return compareLines(target, buffer.str());
-}
-
 
 TEST(lexer, symbols) {
 
@@ -1037,7 +999,7 @@ TEST(codegen, globalVariables) {
 
 
 
-  EXPECT_TRUE(compareFiles(target, asm_file));
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
 
 }
@@ -1100,8 +1062,8 @@ TEST(codegen, function) {
   compileProcess process;
   process.initialize(file_path + file_name);
   process.startCompiler();
-//  compareFiles(target, asm_file);
-  EXPECT_TRUE(compareFiles(target, asm_file));
+//  compareFiles(target, file_path + asm_file);
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
   
 }
 
@@ -1160,8 +1122,8 @@ TEST(codegen, functionArguments) {
   compileProcess process;
   process.initialize(file_path + file_name);
   process.startCompiler();
-  //  compareFiles(target, asm_file);
-  EXPECT_TRUE(compareFiles(target, asm_file));
+  //  compareFiles(target, file_path + asm_file);
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
 }
 
@@ -1237,8 +1199,8 @@ TEST(codegen, functionArguments2) {
   compileProcess process;
   process.initialize(file_path + file_name);
   process.startCompiler();
-  //  compareFiles(target, asm_file);
-  EXPECT_TRUE(compareFiles(target, asm_file));
+  //  compareFiles(target, file_path + asm_file);
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
 }
 
@@ -1310,8 +1272,8 @@ TEST(codegen, functionArguments3) {
   compileProcess process;
   process.initialize(file_path + file_name);
   process.startCompiler();
-  //  compareFiles(target, asm_file);
-  EXPECT_TRUE(compareFiles(target, asm_file));
+  //  compareFiles(target, file_path + asm_file);
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
 }
 
@@ -1372,8 +1334,8 @@ TEST(codegen, functionCall) {
   compileProcess process;
   process.initialize(file_path + file_name);
   process.startCompiler();
-  //  compareFiles(target, asm_file);
-  EXPECT_TRUE(compareFiles(target, asm_file));
+  //  compareFiles(target, file_path + asm_file);
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 }
 
 TEST(codegen, functionCall2) {
@@ -1441,8 +1403,8 @@ TEST(codegen, functionCall2) {
   compileProcess process;
   process.initialize(file_path + file_name);
   process.startCompiler();
-  //  compareFiles(target, asm_file);
-  EXPECT_TRUE(compareFiles(target, asm_file));
+  //  compareFiles(target, file_path + asm_file);
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
 }
 
@@ -1513,8 +1475,8 @@ TEST(codegen, functionCall3) {
   compileProcess process;
   process.initialize(file_path + file_name);
   process.startCompiler();
-  //  compareFiles(target, asm_file);
-  EXPECT_TRUE(compareFiles(target, asm_file));
+  //  compareFiles(target, file_path + asm_file);
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 }
 
 
@@ -1599,8 +1561,8 @@ TEST(codegen, functionCall4) {
   compileProcess process;
   process.initialize(file_path + file_name);
   process.startCompiler();
-  //  compareFiles(target, asm_file);
-  EXPECT_TRUE(compareFiles(target, asm_file));
+  //  compareFiles(target, file_path + asm_file);
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
   process.stop();
 
 }
@@ -1649,8 +1611,8 @@ TEST(codegen, ifstatement) {
   compileProcess process;
   process.initialize(file_path + file_name);
   process.startCompiler();
-  //  compareFiles(target, asm_file);
-  EXPECT_TRUE(compareFiles(target, asm_file));
+  //  compareFiles(target, file_path + asm_file);
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
   process.stop();
 }
 
@@ -1740,8 +1702,8 @@ TEST(codegen, ifelsestatement) {
   compileProcess process;
   process.initialize(file_path + file_name);
   process.startCompiler();
-  //  compareFiles(target, asm_file);
-  EXPECT_TRUE(compareFiles(target, asm_file));
+  //  compareFiles(target, file_path + asm_file);
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
   process.stop();
 }
@@ -1790,8 +1752,8 @@ TEST(codegen, whilestatement) {
   compileProcess process;
   process.initialize(file_path + file_name);
   process.startCompiler();
-  //  compareFiles(target, asm_file);
-  EXPECT_TRUE(compareFiles(target, asm_file));
+  //  compareFiles(target, file_path + asm_file);
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
   process.stop();
 }
@@ -1868,8 +1830,8 @@ TEST(codegen, forstatement) {
   compileProcess process;
   process.initialize(file_path + file_name);
   process.startCompiler();
-  //  compareFiles(target, asm_file);
-  EXPECT_TRUE(compareFiles(target, asm_file));
+  //  compareFiles(target, file_path + asm_file);
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
   process.stop();
 }
