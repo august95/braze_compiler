@@ -23,7 +23,6 @@ SOURCES = \
     compiler_lib/source/resolverEntityData.cpp \
     compiler_lib/source/resolverResult.cpp \
     compiler_lib/source/resolverScope.cpp \
-    compiler_lib/source/resolverScopeData.cpp \
     compiler_lib/source/scope.cpp \
     compiler_lib/source/stackMonitor.cpp \
     compiler_lib/source/symbolResolver.cpp \

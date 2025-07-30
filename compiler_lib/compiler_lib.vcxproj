@@ -147,7 +147,6 @@
     <ClInclude Include="resolverEntityData.h" />
     <ClInclude Include="resolverResult.h" />
     <ClInclude Include="resolverScope.h" />
-    <ClInclude Include="resolverScopeData.h" />
     <ClInclude Include="scope.h" />
     <ClInclude Include="source\pch.h" />
     <ClInclude Include="stackMonitor.h" />
@@ -254,13 +253,6 @@
       </PrecompiledHeaderOutputFile>
     </ClCompile>
     <ClCompile Include="source\resolverScope.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderOutputFile>
-    </ClCompile>
-    <ClCompile Include="source\resolverScopeData.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </PrecompiledHeaderFile>

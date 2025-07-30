@@ -16,7 +16,6 @@
     <ClInclude Include="resolverScope.h" />
     <ClInclude Include="scope.h" />
     <ClInclude Include="token.h" />
-    <ClInclude Include="resolverScopeData.h" />
     <ClInclude Include="resolverEntityData.h" />
     <ClInclude Include="resolverEntity.h" />
     <ClInclude Include="resolverResult.h" />
@@ -70,9 +69,6 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\resolverScope.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\resolverScopeData.cpp">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\scope.cpp">
