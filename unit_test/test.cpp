@@ -1003,7 +1003,48 @@ TEST(codegen, globalVariables) {
 
 
 }
+/*
 
+TEST(parser, unary) {
+
+  std::string file_name = "parser/test_parser_unary.c";
+
+//  int main()
+//  {
+//    int* var_ptr;
+//    int  var_value = 0xdebg000;
+//    int var_ptr = &var_value;
+//  }
+
+  const int num_of_tokens = 5;
+
+  compileProcess process;
+  process.__unit_test_no_code_generation = true;
+  process.initialize(file_path + file_name);
+  process.startCompiler();
+
+  std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+  std::shared_ptr < node > _node = ast.front();
+
+
+  EXPECT_EQ(_node->getStringValue(), "main");
+  EXPECT_EQ(_node->getBodyNode()->getBodySize(), 12);
+  std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
+  EXPECT_EQ(statements.size(), 3);
+
+  std::shared_ptr < node > var_ptr = statements.back();
+  EXPECT_EQ(var_ptr->getDatatypeSize(), 4);
+  EXPECT_EQ(var_ptr->getStackOffset(), -12);
+
+  //testing symbol resolver, needs to find the declaration node for identifiers
+  
+  var_ptr = statements.back();
+  EXPECT_EQ(var_ptr->getDatatypeSize(), 4); //int var_val;
+  EXPECT_EQ(var_ptr->getStackOffset(), -8);// int var_val;
+
+}
+
+*/
 TEST(codegen, function) {
 
 //  int var = 0;
