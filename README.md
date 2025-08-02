@@ -18,7 +18,7 @@ Feature list:
 1. Local and global variables of primitive type: char, int, short, long, void. R and L values are supported.
 2. Function declarations, function prototypes and function calls, all with parameters
 3. String support
-4. Most operators are implemented, but not logical operators( && and ||)
+4. Most operators are implemented, but not logical operators( && and ||) and bitwise operators (>> and <<)
 5. if, else if and else statements is upported
 6. while loop is supported, break and continue statement do not work
 7. for loop is supported, break and continue statement do not work
