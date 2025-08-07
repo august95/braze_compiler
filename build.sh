@@ -6,4 +6,4 @@ echo "==> Building project"
 make
 
 echo "==> Compiling test file with Braze"
-./bin/braze_compiler
+./braze

@@ -81,7 +81,7 @@ jobs:
       run: make
 
     - name: Compile test file with Braze
-      run: ./bin/braze_compiler
+      run: ./braze
 
 #    - name: Run file compiled by Braze
 #      run: ./test_file
