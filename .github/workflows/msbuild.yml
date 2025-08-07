@@ -83,5 +83,6 @@ jobs:
     - name: Compile test file with Braze
       run: ./braze
 
+#  Braze compiler do not support return statement yet, causing the github action to fail with return value != 0
 #    - name: Run file compiled by Braze
 #      run: ./test_file
