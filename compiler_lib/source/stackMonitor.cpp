@@ -7,9 +7,15 @@ stackMonitor::stackMonitor()
 {
 }
 
-void stackMonitor::pushElement(stackElementType type, std::shared_ptr<datatype> datatype, int offset_from_bp)
+void stackMonitor::pushElement(stackElementType type, std::shared_ptr<datatype> datatype_, int offset_from_bp)
 {
-  m_stack.push_back(std::make_shared<stackElement>(type, datatype, offset_from_bp));
+  std::shared_ptr< datatype > datatype_copy = std::make_shared <datatype>();
+  if (datatype_)
+  {
+    *datatype_copy = *datatype_;
+  }
+
+  m_stack.push_back(std::make_shared<stackElement>(type, datatype_, offset_from_bp));
 }
 
 void stackMonitor::popElement(stackElementType type)

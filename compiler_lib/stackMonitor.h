@@ -18,7 +18,7 @@ class stackMonitor
 {
 public:
   stackMonitor();
-  void pushElement(stackElementType type, std::shared_ptr<datatype> datatype, int offset_from_bp);
+  void pushElement(stackElementType type, std::shared_ptr<datatype> datatype_, int offset_from_bp);
   void popElement(stackElementType type);
   std::shared_ptr<datatype> getDatatypeOnStack(int index = 0);
   int discardUnusedStack();
@@ -32,6 +32,7 @@ public:
     {
     }
     int m_offset_from_bp;
+    //copy of the data type from the node tree, owned by the stackElement
     std::shared_ptr<datatype> m_datatype;
     stackElementType m_element_type;
   };
