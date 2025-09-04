@@ -11,114 +11,120 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="test_files\lexer\test_lexer_identifiers_symbols.c">
-      <Filter>lexer</Filter>
+      <Filter>test_files\lexer</Filter>
     </None>
     <None Include="test_files\lexer\test_lexer_numbers.c">
-      <Filter>lexer</Filter>
+      <Filter>test_files\lexer</Filter>
     </None>
     <None Include="test_files\lexer\test_lexer_operators.c">
-      <Filter>lexer</Filter>
+      <Filter>test_files\lexer</Filter>
     </None>
     <None Include="test_files\lexer\test_lexer_ordinary_c_file.c">
-      <Filter>lexer</Filter>
+      <Filter>test_files\lexer</Filter>
     </None>
     <None Include="test_files\lexer\test_lexer_quote.c">
-      <Filter>lexer</Filter>
+      <Filter>test_files\lexer</Filter>
     </None>
     <None Include="test_files\lexer\test_lexer_string_and_include_strings.c">
-      <Filter>lexer</Filter>
+      <Filter>test_files\lexer</Filter>
     </None>
     <None Include="test_files\lexer\test_lexer_symbol.c">
-      <Filter>lexer</Filter>
+      <Filter>test_files\lexer</Filter>
     </None>
     <None Include="test_files\codegeneration\test_codegen_function.c">
-      <Filter>codegeneration</Filter>
+      <Filter>test_files\codegeneration</Filter>
     </None>
     <None Include="test_files\codegeneration\test_codegen_function_arguments.c">
-      <Filter>codegeneration</Filter>
+      <Filter>test_files\codegeneration</Filter>
     </None>
     <None Include="test_files\codegeneration\test_codegen_function_arguments2.c">
-      <Filter>codegeneration</Filter>
+      <Filter>test_files\codegeneration</Filter>
     </None>
     <None Include="test_files\codegeneration\test_codegen_function_arguments3.c">
-      <Filter>codegeneration</Filter>
+      <Filter>test_files\codegeneration</Filter>
     </None>
     <None Include="test_files\codegeneration\test_codegen_global_variables.c">
-      <Filter>codegeneration</Filter>
+      <Filter>test_files\codegeneration</Filter>
     </None>
     <None Include="test_files\parser\test_parser_function.c">
-      <Filter>parser</Filter>
+      <Filter>test_files\parser</Filter>
     </None>
     <None Include="test_files\parser\test_parser_function_2.c">
-      <Filter>parser</Filter>
+      <Filter>test_files\parser</Filter>
     </None>
     <None Include="test_files\parser\test_parser_function_arguments.c">
-      <Filter>parser</Filter>
+      <Filter>test_files\parser</Filter>
     </None>
     <None Include="test_files\parser\test_parser_global_access_from_function.c">
-      <Filter>parser</Filter>
+      <Filter>test_files\parser</Filter>
     </None>
     <None Include="test_files\parser\test_parser_keyword.c">
-      <Filter>parser</Filter>
+      <Filter>test_files\parser</Filter>
     </None>
     <None Include="test_files\parser\test_parser_test.c">
-      <Filter>parser</Filter>
+      <Filter>test_files\parser</Filter>
     </None>
     <None Include="test_files\parser\test_parser_unary.c">
-      <Filter>parser</Filter>
+      <Filter>test_files\parser</Filter>
     </None>
     <None Include="test_files\codegeneration\test_codegen_function_call.c">
-      <Filter>codegeneration</Filter>
+      <Filter>test_files\codegeneration</Filter>
     </None>
     <None Include="test_files\codegeneration\test_codegen_function_call2.c">
-      <Filter>codegeneration</Filter>
+      <Filter>test_files\codegeneration</Filter>
     </None>
     <None Include="test_files\parser\test_parser_string.c">
-      <Filter>parser</Filter>
+      <Filter>test_files\parser</Filter>
     </None>
     <None Include="test_files\codegeneration\test_codegen_function_call3.c">
-      <Filter>codegeneration</Filter>
+      <Filter>test_files\codegeneration</Filter>
     </None>
     <None Include="test_files\codegeneration\test_codegen_function_call4.c">
-      <Filter>codegeneration</Filter>
+      <Filter>test_files\codegeneration</Filter>
     </None>
     <None Include="test_files\codegeneration\test_codegen_if_statement.c">
-      <Filter>codegeneration</Filter>
+      <Filter>test_files\codegeneration</Filter>
     </None>
     <None Include="test_files\parser\test_parser_if_statement.c">
-      <Filter>parser</Filter>
+      <Filter>test_files\parser</Filter>
     </None>
     <None Include="test_files\parser\test_parser_if_else_statement.c">
-      <Filter>parser</Filter>
+      <Filter>test_files\parser</Filter>
     </None>
     <None Include="test_files\codegeneration\test_codegen_if_else_statement.c">
-      <Filter>codegeneration</Filter>
+      <Filter>test_files\codegeneration</Filter>
     </None>
     <None Include="test_files\codegeneration\test_codegen_while_statement.c">
-      <Filter>codegeneration</Filter>
+      <Filter>test_files\codegeneration</Filter>
     </None>
     <None Include="test_files\parser\test_parser_for_statement.c">
-      <Filter>parser</Filter>
+      <Filter>test_files\parser</Filter>
     </None>
     <None Include="test_files\parser\test_parser_while_statement.c">
-      <Filter>parser</Filter>
+      <Filter>test_files\parser</Filter>
     </None>
     <None Include="test_files\codegeneration\test_codegen_for_statement.c">
-      <Filter>codegeneration</Filter>
+      <Filter>test_files\codegeneration</Filter>
     </None>
     <None Include="test_files\codegeneration\test_codegen_unary.c">
-      <Filter>codegeneration</Filter>
+      <Filter>test_files\codegeneration</Filter>
+    </None>
+    <None Include="test_files\codegeneration\test_codegen_unary2.c">
+      <Filter>test_files\codegeneration</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="lexer">
+    <Filter Include="test_files">
+      <UniqueIdentifier>{f7221aa7-7360-4d4e-8d51-86723c73cf6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test_files\codegeneration">
+      <UniqueIdentifier>{91b1686c-69cd-4206-8adb-d0f468f42b14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test_files\lexer">
       <UniqueIdentifier>{baffa09b-93af-4344-9878-037bb53a764d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="parser">
+    <Filter Include="test_files\parser">
       <UniqueIdentifier>{833b1d39-e467-43d1-982e-1d6ea801b3dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="codegeneration">
-      <UniqueIdentifier>{91b1686c-69cd-4206-8adb-d0f468f42b14}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
