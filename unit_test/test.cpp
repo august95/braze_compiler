@@ -17,6 +17,8 @@ std::string file_path = "test_files/";
 std::string file_path = "D:/a/braze_compiler/braze_compiler/unit_test/test_files/";
 #endif // __LOCAL__
 
+
+
 TEST(lexer, symbols) {
 
   std::string file_name = "lexer/test_lexer_symbol.c";
@@ -1003,18 +1005,20 @@ TEST(codegen, globalVariables) {
 
 
 }
-/*
+
 
 TEST(parser, unary) {
 
   std::string file_name = "parser/test_parser_unary.c";
 
-//  int main()
-//  {
-//    int* var_ptr;
-//    int  var_value = 0xdebg000;
-//    int var_ptr = &var_value;
-//  }
+  //int main()
+  //{
+  //  int* ptr;
+  //  int val = 5;
+  //  ptr = &val;
+  //
+  //  int result = *ptr;
+  //}
 
   const int num_of_tokens = 5;
 
@@ -1030,21 +1034,28 @@ TEST(parser, unary) {
   EXPECT_EQ(_node->getStringValue(), "main");
   EXPECT_EQ(_node->getBodyNode()->getBodySize(), 12);
   std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
-  EXPECT_EQ(statements.size(), 3);
+  EXPECT_EQ(statements.size(), 4);
 
-  std::shared_ptr < node > var_ptr = statements.back();
-  EXPECT_EQ(var_ptr->getDatatypeSize(), 4);
-  EXPECT_EQ(var_ptr->getStackOffset(), -12);
+  std::shared_ptr < node > ptr = statements.front();
+  EXPECT_EQ(ptr->getDatatypeSize(), 4);
+  EXPECT_EQ(ptr->getStackOffset(), -4);
+  EXPECT_EQ(ptr->getDatatype()->getPointerDepth(), 1);
+  statements.pop_front();
+  statements.pop_front();// int val
 
-  //testing symbol resolver, needs to find the declaration node for identifiers
-  
-  var_ptr = statements.back();
-  EXPECT_EQ(var_ptr->getDatatypeSize(), 4); //int var_val;
-  EXPECT_EQ(var_ptr->getStackOffset(), -8);// int var_val;
+  std::shared_ptr < node > ptr_assignment = statements.front();
+  EXPECT_EQ(ptr_assignment->getRightNode()->getNodeType(), nodeType::NODE_TYPE_UNARY);
+  EXPECT_TRUE(STRINGS_EQUAL(ptr_assignment->getRightNode()->getStringValue().c_str(), "&"));
+
+  statements.pop_front();// int val
+  std::shared_ptr < node > result = statements.front();
+  EXPECT_EQ(result->getValueNode()->getNodeType(), nodeType::NODE_TYPE_UNARY);
+  EXPECT_TRUE(STRINGS_EQUAL(result->getValueNode()->getStringValue().c_str(), "*"));
+
 
 }
 
-*/
+
 TEST(codegen, function) {
 
 //  int var = 0;
