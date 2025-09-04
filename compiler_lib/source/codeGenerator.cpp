@@ -175,6 +175,10 @@ void codeGenerator::generateStatement(std::shared_ptr<node> node)
   {
     generateStatementFor(node);
   }
+  else if (node->getNodeType() == NODE_TYPE_UNARY)
+  {
+    generateUnary(node);
+  }
   m_asm_writer.discardUnusedStack();
 }
 
@@ -355,6 +359,10 @@ void codeGenerator::generateExpressionable(std::shared_ptr<node> node, int flags
   {
     generateString(node);
   }
+  else if (node->getNodeType() == NODE_TYPE_UNARY)
+  {
+    generateUnary(node);
+  }
 }
 
 void codeGenerator::generateExpNode(std::shared_ptr<node> node)
@@ -426,8 +434,13 @@ bool codeGenerator::resolveNodeForValue(std::shared_ptr<node> node)
     return false;
   }
   generateEntityAccess(node, result);
+  std::shared_ptr < datatype > datatype =  m_asm_writer.getDatatypeOnStack();
+  if (datatype->getPointerDepth() != 0)
+  {
+    //we have a pointer on the stack
+    return true;
+  } 
   m_asm_writer.asmGenPopIns("eax");
-
   m_asm_writer.asmGenReduceRegister("eax", entity->getDatatype()->getDatatypeSize(), entity->getDatatype()->isSigned());
   m_asm_writer.asmGenPushIns("eax", entity->getDatatype(), 0);
 
@@ -451,6 +464,14 @@ void codeGenerator::generateEntityAccessForEntity(std::shared_ptr<resolverEntity
   {
     generateEntityAccessForFunctionCall(entity, result);
   }
+  if (entity->getEntityType() == E_UNARY_ADDRESS)
+  {
+    generateEntityAccessForUnaryAddress(entity, result);
+  }
+  if (entity->getEntityType() == E_INDIRECTION)
+  {
+    generateEntityAccessForUnaryIndirection(entity, result);
+  }
 }
 
 void codeGenerator::generateEntityAccessForFunctionCall(std::shared_ptr<resolverEntity> entity, std::shared_ptr<resolverResult> result)
@@ -473,15 +494,29 @@ void codeGenerator::generateEntityAccessForFunctionCall(std::shared_ptr<resolver
   m_asm_writer.asmGenPushIns("eax", entity->getDatatype(), 0);
 }
 
+void codeGenerator::generateEntityAccessForUnaryAddress(std::shared_ptr<resolverEntity> entity, std::shared_ptr<resolverResult> result)
+{
+  m_asm_writer.asmGenPopIns("ebx");
+  m_asm_writer.asmGenPushIns("ebx", entity->getDatatype(), 0);
+}
+
+void codeGenerator::generateEntityAccessForUnaryIndirection(std::shared_ptr<resolverEntity> entity, std::shared_ptr<resolverResult> result)
+{
+  std::shared_ptr<datatype> datatype = m_asm_writer.getDatatypeOnStack();
+  if (!datatype)
+    assert(0);
+  m_asm_writer.asmGenPopIns("ebx");
+  for (int i = 0; i < entity->getUnaryIndirectionDepth(); i++)
+  {
+    m_asm_writer.asmGen("mov ebx, [ebx]");
+  }
+  m_asm_writer.asmGenPushIns("ebx", entity->getDatatype(), 0);
+
+}
+
 void codeGenerator::generateEntityAccessStart(std::shared_ptr<resolverEntity> root_entity, std::shared_ptr<resolverResult> result)
 {
-  // if E_POINTER  asm_push_ins_push_with_data("dword [%s]", STACK_FRAME_ELEMENT_TYPE_PUSHED_VALUE, "result_value", 0, &(struct stack_frame_data){.dtype = root_assignment_entity->dtype}, result->base.address);
-
-  if (root_entity->getEntityType() == E_POINTER)
-  {
-    // push dword ptr address
-  }
-  else if (root_entity->getEntityType() == E_FUNCTION)
+  if (root_entity->getEntityType() == E_FUNCTION)
   {
     m_asm_writer.asmGen("lea ebx, [" + result->getRootAddress() + "]");
     m_asm_writer.asmGenPushIns("ebx", root_entity->getDatatype(), 0);
@@ -490,6 +525,16 @@ void codeGenerator::generateEntityAccessStart(std::shared_ptr<resolverEntity> ro
   {
     m_asm_writer.asmGen("mov ebx, [" + result->getRootAddress() + "]");
     m_asm_writer.asmGenPushIns("ebx", root_entity->getDatatype(), 0);
+  }
+  else if (root_entity->getCodeGenInstruction() & CG_LOAD_VALUE_TO_EBX)
+  {
+    m_asm_writer.asmGen("lea ebx, [" + root_entity->getAddress() + "]");
+    m_asm_writer.asmGenPushIns("ebx", root_entity->getDatatype(), 0);
+    m_asm_writer.getDatatypeOnStack()->incrementPointerDepth();
+  }
+  else if (root_entity->getEntityType() == E_VARIABLE)
+  {
+    m_asm_writer.asmGenPushIns("dword [" + root_entity->getAddress() + "]", root_entity->getDatatype(), 0);
   }
 }
 
@@ -500,6 +545,23 @@ void codeGenerator::generateAssignmentExpression(std::shared_ptr<node> node)
   generateAssignmentPart(node->getLeftNode(), node->getStringValue());
 }
 
+void codeGenerator::generateUnary(std::shared_ptr<node> node)
+{ 
+  if (resolveNodeForValue(node))
+  {
+    return;
+  }
+  else if (STRINGS_EQUAL(node->getStringValue().c_str(), "*"))
+  {
+
+  }
+  else if (STRINGS_EQUAL(node->getStringValue().c_str(), "&"))
+  {
+
+    return;
+  }
+}
+
 void codeGenerator::generateNumber(std::shared_ptr<node> node, int flags)
 {
   // todo add stack verificatoions
@@ -508,6 +570,7 @@ void codeGenerator::generateNumber(std::shared_ptr<node> node, int flags)
 
 void codeGenerator::generateIdentifier(std::shared_ptr<node> node)
 {
+  //always variable, functon calls are expressions with () op
   std::shared_ptr<resolverResult> result;
   m_resolver.follow(node, result);
   std::shared_ptr<resolverEntity> entity = result->peekEntity();

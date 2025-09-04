@@ -24,7 +24,8 @@ public:
   std::shared_ptr<node> getNode() { return m_node; }
   void registerFunction(std::shared_ptr<node> node);
   void setGlobalAsmAddress(std::string name, int offset = 0);
-
+  void increasePtrDepth() { m_ptr_depth++; }
+  int getPtrDepth() { return m_ptr_depth; }
   // private:
   //  ie variable function or struct
   int m_entity_type;
@@ -35,6 +36,7 @@ public:
   // -4
   int offset;
   int flags;
+  int m_ptr_depth;
 
   bool m_is_stack;
   std::shared_ptr<datatype> m_datatype;

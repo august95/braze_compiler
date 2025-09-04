@@ -33,6 +33,10 @@ void resolverScope::follow(std::shared_ptr<node> node, std::shared_ptr<resolverR
   {
     followExpression(node->getParenthesesNode(), result);
   }
+  else if (node->getNodeType() == NODE_TYPE_UNARY)
+  {
+    followUnary(node, result);
+  }
 }
 
 void resolverScope::followName(std::shared_ptr<node> node, std::shared_ptr<resolverResult> result)
@@ -89,6 +93,50 @@ void resolverScope::followFunctionCall(std::shared_ptr<node> node_, std::shared_
   }
   function_call_entity->setDatatype(function_entity->getDatatype());
 }
+
+void resolverScope::followUnary(std::shared_ptr<node> node_, std::shared_ptr<resolverResult> result)
+{
+  //indirection
+  if (STRINGS_EQUAL(node_->getStringValue().c_str(), "*"))
+  {
+    followUnaryIndirection(node_, result);
+  }
+  //address
+  else if (STRINGS_EQUAL(node_->getStringValue().c_str(), "&"))
+  {
+    followUnaryAddress(node_, result);
+  }
+
+}
+
+void resolverScope::followUnaryAddress(std::shared_ptr<node> node_, std::shared_ptr<resolverResult> result)
+{
+  // int val;
+  // int ptr* = &val;
+  // we are creating a pointer out of the identifier val
+  follow(node_->getValueNode(), result);
+  std::shared_ptr<resolverEntity> last_entity = result->getRootEntity();
+  std::shared_ptr<resolverEntity> unary_address = std::make_shared<resolverEntity>(node_);
+  unary_address->setEntityType(E_UNARY_ADDRESS);
+  last_entity->setDatatype(last_entity->getNode()->getDatatype());
+  unary_address->setDatatype(last_entity->getNode()->getDatatype());
+  //load the address of the variable val into register
+  last_entity->setCodeGenInstruction(CG_LOAD_VALUE_TO_EBX);
+  result->addEntity(unary_address);
+}
+
+void resolverScope::followUnaryIndirection(std::shared_ptr<node> node_, std::shared_ptr<resolverResult> result)
+{
+  follow(node_->getValueNode(), result);
+  std::shared_ptr<resolverEntity> indirection_entity = std::make_shared<resolverEntity>(node_);
+  std::shared_ptr<resolverEntity> last_entity = result->getRootEntity();
+  indirection_entity->setEntityType(E_INDIRECTION);
+  indirection_entity->setUnaryIndirectionDepth(node_->getUnaryIndirectionDepth());
+  indirection_entity->setDatatype(node_->getDatatype());
+  last_entity->setDatatype(node_->getDatatype());
+  result->addEntity(indirection_entity);
+}
+
 void resolverScope::buildFunctionCallArguments(std::shared_ptr<node> node_, std::shared_ptr<resolverEntity> function_call_entity, std::shared_ptr<resolverResult> result, int &function_call_stack_size)
 {
   // we have multiple arguments separated by opertaor node wiht op ",

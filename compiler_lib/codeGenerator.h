@@ -58,8 +58,11 @@ public:
   void generateEntityAccess(std::shared_ptr<node> node, std::shared_ptr<resolverResult> result);
   void generateEntityAccessForEntity(std::shared_ptr<resolverEntity> entity, std::shared_ptr<resolverResult> result);
   void generateEntityAccessForFunctionCall(std::shared_ptr<resolverEntity> entity, std::shared_ptr<resolverResult> result);
+  void generateEntityAccessForUnaryAddress(std::shared_ptr<resolverEntity> entity, std::shared_ptr<resolverResult> result);
+  void generateEntityAccessForUnaryIndirection(std::shared_ptr<resolverEntity> entity, std::shared_ptr<resolverResult> result);
   void generateEntityAccessStart(std::shared_ptr<resolverEntity> root_entity, std::shared_ptr<resolverResult> result);
   void generateAssignmentExpression(std::shared_ptr<node> node);
+  void generateUnary(std::shared_ptr<node> node);
   void generateNumber(std::shared_ptr<node> node, int flags);
   void generateIdentifier(std::shared_ptr<node> node);
   void generateAssignmentPart(std::shared_ptr<node> node, std::string operator_);

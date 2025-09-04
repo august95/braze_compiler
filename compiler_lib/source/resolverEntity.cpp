@@ -7,7 +7,9 @@ resolverEntity::resolverEntity()
     type(0),
     flag(0),
     offest(0),
-    m_function_call_stack_size(0)
+    m_function_call_stack_size(0),
+    m_code_gen_instruction(0),
+    m_indirection_depth(0)
 {
 }
 
@@ -18,7 +20,9 @@ resolverEntity::resolverEntity(std::shared_ptr<node> node)
     type(0),
     flag(0),
     offest(0),
-    m_function_call_stack_size(0)
+    m_function_call_stack_size(0),
+    m_code_gen_instruction(0),
+    m_indirection_depth(0)
 {
 }
 

@@ -198,6 +198,7 @@ void parser::parseOperand()
     node_ = std::make_shared<node>(nodeType::NODE_TYPE_IDENTIFIER, token->getFilePosition());
     node_->setStringValue(token->getStringValue());
     node_->setDeclarationNode(m_symbol_resolver.findDeclerationNode(node_));
+    node_->setDatatype(node_->getDeclarationNode()?node_->getDeclarationNode()->getDatatype():0);
   }
   else if (token->isTokenTypeString())
   {
@@ -725,6 +726,7 @@ void parser::parseIndirectionUnary()
   unary_node->setValueNode(operand_node);
   unary_node->setStringValue(operator_);
   unary_node->setUnaryIndirectionDepth(pointer_depth);
+  unary_node->setDatatype(operand_node->getDatatype());
   pushNode(unary_node);
 }
 

@@ -4,7 +4,8 @@
 resolverEntityData::resolverEntityData(entityDataType entity_type)
     : m_entity_type(entity_type),
       m_is_stack(false),
-      offset(0)
+      offset(0),
+      m_ptr_depth(0)
 {
 }
 
