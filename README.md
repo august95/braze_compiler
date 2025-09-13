@@ -23,6 +23,7 @@ Feature list:
 6. while loop is supported, break and continue statement do not work
 7. for loop is supported, break and continue statement do not work
   * Init part of the for loop must contain a variable declaration. Condition and loop part must be present.
+6. pointer arithmentic is supported
 
 Known limitations:
 1. No pre processor support, include doesn't work. In order to use Printf, declare the following prototype at the top of the file, and nasm will link it: "int printf(const char *format, ...);" 
