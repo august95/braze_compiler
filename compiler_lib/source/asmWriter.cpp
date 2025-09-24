@@ -80,7 +80,7 @@ void asmWriter::asmGenNoNewLine(std::string ins)
 
 void asmWriter::asmGenReduceRegister(std::string reg, int size, bool is_signed)
 {
-  if (size != DATA_SIZE_DWORD)
+  if (size != DATA_SIZE_DWORD && size != 0)
   {
     std::string ins = "movsx";
     if (!is_signed)
