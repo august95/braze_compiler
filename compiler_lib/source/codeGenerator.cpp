@@ -516,14 +516,9 @@ void codeGenerator::generateEntityAccessForUnaryIndirection(std::shared_ptr<reso
 
 void codeGenerator::generateEntityAccessStart(std::shared_ptr<resolverEntity> root_entity, std::shared_ptr<resolverResult> result)
 {
-  if (root_entity->getEntityType() == E_FUNCTION)
+  if (root_entity->getCodeGenInstruction() & CG_LOAD_FUNCTION_ADDRESS_TO_EBX)
   {
     m_asm_writer.asmGen("lea ebx, [" + result->getRootAddress() + "]");
-    m_asm_writer.asmGenPushIns("ebx", root_entity->getDatatype(), 0);
-  }
-  else if (root_entity->getEntityType() == E_ARRAY)
-  {
-    m_asm_writer.asmGen("mov ebx, [" + result->getRootAddress() + "]");
     m_asm_writer.asmGenPushIns("ebx", root_entity->getDatatype(), 0);
   }
   else if (root_entity->getCodeGenInstruction() & CG_LOAD_VALUE_TO_EBX)

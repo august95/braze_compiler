@@ -83,6 +83,7 @@ void resolverScope::followFunctionCall(std::shared_ptr<node> node_, std::shared_
   }
   std::shared_ptr<resolverEntity> function_call_entity = std::make_shared<resolverEntity>();
   function_call_entity->setEntityType(E_FUNCTION_CALL);
+  function_entity->setCodeGenInstruction(CG_LOAD_FUNCTION_ADDRESS_TO_EBX);
   result->addEntity(function_call_entity);
 
   if (node_->getRightNode())
