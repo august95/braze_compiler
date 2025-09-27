@@ -296,31 +296,75 @@ void parser::parseNormalExpression()
 {
   // 50 * 30 + 20
   std::shared_ptr<node> left_node = peekLastNode();    // 50
-  std::shared_ptr<token> operatort_token = peekToken(); // *
+  std::shared_ptr<token> operator_token = peekToken(); // *
   // std::string operator_ = operatort_token->getStringValue();
 
   if (!left_node)
   {
-    if (operatort_token->isUnaryOperator())
+    if (operator_token->isUnaryOperator())
     {
       parseUnary();
     }
     else
     {
-      cwarning("expression has no left operand, expected unary, but no found", operatort_token->getFilePosition());
+      cwarning("expression has no left operand, expected unary, but no found", operator_token->getFilePosition());
     }
     return;
   }
-
+  if (STRINGS_EQUAL(operator_token->getStringValue().c_str(), "++") ||
+    STRINGS_EQUAL(operator_token->getStringValue().c_str(), "--"))
+  {
+    parseIncrementOperator();
+    return;
+  }
   nextToken();                    // operator token popped '*'
   popLastNode();                    // 50
   parseExpression();                  // parse 30 + 20
   std::shared_ptr<node> right_node = popLastNode(); // + L(30) R(20)
-  std::shared_ptr<node> expression_node = makeExpressionNode(operatort_token->getFilePosition(), operatort_token->getStringValue(), left_node, right_node);
+  std::shared_ptr<node> expression_node = makeExpressionNode(operator_token->getFilePosition(), operator_token->getStringValue(), left_node, right_node);
 
   precedenceHandler::reorderExpression(expression_node);
 
   pushNode(expression_node);
+}
+
+void parser::parseIncrementOperator()
+{
+  //FIXME: create new node type and let code gen handle increment operator.
+  // in case of array the result needs to be pushed to stack, in order to access array X element
+  //For now to make GUI work, create following node structure 
+  /*
+      =
+    i   +/-
+      i    1
+  */
+
+  std::shared_ptr<node> left_node = popLastNode();    // i
+  std::shared_ptr<token> operator_token = nextToken(); // ++
+
+  //1
+  std::shared_ptr<node> node_1 = std::make_shared<node>(nodeType::NODE_TYPE_NUMBER, left_node->getFilePosition());
+  std::shared_ptr<datatype> datatype_ = std::make_shared<datatype>(left_node->getFilePosition());
+  datatype_->setDataType("int");
+  datatype_->setRValue(true);
+  node_1->setDatatype(datatype_);
+  node_1->setNumberValue(1);
+
+  //i
+  std::shared_ptr<node> node_i = std::make_shared<node>();
+  *node_i = *left_node;
+
+
+  //+ or -
+  std::shared_ptr<node> add_or_subtract_node;
+  if (STRINGS_EQUAL(operator_token->getStringValue().c_str(), "++"))
+    add_or_subtract_node = makeExpressionNode(operator_token->getFilePosition(), "+", node_i, node_1);
+  else if (STRINGS_EQUAL(operator_token->getStringValue().c_str(), "--"))
+    add_or_subtract_node = makeExpressionNode(operator_token->getFilePosition(), "-", node_i, node_1);
+
+
+  std::shared_ptr<node> assignment_node = makeExpressionNode(operator_token->getFilePosition(), "=", left_node, add_or_subtract_node);
+  pushNode(assignment_node);
 }
 
 void parser::parseKeyword()

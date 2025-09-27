@@ -52,6 +52,7 @@ private:
   void parseParenthesesExpressionOrFunctionCall();
   void parseComma();
   void parseNormalExpression();
+  void parseIncrementOperator();
   void parseKeyword();
   void parseWhileStatement();
   void parseForStatement();
