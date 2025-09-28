@@ -29,6 +29,10 @@ public:
 private:
   void lexFile();
   std::shared_ptr<token> readNextToken();
+  void handleComment();
+  bool handleComment_();
+  void handleSingleLineComment();
+  void handleMultiLineComment();
 
   std::shared_ptr<token> makeIdentifierOrKeyword();
   bool is_keyword(std::string _keyword_);

@@ -147,6 +147,8 @@ std::shared_ptr<token> lexer::readNextToken()
 {
   std::shared_ptr<token> token(0);
 
+  handleComment();
+
   char c = peekChar();
 
   /*
@@ -198,6 +200,76 @@ std::shared_ptr<token> lexer::readNextToken()
   }
 
   return token;
+}
+
+void lexer::handleComment()
+{
+  /*
+  handle cases like 
+
+  //
+  /*
+  test
+  */
+  bool continue_to_remove_comments = false;
+  do 
+  {
+    continue_to_remove_comments = handleComment_();
+  } while (continue_to_remove_comments);
+}
+
+bool lexer::handleComment_()
+{
+  char c = peekChar();
+  if (c == '/')
+  {
+    nextChar();
+    if (peekChar() == '/')
+    {
+      handleSingleLineComment();
+      return true;
+    }
+    else if (peekChar() == '*')
+    {
+      handleMultiLineComment();
+      return true;
+    }
+    pushChar(c);
+  }
+  return false;
+}
+
+void lexer::handleSingleLineComment()
+{
+  char c = peekChar();
+  while (c != '\n')
+  {
+    if (c == EOF)
+    {
+      return;
+    }
+    c = nextChar();
+  }
+
+}
+
+void lexer::handleMultiLineComment()
+{
+  while (1)
+  {
+    if (peekChar() == EOF)
+    {
+      return;
+    }
+    if (nextChar() == '*')
+    {
+      if (peekChar() == '/')
+      {
+        nextChar();
+        return;
+      }
+    }
+  }
 }
 
 std::shared_ptr<token> lexer::makeIdentifierOrKeyword()
