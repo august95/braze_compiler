@@ -33,7 +33,6 @@ Known limitations:
 5. No pointer arithmentic is supported 
 5. No structs, typedef or complex types are supported
 6. Single line bodies are not supported {} must be used
-7. Comments is partially implemented, and is unstable!
-8. Global variables must be declared before the first function definition
+7. Global variables must be declared before the first function definition
 
 To see examples of implemented language features goto: /unit_test/test_files/codegeneration/
