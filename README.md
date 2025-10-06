@@ -19,18 +19,17 @@ Feature list:
 2. Function declarations, function prototypes and function calls, all with parameters
 3. String support
 4. Most operators are implemented, but not logical operators( && and ||) and bitwise operators (>> and <<)
-5. if, else if and else statements is upported
+5. if, else if and else statements is supported
 6. while loop is supported, break and continue statement do not work
 7. for loop is supported, break and continue statement do not work
   * Init part of the for loop must contain a variable declaration. Condition and loop part must be present.
-6. pointer arithmentic is supported
+8. pointer arithmentic is partially supported
 
 Known limitations:
 1. No pre processor support, include doesn't work. In order to use Printf, declare the following prototype at the top of the file, and nasm will link it: "int printf(const char *format, ...);" 
 2. Format specifiers in strings is not supported, example: "test value %d", 10
 3. Return keyword is not suppoerted
-4. Following controll flow constructs are supported like: do while, goto
-5. No pointer arithmentic is supported 
+4. Following controll flow constructs are not supported: do while, goto
 5. No structs, typedef or complex types are supported
 6. Single line bodies are not supported {} must be used
 7. Global variables must be declared before the first function definition
