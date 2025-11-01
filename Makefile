@@ -49,5 +49,8 @@ $(BUILD_DIR)/braze_compiler.o: braze_compiler/braze_compiler.cpp
 
 clean:
 	rm -rf $(BUILD_DIR) $(TARGET)
+	rm test_file
+	rm test_file.c.asm
+	rm test_file.o
 
 .PHONY: all clean
