@@ -5,7 +5,7 @@
             "name": "WSL Debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/mnt/c/repositories/braze_compiler/bin/braze_compiler",
+            "program": "/mnt/c/repositories/braze_compiler/braze",
             "args": [],
             "stopAtEntry": false,
             "cwd": "/mnt/c/repositories/braze_compiler",
