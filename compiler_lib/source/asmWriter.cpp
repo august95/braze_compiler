@@ -9,9 +9,10 @@ asmWriter::asmWriter()
 
 void asmWriter::asmGen(std::string ins)
 {
-
+#if defined(_MSC_VER)
   fprintf(stdout, ins.c_str());
   fprintf(stdout, "\n");
+#endif
   if (file)
   {
     fprintf(file, ins.c_str());
@@ -70,8 +71,9 @@ void asmWriter::asmGenPopEbp(int stack_addition)
 
 void asmWriter::asmGenNoNewLine(std::string ins)
 {
-
+#if defined(_MSC_VER)
   fprintf(stdout, ins.c_str());
+#endif
   if (file)
   {
     fprintf(file, ins.c_str());
