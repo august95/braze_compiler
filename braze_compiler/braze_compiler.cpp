@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 
   std::cout <<"\ncompiling " << input_file << " to " << output_bin << "\n\n";
 
-  std::string nasm_output_file = output_file + ".o";
+  std::string nasm_output_file = output_bin + ".o";
 
   //avoid libc debugging, allocato on heap
   compileProcess* process = new compileProcess();
