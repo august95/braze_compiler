@@ -2016,3 +2016,77 @@ TEST(codegen, unary2) {
 }
 
 
+
+
+
+TEST(codegen, unary3) {
+
+//int test()
+//{
+//  int* a = 0xffc00000;
+//  *a;
+//}
+//
+//
+//int main()
+//{
+//  test();
+//}
+
+
+
+  std::string target =
+
+    "section .data\n"
+    "section .text\n"
+    "global test\n"
+ //   "; test function\n"
+    "test:\n"
+    "push ebp\n"
+    "mov ebp, esp\n"
+    "sub esp, 16\n"
+    "push dword 1744830464\n"
+    "pop eax\n"
+    "mov dword [ebp-4], eax\n"
+    "push dword [ebp-4]\n"
+//    "; INDIRECTION\n"
+    "pop ebx\n"
+    "mov ebx, [ebx]\n"
+    "push ebx\n"
+    "add esp, 4\n"
+    "add esp, 16\n"
+    "pop ebp\n"
+    "ret\n"
+    "global main\n"
+//    "; main function\n"
+    "main:\n"
+    "push ebp\n"
+    "mov ebp, esp\n"
+    "lea ebx, [test]\n"
+    "push ebx\n"
+    "pop ebx\n"
+    "mov ecx, ebx\n"
+    "call ecx\n"
+    "push eax\n"
+    "pop eax\n"
+    "push eax\n"
+    "add esp, 4\n"
+    "pop ebp\n"
+    "ret\n"
+    "section .rodata\n"
+    ;
+
+  std::string file_name = "codegeneration/test_codegen_unary3.c";
+  std::string asm_file = file_name + ".asm";
+
+  const int num_of_tokens = 5;
+
+  compileProcess process;
+  process.initialize(file_path + file_name);
+  process.startCompiler();
+  //  compareFiles(target, file_path + asm_file);
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
+
+  process.stop();
+}
+
