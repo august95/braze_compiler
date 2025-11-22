@@ -24,6 +24,9 @@
     <ClInclude Include="source\pch.h">
       <Filter>source</Filter>
     </ClInclude>
+    <ClInclude Include="charStreamInterface.h" />
+    <ClInclude Include="charStreamFile.h" />
+    <ClInclude Include="charStreamArgs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\asmWriter.cpp">
@@ -81,6 +84,15 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\token.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\charStreamInterface.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\charStreamFile.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\charStreamArgs.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

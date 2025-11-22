@@ -133,6 +133,9 @@
   <ItemGroup>
     <ClInclude Include="asmWriter.h" />
     <ClInclude Include="braze_compiler.h" />
+    <ClInclude Include="charStreamArgs.h" />
+    <ClInclude Include="charStreamFile.h" />
+    <ClInclude Include="charStreamInterface.h" />
     <ClInclude Include="codeGenerator.h" />
     <ClInclude Include="compilerProcess.h" />
     <ClInclude Include="datatype.h" />
@@ -161,6 +164,9 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </PrecompiledHeaderOutputFile>
     </ClCompile>
+    <ClCompile Include="source\charStreamArgs.cpp" />
+    <ClCompile Include="source\charStreamFile.cpp" />
+    <ClCompile Include="source\charStreamInterface.cpp" />
     <ClCompile Include="source\codeGenerator.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
