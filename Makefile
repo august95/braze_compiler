@@ -25,8 +25,10 @@ SOURCES = \
 	compiler_lib/source/scope.cpp \
 	compiler_lib/source/stackMonitor.cpp \
 	compiler_lib/source/symbolResolver.cpp \
-	compiler_lib/source/token.cpp 
- 
+	compiler_lib/source/token.cpp \
+	compiler_lib/source/charStreamArgs.cpp  \
+  compiler_lib/source/charStreamFile.cpp \
+  compiler_lib/source/charStreamInterface.cpp  \
 
 OBJECTS = $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(notdir $(SOURCES)))
 

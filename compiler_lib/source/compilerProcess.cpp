@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "../compilerProcess.h"
 #include "../braze_compiler.h"
+#include "../charStreamFile.h"
 #include <cstdio> // For fopen, fclose, fread, fwrite, etc.
 
 compileProcess::compileProcess()
@@ -10,6 +11,9 @@ compileProcess::compileProcess()
 void compileProcess::initialize(std::string filename)
 {
   m_lexer.initialize(filename);
+  std::shared_ptr<charStreamFile> char_stream = std::make_shared <charStreamFile>();
+  char_stream->initialize(filename);
+  m_lexer.setCharStreamInterface(char_stream);
   m_code_generator.setFileName(filename);
 }
 

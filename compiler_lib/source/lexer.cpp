@@ -47,69 +47,18 @@
   case ')':       \
   case ']'
 
-lexer::lexer() : m_filename(),
-         m_file(),
-         m_file_position()
+lexer::lexer() 
 {
 }
 
 lexer::~lexer()
 {
-  m_file.close();
-}
-
-char lexer::peekChar()
-{
-  if (m_file.is_open())
-  {
-    return m_file.peek();
-  }
-  cerror("could not open test.c"); // add ...
-  return 'x';
-}
-
-char lexer::nextChar()
-{
-  if (m_file.is_open())
-  {
-    char c = m_file.get();
-    m_file_position.incrementCol();
-    if (c == '\n')
-    {
-      m_file_position.incrementLine();
-    }
-    return c;
-  }
-
-  cerror("could not open test.c"); // add ...
-  return 'x';
-}
-
-void lexer::pushChar(char ch)
-{
-  if (!m_file.is_open())
-  {
-    cerror("LEX error: could not open test.c"); // add ...
-    return;
-  }
-  m_file.putback(ch);
-}
-
-void lexer::initialize(std::string filename)
-{
-  m_filename = filename;
-  m_file_position.setFileName(m_filename);
-  m_file.open(m_filename);
-  if (!m_file.is_open())
-  {
-    std::cerr << "Failed to open file: " << m_filename << std::endl;
-    // Handle error here
-  }
+  
 }
 
 int lexer::startLexer()
 {
-  if (!m_file.is_open())
+  if (!m_char_stream->initialized())
   {
     cerror("failed to open file"); // add ...
     return -2;
@@ -117,7 +66,7 @@ int lexer::startLexer()
 
   lexFile();
 
-  m_file.close();
+  m_char_stream->close();
   if (!tokens.empty())
     return 0;
 
@@ -149,7 +98,7 @@ std::shared_ptr<token> lexer::readNextToken()
 
   handleComment();
 
-  char c = peekChar();
+  char c = m_char_stream->peekChar();
 
   /*
    * TODO
@@ -220,35 +169,35 @@ void lexer::handleComment()
 
 bool lexer::handleComment_()
 {
-  char c = peekChar();
+  char c = m_char_stream->peekChar();
   if (c == '/')
   {
-    nextChar();
-    if (peekChar() == '/')
+    m_char_stream->nextChar();
+    if (m_char_stream->peekChar() == '/')
     {
       handleSingleLineComment();
       return true;
     }
-    else if (peekChar() == '*')
+    else if (m_char_stream->peekChar() == '*')
     {
       handleMultiLineComment();
       return true;
     }
-    pushChar(c);
+    m_char_stream->pushChar(c);
   }
   return false;
 }
 
 void lexer::handleSingleLineComment()
 {
-  char c = peekChar();
+  char c = m_char_stream->peekChar();
   while (c != '\n')
   {
     if (c == EOF)
     {
       return;
     }
-    c = nextChar();
+    c = m_char_stream->nextChar();
   }
 
 }
@@ -257,15 +206,15 @@ void lexer::handleMultiLineComment()
 {
   while (1)
   {
-    if (peekChar() == EOF)
+    if (m_char_stream->peekChar() == EOF)
     {
       return;
     }
-    if (nextChar() == '*')
+    if (m_char_stream->nextChar() == '*')
     {
-      if (peekChar() == '/')
+      if (m_char_stream->peekChar() == '/')
       {
-        nextChar();
+        m_char_stream->nextChar();
         return;
       }
     }
@@ -275,14 +224,14 @@ void lexer::handleMultiLineComment()
 std::shared_ptr<token> lexer::makeIdentifierOrKeyword()
 {
   // might parse a variable 'myvar' or a keyword return
-  char c = peekChar();
+  char c = m_char_stream->peekChar();
   if (isalpha(c) || c == '_')
   {
     std::string identifier_or_keyword;
     while ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_')
     {
-      identifier_or_keyword += nextChar();
-      c = peekChar();
+      identifier_or_keyword += m_char_stream->nextChar();
+      c = m_char_stream->peekChar();
     }
     if (is_keyword(identifier_or_keyword))
     {
@@ -344,21 +293,21 @@ std::shared_ptr<token> lexer::makeOperatorTokenOrIncludeString()
 std::string lexer::getOperatorString()
 {
   // operator might be a single char '+' then something else 5, or two chars "+=" then 5
-  char first_op = nextChar(); //'+'
+  char first_op = m_char_stream->nextChar(); //'+'
   std::string operator_string("");
   operator_string += first_op;
   _assert_(isOperatorValid(operator_string), ("'%s' is not a valid operator", operator_string.c_str()));
-  operator_string += peekChar();      // add '+' or 5
+  operator_string += m_char_stream->peekChar();      // add '+' or 5
   if (isOperatorValid(operator_string)) // test if dual char operator: '+='
   {
-    nextChar();
+    m_char_stream->nextChar();
     return operator_string;
   }
   else if (STRINGS_EQUAL(operator_string.c_str(), "..")) // operator "..." infinite arguments
   {
-    nextChar();
-    _assert_(peekChar() == '.', "expected '.' after '..' to complete operator '...'");
-    operator_string += nextChar();
+    m_char_stream->nextChar();
+    _assert_(m_char_stream->peekChar() == '.', "expected '.' after '..' to complete operator '...'");
+    operator_string += m_char_stream->nextChar();
     return operator_string;
   }
   operator_string.clear();
@@ -426,10 +375,10 @@ std::shared_ptr<token> lexer::makeStringToken()
 
 std::string lexer::createString(char start_char, char end_char)
 {
-  _assert_(start_char == nextChar(), "expected beginning of string");
-  char c = nextChar();
+  _assert_(start_char == m_char_stream->nextChar(), "expected beginning of string");
+  char c = m_char_stream->nextChar();
   std::string string_to_return;
-  for (; c != end_char && c != EOF; c = nextChar())
+  for (; c != end_char && c != EOF; c = m_char_stream->nextChar())
   {
     if (c == '\\')
     {
@@ -444,19 +393,19 @@ std::string lexer::createString(char start_char, char end_char)
 
 std::shared_ptr<token> lexer::makeSymbolToken()
 {
-  char c = nextChar();
+  char c = m_char_stream->nextChar();
   return std::make_shared<token>(tokenType::TOKEN_TYPE_SYMBOL, getFilePostiion(), c);
 }
 
 std::shared_ptr<token> lexer::makeQuoteToken()
 {
-  _assert_(nextChar() == '\'', "expected beginning of quote ' '");
-  char c = nextChar(); // content of quote 'c'
+  _assert_(m_char_stream->nextChar() == '\'', "expected beginning of quote ' '");
+  char c = m_char_stream->nextChar(); // content of quote 'c'
 
   // for example '\n' and '\\' are single chars, but we must pop 2 chars from the input file
   if (c == '\\')
   {
-    c = nextChar();
+    c = m_char_stream->nextChar();
     if (c == 'n')
       c = '\n';
     else if (c == '\\')
@@ -468,52 +417,52 @@ std::shared_ptr<token> lexer::makeQuoteToken()
     else if (c == 'r')
       c = '\r';
   }
-  _assert_(nextChar() == '\'', "expected ending of quote ''");
+  _assert_(m_char_stream->nextChar() == '\'', "expected ending of quote ''");
 
   return std::make_shared<token>(tokenType::TOKEN_TYPE_CHAR, getFilePostiion(), c);
 }
 
 std::shared_ptr<token> lexer::makeNewLineToken()
 {
-  nextChar();
+  m_char_stream->nextChar();
   return std::make_shared<token>(tokenType::TOKEN_TYPE_NEWLINE, getFilePostiion(), 0);
 }
 
 std::shared_ptr<token> lexer::makeNumberToken()
 {
   std::shared_ptr<token> token(0);
-  if (peekChar() == '0')
+  if (m_char_stream->peekChar() == '0')
   {
-    char c = peekChar();
-    nextChar();
+    char c = m_char_stream->peekChar();
+    m_char_stream->nextChar();
 
     // hex number 0xFA3
-    if (peekChar() == 'x')
+    if (m_char_stream->peekChar() == 'x')
     {
       return makeHexicalNumberToken();
     }
 
     // binary number: 0b1010
-    else if (peekChar() == 'b')
+    else if (m_char_stream->peekChar() == 'b')
     {
       return makeBinaryNumberToken();
     }
 
     // decimal number 0123, put back the '0' token we popped from the stream
-    pushChar(c);
+    m_char_stream->pushChar(c);
   }
   return makeDecimalNumberToken();
 }
 
 std::shared_ptr<token> lexer::makeHexicalNumberToken()
 {
-  _assert_(nextChar() == 'x', "expected char 'x'");
+  _assert_(m_char_stream->nextChar() == 'x', "expected char 'x'");
   unsigned long number = 0;
   std::string number_str;
-  while (isHexChar(peekChar()))
+  while (isHexChar(m_char_stream->peekChar()))
   {
-    number_str += peekChar();
-    nextChar();
+    number_str += m_char_stream->peekChar();
+    m_char_stream->nextChar();
   }
   number = strtol(number_str.c_str(), 0, 16);
   return std::make_shared<token>(tokenType::TOKEN_TYPE_NUMBER, getFilePostiion(), number);
@@ -521,13 +470,13 @@ std::shared_ptr<token> lexer::makeHexicalNumberToken()
 
 std::shared_ptr<token> lexer::makeBinaryNumberToken()
 {
-  _assert_(nextChar() == 'b', "expected char 'b'");
+  _assert_(m_char_stream->nextChar() == 'b', "expected char 'b'");
   unsigned long number = 0;
   std::string number_str;
-  while (peekChar() == '0' || peekChar() == '1')
+  while (m_char_stream->peekChar() == '0' || m_char_stream->peekChar() == '1')
   {
-    number_str += peekChar();
-    nextChar();
+    number_str += m_char_stream->peekChar();
+    m_char_stream->nextChar();
   }
   number = strtol(number_str.c_str(), 0, 2);
   return std::make_shared<token>(tokenType::TOKEN_TYPE_NUMBER, getFilePostiion(), number);
@@ -537,10 +486,10 @@ std::shared_ptr<token> lexer::makeDecimalNumberToken()
 {
   unsigned long number = 0;
   std::string number_str;
-  while (peekChar() >= '0' && peekChar() <= '9')
+  while (m_char_stream->peekChar() >= '0' && m_char_stream->peekChar() <= '9')
   {
-    number_str += peekChar();
-    nextChar();
+    number_str += m_char_stream->peekChar();
+    m_char_stream->nextChar();
   }
   number = atoll(number_str.c_str());
   return std::make_shared<token>(tokenType::TOKEN_TYPE_NUMBER, getFilePostiion(), number);
@@ -554,8 +503,8 @@ bool lexer::isHexChar(char c)
 
 std::shared_ptr<token> lexer::handle_whitespace()
 {
-  _assert_(peekChar() == ' ' || peekChar() == '\t' || peekChar() == '\r', "expected ' ' '\t' or '\r'");
-  nextChar();
+  _assert_(m_char_stream->peekChar() == ' ' || m_char_stream->peekChar() == '\t' || m_char_stream->peekChar() == '\r', "expected ' ' '\t' or '\r'");
+  m_char_stream->nextChar();
   return readNextToken();
 }
 

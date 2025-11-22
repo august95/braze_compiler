@@ -9,6 +9,7 @@
 
 #include "filePosition.h"
 #include "token.h"
+#include "charStreamInterface.h"
 
 class lexer
 {
@@ -18,13 +19,10 @@ public:
 
   // TODO: these functions and ifstream should be provided by an interface(made by template?)
   // the lexer should not own the file stream
-  char peekChar();
-  char nextChar();
-  void pushChar(char ch);
 
-  void initialize(std::string filename);
   int startLexer();
   std::list<std::shared_ptr<token>> getTokens() { return tokens; }
+  void setCharStreamInterface(std::shared_ptr<charStreamInterface> char_stream) { m_char_stream = char_stream; }
 
 private:
   void lexFile();
@@ -55,12 +53,10 @@ private:
   bool isHexChar(char c);
   std::shared_ptr<token> handle_whitespace();
 
-  filePosition getFilePostiion() { return m_file_position; }
+  filePosition getFilePostiion() { return m_char_stream->getFilePostiion(); }
 
-  std::string m_filename;
-  std::ifstream m_file;
-  filePosition m_file_position;
 
+  std::shared_ptr<charStreamInterface> m_char_stream;
   // list of tokens that has been lexed. Will be handed over to the parser
   std::list<std::shared_ptr<token>> tokens;
 
