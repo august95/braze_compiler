@@ -2,16 +2,20 @@
 //
 
 #include <iostream>
+#include <sstream>
 #include <cctype>
 #include <string>
 #include "../compiler_lib/source/compiler_lib.cpp"
 #include "../compiler_lib/compilerProcess.h"
 
+void printHelpString();
 
 int main(int argc, char* argv[]) {
   std::string input_file;
   std::string output_file;
   std::string output_bin;
+  std::shared_ptr<std::stringstream> input_args = std::make_shared<std::stringstream>();
+  bool input_file_mode = true;
 
   if (argc < 2) {
     std::cout << "\n-h -help or help for arg description\n";
@@ -36,15 +40,33 @@ int main(int argc, char* argv[]) {
       printHelpString();
       return 0;
     }
+    if(STRINGS_EQUAL(argv[1], "--command_mode"))
+    {
+      *input_args << argv[2];
+      output_file = "app.out.asm";
+      output_bin = "app.out";
+      const std::string suffix = ".c";
+      input_file_mode = false;
+    }
+
+    if(STRINGS_EQUAL(argv[1], "-h") || STRINGS_EQUAL(argv[1], "-help") || STRINGS_EQUAL(argv[1], "help"))
+    {
+      printHelpString();
+      return 0;
+    }
   }
 
-  std::cout <<"\ncompiling " << input_file << " to " << output_bin << "\n\n";
+  //std::cout <<"\ncompiling " << input_file << " to " << output_bin << "\n\n";
 
   std::string nasm_output_file = output_bin + ".o";
 
   //avoid libc debugging, allocato on heap
   compileProcess* process = new compileProcess();
-  process->initialize(input_file);
+  if(input_file_mode)
+    process->initialize(input_file);
+  else
+    process->initialize(input_args);
+  
   
   int ret = process->startCompiler();
   if (ret != 0)
@@ -58,13 +80,16 @@ int main(int argc, char* argv[]) {
   //Microsoft Visual Studio Compile
  std::cout << "\nno NASM support yet, compile with gcc: \n 1. make clean \n 2. make \n .3 ./bin/braze_compiler " ;
 #else
-  std::string nasm_cmd = "nasm -f elf32 ./" + output_file + " -o ./" + nasm_output_file + " && gcc -m32 ./" + nasm_output_file + " -o ./" + output_bin +" -no-pie";
-
-  int res = system(nasm_cmd.c_str());
-  if (res < 0)
+  if(input_file_mode)
   {
-      return res;
-  }  
+      std::string nasm_cmd = "nasm -f elf32 ./" + output_file + " -o ./" + nasm_output_file + " && gcc -m32 ./" + nasm_output_file + " -o ./" + output_bin +" -no-pie";
+    
+      int res = system(nasm_cmd.c_str());
+      if (res < 0)
+      {
+          return res;
+      }  
+  }
   
 #endif
 

@@ -2,6 +2,7 @@
 
 #include "../compiler_lib/source/compiler_lib.cpp"
 #include "../compiler_lib/compilerProcess.h"
+#include "../compiler_lib/charStreamFile.h"
 #include "../compiler_lib/scope.h"
 #include "test_helper.cpp"
 #include <string>
@@ -33,7 +34,9 @@ TEST(lexer, symbols) {
   const int num_of_tokens = 5;
 
   lexer lexer;
-  lexer.initialize(file_path + file_name);
+  std::shared_ptr<charStreamFile> char_stream = std::make_shared <charStreamFile>();
+  char_stream->initialize(file_path + file_name);
+  lexer.setCharStreamInterface(char_stream);
   lexer.startLexer();
 
   std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
@@ -82,7 +85,9 @@ TEST(lexer, quote) {
   const int num_of_tokens = 4;
 
   lexer lexer;
-  lexer.initialize(file_path + file_name);
+  std::shared_ptr<charStreamFile> char_stream = std::make_shared <charStreamFile>();
+  char_stream->initialize(file_path + file_name);
+  lexer.setCharStreamInterface(char_stream);
   lexer.startLexer();
 
   std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
@@ -129,7 +134,9 @@ TEST(lexer, stringsAndIncludeStrings) {
   const int num_of_tokens = 6;
 
   lexer lexer;
-  lexer.initialize(file_path + file_name);
+  std::shared_ptr<charStreamFile> char_stream = std::make_shared <charStreamFile>();
+  char_stream->initialize(file_path + file_name);
+  lexer.setCharStreamInterface(char_stream);
   lexer.startLexer();
 
   std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
@@ -187,7 +194,9 @@ TEST(lexer, identifierOrKeyword) {
     const int num_of_tokens = 5;
 
     lexer lexer;
-    lexer.initialize(file_path + file_name);
+    std::shared_ptr<charStreamFile> char_stream = std::make_shared <charStreamFile>();
+    char_stream->initialize(file_path + file_name);
+    lexer.setCharStreamInterface(char_stream);
     lexer.startLexer();
 
     std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
@@ -245,7 +254,9 @@ TEST(lexer, operators)
   const int num_of_tokens = 6;
 
   lexer lexer;
-  lexer.initialize(file_path + file_name);
+  std::shared_ptr<charStreamFile> char_stream = std::make_shared <charStreamFile>();
+  char_stream->initialize(file_path + file_name);
+  lexer.setCharStreamInterface(char_stream);
   lexer.startLexer();
 
   std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
@@ -292,7 +303,9 @@ TEST(lexer, numbers) {
   const int num_of_tokens = 3;
 
   lexer lexer;
-  lexer.initialize(file_path + file_name);
+  std::shared_ptr<charStreamFile> char_stream = std::make_shared <charStreamFile>();
+  char_stream->initialize(file_path + file_name);
+  lexer.setCharStreamInterface(char_stream);
   lexer.startLexer();
 
   std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
@@ -335,7 +348,9 @@ TEST(lexer, ordinaryCFile) {
   const int num_of_tokens = 38;
 
   lexer lexer;
-  lexer.initialize(file_path + file_name);
+  std::shared_ptr<charStreamFile> char_stream = std::make_shared <charStreamFile>();
+  char_stream->initialize(file_path + file_name);
+  lexer.setCharStreamInterface(char_stream);
   lexer.startLexer();
 
   std::list < std::shared_ptr < token > > tokens = lexer.getTokens();

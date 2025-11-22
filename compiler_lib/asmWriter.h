@@ -7,7 +7,12 @@
 
 class asmWriter
 {
-public:
+  public:
+  enum WriteMode
+  {
+    W_FILE,
+    W_STDOUT  
+  };
   asmWriter();
   void asmGen(std::string ins);
   void asmGenArgs(const char *ins, va_list args);
@@ -21,11 +26,13 @@ public:
   void discardUnusedStack();
   void addStack(int stack_size);
   void close();
+  void setWriteMode(WriteMode mode){m_mode = mode;}
   std::shared_ptr<datatype> getDatatypeOnStack(int index = 0);
 
 private:
   std::string getSubRegister(std::string reg, int size);
 
+  WriteMode m_mode;
   stackMonitor m_stack_monitor;
   std::string m_filename;
   FILE *file;

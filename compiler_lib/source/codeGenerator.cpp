@@ -23,10 +23,11 @@ void codeGenerator::initialize()
   }
 }
 
-void codeGenerator::setFileName(std::string filename)
+void codeGenerator::setFileName(std::string filename, asmWriter::WriteMode write_mode)
 {
   m_input_file = filename;
   output_file = filename + ".asm";
+  m_asm_writer.setWriteMode(write_mode);
 }
 
 int codeGenerator::startCodeGeneration()

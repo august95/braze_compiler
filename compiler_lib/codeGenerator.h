@@ -30,7 +30,7 @@ public:
   codeGenerator();
   void setAbstractSyntaxTree(std::list<std::shared_ptr<node>> ast) { m_ast = ast; }
   void initialize();
-  void setFileName(std::string filename);
+  void setFileName(std::string filenam, asmWriter::WriteMode write_mode = asmWriter::WriteMode::W_FILE);
   int startCodeGeneration();
   void generateDataSection();
   void generateRoot();

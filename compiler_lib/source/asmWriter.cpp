@@ -3,20 +3,25 @@
 #include <stdarg.h>
 
 asmWriter::asmWriter()
-    : file(0)
+    : file(0),
+    m_mode(W_FILE)
 {
 }
 
 void asmWriter::asmGen(std::string ins)
 {
-#if defined(_MSC_VER)
-  fprintf(stdout, ins.c_str());
-  fprintf(stdout, "\n");
-#endif
-  if (file)
+  if(m_mode == W_FILE)
   {
-    fprintf(file, ins.c_str());
-    fprintf(file, "\n");
+    if (file)
+    {
+      fprintf(file, ins.c_str());
+      fprintf(file, "\n");
+    }
+  }
+  else if(m_mode == W_STDOUT)
+  {
+    fprintf(stdout, ins.c_str());
+    fprintf(stdout, "\n");
   }
 }
 
@@ -24,13 +29,19 @@ void asmWriter::asmGenArgs(const char *ins, va_list args)
 {
   va_list args2;
   va_copy(args2, args);
-  vfprintf(stdout, ins, args);
-  fprintf(stdout, "\n");
-  if (file)
+  if(m_mode == W_FILE)
   {
-    vfprintf(file, ins, args2);
-    fprintf(file, "\n");
+    if (file)
+    {
+      vfprintf(file, ins, args2);
+      fprintf(file, "\n");
+    }
   }
+  else if(m_mode == W_STDOUT)
+  {
+    vfprintf(stdout, ins, args);
+    fprintf(stdout, "\n");
+  } 
 }
 
 void asmWriter::asmGenPushIns(std::string reg, std::shared_ptr<datatype> datatype, int offset_from_bp)
@@ -71,12 +82,16 @@ void asmWriter::asmGenPopEbp(int stack_addition)
 
 void asmWriter::asmGenNoNewLine(std::string ins)
 {
-#if defined(_MSC_VER)
-  fprintf(stdout, ins.c_str());
-#endif
-  if (file)
+  if(m_mode == W_FILE)
   {
-    fprintf(file, ins.c_str());
+    if (file)
+    {
+      fprintf(file, ins.c_str());
+    }
+  }
+  else if(m_mode == W_STDOUT)
+  {
+    fprintf(stdout, ins.c_str());
   }
 }
 

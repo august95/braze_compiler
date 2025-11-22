@@ -2,19 +2,29 @@
 #include "../compilerProcess.h"
 #include "../braze_compiler.h"
 #include "../charStreamFile.h"
+#include "../charStreamArgs.h"
+#include "../asmWriter.h"
 #include <cstdio> // For fopen, fclose, fread, fwrite, etc.
 
 compileProcess::compileProcess()
   : __unit_test_no_code_generation(false)
 {
 }
+
 void compileProcess::initialize(std::string filename)
 {
-  m_lexer.initialize(filename);
   std::shared_ptr<charStreamFile> char_stream = std::make_shared <charStreamFile>();
   char_stream->initialize(filename);
   m_lexer.setCharStreamInterface(char_stream);
   m_code_generator.setFileName(filename);
+}
+
+void compileProcess::initialize(std::shared_ptr<std::stringstream> input_args)
+{
+  std::shared_ptr<charStreamArgs> char_stream = std::make_shared <charStreamArgs>();
+  char_stream->initialize(input_args);
+  m_lexer.setCharStreamInterface(char_stream);
+  m_code_generator.setFileName("app.out", asmWriter::WriteMode::W_STDOUT);
 }
 
 int compileProcess::startCompiler()
