@@ -82,6 +82,7 @@ int main(int argc, char* argv[]) {
 #else
   if(input_file_mode)
   {
+      //nasm -f elf32 ./test_file.c.asm -o ./test_file.o && gcc -m32 ./test_file.o -o ./test_file -no-pie
       std::string nasm_cmd = "nasm -f elf32 ./" + output_file + " -o ./" + nasm_output_file + " && gcc -m32 ./" + nasm_output_file + " -o ./" + output_bin +" -no-pie";
     
       int res = system(nasm_cmd.c_str());
