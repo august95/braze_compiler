@@ -20,8 +20,11 @@ int main(int argc, char* argv[]) {
   if (argc < 2) {
     std::cout << "\n-h -help or help for arg description\n";
     std::cout << "\nNo input file provided, using <project-root>/test_file.c\n";
-#if defined(_MSC_VER)
+#if _MSC_VER
+    input_file = "./../test_file.c";
+#else
     input_file = "./test_file.c";
+#endif
     output_file = "./test_file.c.asm";
     output_bin = "./test_file";
   }
@@ -76,24 +79,20 @@ int main(int argc, char* argv[]) {
   }
   delete process;
 
-
-#if defined(_MSC_VER)
-  //Microsoft Visual Studio Compile
- std::cout << "\nno NASM support yet, compile with gcc: \n 1. make clean \n 2. make \n .3 ./bin/braze_compiler " ;
-#else
   if(input_file_mode)
-  {
+  {   
       //nasm -f elf32 ./test_file.c.asm -o ./test_file.o && gcc -m32 ./test_file.o -o ./test_file -no-pie
       std::string nasm_cmd = "nasm -f elf32 ./" + output_file + " -o ./" + nasm_output_file + " && gcc -m32 ./" + nasm_output_file + " -o ./" + output_bin +" -no-pie";
     
       int res = system(nasm_cmd.c_str());
-      if (res < 0)
+      if (res != 0)
       {
-          return res;
+        std::cout << "\n failed to assemble: " << output_file << " with nasm!";
+         return res;
       }  
   }
   
-#endif
+//#endif
 
 }
 
