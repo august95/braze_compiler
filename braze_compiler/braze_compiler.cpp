@@ -20,6 +20,7 @@ int main(int argc, char* argv[]) {
   if (argc < 2) {
     std::cout << "\n-h -help or help for arg description\n";
     std::cout << "\nNo input file provided, using <project-root>/test_file.c\n";
+#if defined(_MSC_VER)
     input_file = "./test_file.c";
     output_file = "./test_file.c.asm";
     output_bin = "./test_file";
