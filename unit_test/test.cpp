@@ -2105,3 +2105,89 @@ TEST(codegen, unary3) {
   process.stop();
 }
 
+
+
+TEST(codegen, singlelinestatement) {
+
+
+      //main()
+      //{
+      //  int a = 5;
+      //  if (a > 10)
+      //    int a = 10;
+      //  else if (a < 10)
+      //    int b = a;
+      //  else
+      //    int c = 3;
+      //}
+
+  std::string target =
+    "section .data\n"
+    "section .text\n"
+    "global main\n"
+    "main:\n"
+    "push ebp\n"
+    "mov ebp, esp\n"
+    "sub esp, 16\n"
+    "push dword 5\n"
+    "pop eax\n"
+    "mov dword [ebp-4], eax\n"
+    "push dword [ebp-4]\n"
+    "push dword 10\n"
+    "pop ecx\n"
+    "pop eax\n"
+    "cmp eax, ecx\n"
+    "setg al\n"
+    "movzx eax, al\n"
+    "push eax\n"
+    "pop eax\n"
+    "cmp eax, 0\n"
+    "je .if_2\n"
+    "push dword 10\n"
+    "pop eax\n"
+    "mov dword [ebp-8], eax\n"
+    "jmp .if_end_1\n"
+    ".if_2:\n"
+    "push dword [ebp-4]\n"
+    "push dword 10\n"
+    "pop ecx\n"
+    "pop eax\n"
+    "cmp eax, ecx\n"
+    "setl al\n"
+    "movzx eax, al\n"
+    "push eax\n"
+    "pop eax\n"
+    "cmp eax, 0\n"
+    "je .if_3\n"
+    "push dword [ebp-4]\n"
+    "pop eax\n"
+    //"mov dword [ebp-8], eax\n"
+    "mov dword [ebp-12], eax\n"
+    "jmp .if_end_1\n"
+    ".if_3:\n"
+    "push dword 3\n"
+    "pop eax\n"
+    //"mov dword [ebp-8], eax\n"
+    "mov dword [ebp-16], eax\n"
+    ".if_end_1:\n"
+    "add esp, 16\n"
+    "pop ebp\n"
+    "ret\n"
+    "section .rodata\n"
+    ;
+
+
+  std::string file_name = "codegeneration/test_codegen_single_line_statement.c";
+  std::string asm_file = file_name + ".asm";
+
+  const int num_of_tokens = 5;
+
+  compileProcess process;
+  process.initialize(file_path + file_name);
+  process.startCompiler();
+  //  compareFiles(target, file_path + asm_file);
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
+
+  process.stop();
+}
+

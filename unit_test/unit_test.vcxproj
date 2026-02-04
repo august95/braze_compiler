@@ -113,6 +113,9 @@
     <None Include="test_files\codegeneration\test_codegen_unary3.c">
       <FileType>CppCode</FileType>
     </None>
+    <None Include="test_files\codegeneration\test_codegen_single_line_statement.c">
+      <FileType>CppCode</FileType>
+    </None>
     <ClCompile Include="test_helper.cpp" />
     <None Include="test_files\codegeneration\test_codegen_unary.c">
       <FileType>CppCode</FileType>

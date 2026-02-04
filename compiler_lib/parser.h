@@ -29,6 +29,7 @@ public:
 
 private:
   std::shared_ptr<token> nextToken();
+  void pushToken(std::shared_ptr<token> token);
   std::shared_ptr<token> peekToken();
   void pushNode(std::shared_ptr<node> node);
   std::shared_ptr<node> peekLastNode();

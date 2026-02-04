@@ -31,7 +31,6 @@ Known limitations:
 3. Return keyword is not suppoerted
 4. Following controll flow constructs are not supported: do while, goto
 5. No structs, typedef or complex types are supported
-6. Single line bodies are not supported {} must be used
-7. Global variables must be declared before the first function definition
+6. Global variables must be declared before the first function definition
 
 To see examples of implemented language features goto: /unit_test/test_files/codegeneration/

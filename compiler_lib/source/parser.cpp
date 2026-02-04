@@ -46,6 +46,11 @@ std::shared_ptr<token> parser::nextToken()
   return token;
 }
 
+void parser::pushToken(std::shared_ptr<token> token)
+{
+  m_tokens.push_front(token);
+}
+
 std::shared_ptr<token> parser::peekToken()
 {
   if (m_tokens.empty())
@@ -631,23 +636,30 @@ void parser::parseBody()
   std::shared_ptr<node> body_node = std::make_shared<node>(nodeType::NODE_TYPE_BODY, token->getFilePosition());
   int stack_offset = 0;
 
+  bool single_line_statement = false;
+  //single line statement
   if (!token->isTokenTypeSymbol() || token->getCharValue() != '{')
   {
-    cerror("expected symbol '{' at beginning of body", body_node->getFilePosition());
-  }
-
-  token = peekToken();
-
-  while (!token->isTokenTypeSymbol() || (token->getCharValue() != '}'))
-  {
+    pushToken(token); //'{' is not preset, push back token
     parseStatement();
     std::shared_ptr<node> statement_node = popLastNode();
     body_node->addStatement(statement_node);
-    token = peekToken();
+    single_line_statement = true;
   }
-  m_last_scope;
-  token = nextToken(); // pop off '}'(); // '}', parseGlobalKeyword will pop this symbol
-  if (!token->isTokenTypeSymbol() || token->getCharValue() != '}')
+  else if(!single_line_statement)
+  {
+    token = peekToken();
+    while (!token->isTokenTypeSymbol() || (token->getCharValue() != '}'))
+    {
+      parseStatement();
+      std::shared_ptr<node> statement_node = popLastNode();
+      body_node->addStatement(statement_node);
+      token = peekToken();
+    }
+    token = nextToken(); // pop off '}'(); // '}', parseGlobalKeyword will pop this symbol
+  }  
+
+  if ((!token->isTokenTypeSymbol() || token->getCharValue() != '}') && !single_line_statement)
   {
     cerror("expected symbol '}' at ending of body", token->getFilePosition());
   }
