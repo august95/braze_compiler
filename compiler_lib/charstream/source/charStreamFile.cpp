@@ -1,5 +1,5 @@
 #include "../charStreamFile.h"
-#include "../braze_compiler.h"
+#include "../../braze_compiler.h"
 
 
 charStreamFile::~charStreamFile()

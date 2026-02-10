@@ -4,7 +4,7 @@
 
 #include "lexer.h"
 #include "parser.h"
-#include "codeGenerator.h"
+#include "./codegen/codeGenerator.h"
 #include <memory>
 #include <sstream>
 

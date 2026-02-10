@@ -1,6 +1,7 @@
 #pragma once
 #include "resolverEntity.h"
 #include "resolverResult.h"
+#include "../../node/nodeExpression.h"
 #include <iostream>
 #include <list>
 #include <memory>
@@ -23,12 +24,12 @@ public:
   void setStack(bool is_stack) { m_is_stack = is_stack; }
   void follow(std::shared_ptr<node> node, std::shared_ptr<resolverResult> result);
   void followName(std::shared_ptr<node> node, std::shared_ptr<resolverResult> result);
-  void followExpression(std::shared_ptr<node> node, std::shared_ptr<resolverResult> result);
-  void followFunctionCall(std::shared_ptr<node> node_, std::shared_ptr<resolverResult> result);
+  void followExpression(std::shared_ptr<nodeExpression> node, std::shared_ptr<resolverResult> result);
+  void followFunctionCall(std::shared_ptr<nodeExpression> node_, std::shared_ptr<resolverResult> result);
   void followUnary(std::shared_ptr<node> node_, std::shared_ptr<resolverResult> result);
   void followUnaryAddress(std::shared_ptr<node> node_, std::shared_ptr<resolverResult> result);
   void followUnaryIndirection(std::shared_ptr<node> node_, std::shared_ptr<resolverResult> result);
-  void buildFunctionCallArguments(std::shared_ptr<node> node_, std::shared_ptr<resolverEntity> function_call_entity, std::shared_ptr<resolverResult> result, int &function_call_stack_size);
+  void buildFunctionCallArguments(std::shared_ptr<nodeExpression> node_, std::shared_ptr<resolverEntity> function_call_entity, std::shared_ptr<resolverResult> result, int &function_call_stack_size);
 
 private:
   std::shared_ptr<resolverScope> m_next_scope;

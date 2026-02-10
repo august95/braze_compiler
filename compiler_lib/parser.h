@@ -3,7 +3,8 @@
 // receives a list of tokens, creates an abstract syntax tree with nodes
 
 #include "token.h"
-#include "node.h"
+#include "node/node.h"
+#include "node/nodeExpression.h"
 #include "datatype.h"
 #include "scope.h"
 #include "symbolResolver.h"
@@ -35,19 +36,18 @@ private:
   std::shared_ptr<node> peekLastNode();
   std::shared_ptr<node> peekLastNodeExpect(nodeType node_type);
   std::shared_ptr<node> popLastNode();
-  std::shared_ptr<node> makeExpressionNode(filePosition file_position, std::string operator_, std::shared_ptr<node> left_node, std::shared_ptr<node> right_node);
+  std::shared_ptr<nodeExpression> makeExpressionNode(filePosition file_position, std::string operator_, std::shared_ptr<nodeExpression> left_node, std::shared_ptr<nodeExpression> right_node);
   std::shared_ptr<scope> newScope();
   void addNodeToCurrentScope(std::shared_ptr<node> node);
   void finishScope();
 
-  template <class nodeType>
-  std::shared_ptr<nodeType> cast_node(std::shared_ptr<node> node_);
+
 
   void parseTokens();
   void parseNextToken();
 
   void parseExpression();
-  void parseExpressionOperatorOrOperand(bool &continue_to_parse_exp);
+  void parseExpressionOperatorOrOperand(bool& continue_to_parse_exp);
   void parseOperand();
   void parseOperator();
   void parseParenthesesExpressionOrFunctionCall();

@@ -1,6 +1,6 @@
 #pragma once
-#include "node.h"
-#include "datatype.h"
+#include "../../node/node.h"
+#include "../../datatype.h"
 #include <string>
 #include <memory>
 

@@ -1,9 +1,9 @@
 #pragma once
 #include <string>
 #include <list>
-#include "resolverEntityData.h"
+#include "../resolver/resolverEntityData.h"
 // #include "resolverscope.h"
-#include "node.h"
+#include "../../node/node.h"
 #include <memory>
 
 enum entityType

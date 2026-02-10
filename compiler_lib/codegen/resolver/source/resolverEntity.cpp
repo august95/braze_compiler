@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "../../source/pch.h"
 #include "../resolverEntity.h"
 
 resolverEntity::resolverEntity()

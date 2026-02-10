@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "../braze_compiler.h"
+#include "../../source/pch.h"
+#include "../../braze_compiler.h"
 #include "../resolver.h"
 
 resolver::resolver()

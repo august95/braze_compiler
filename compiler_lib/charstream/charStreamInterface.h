@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "filePosition.h"
+#include "../filePosition.h"
 class charStreamInterface
 {
 public:

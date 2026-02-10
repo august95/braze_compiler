@@ -2,7 +2,8 @@
 
 #include "../compiler_lib/source/compiler_lib.cpp"
 #include "../compiler_lib/compilerProcess.h"
-#include "../compiler_lib/charStreamFile.h"
+#include "../compiler_lib/charstream/charStreamFile.h"
+#include "../compiler_lib/braze_compiler.h"
 #include "../compiler_lib/scope.h"
 #include "test_helper.cpp"
 #include <string>
@@ -569,7 +570,7 @@ TEST(parser, string) {
   process.startCompiler();
 
   std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
-  std::shared_ptr < node > node = ast.front();
+  std::shared_ptr < nodeExpression > node = cast_node<nodeExpression>(ast.front());
   EXPECT_EQ( node->getStringValue(), "test string");
 }
 
@@ -590,7 +591,7 @@ TEST(parser, expression) {
   process.startCompiler();
 
   std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
-  std::shared_ptr < node > node = ast.front();
+  std::shared_ptr < nodeExpression > node = cast_node<nodeExpression>(ast.front());
   EXPECT_EQ(node->getStringValue(), "=");
   EXPECT_EQ(node->getLeftNode()->getStringValue(), "a");
   EXPECT_EQ(node->getRightNode()->getStringValue(), "+");
@@ -618,7 +619,7 @@ TEST(parser, keyword) {
   process.startCompiler();
 
   std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
-  std::shared_ptr < node > _node = ast.front();  
+  std::shared_ptr < nodeExpression > _node = cast_node<nodeExpression>(ast.front());
   std::shared_ptr < datatype > dtype = _node->getDatatype();
   EXPECT_TRUE(dtype->isStatic());
   EXPECT_TRUE(dtype->isConst());
@@ -629,7 +630,7 @@ TEST(parser, keyword) {
 
   EXPECT_EQ(_node->getStringValue(), "var_name");
 
-  std::shared_ptr < node > val_node = _node->getValueNode();
+  std::shared_ptr < nodeExpression > val_node = cast_node<nodeExpression>(_node->getValueNode());
   EXPECT_EQ(val_node->getStringValue(), "+");
   EXPECT_EQ(val_node->getRightNode()->getNumberValue(), 20);
   EXPECT_EQ(val_node->getLeftNode()->getStringValue(), "*");
@@ -715,7 +716,7 @@ TEST(parser, ifstatement) {
   EXPECT_TRUE(if_node->getNodeType() == NODE_TYPE_STATEMENT_IF);
   EXPECT_EQ(if_node->getBodyNode()->getBodySize(), 4);
   EXPECT_TRUE(if_node->getConditionNode()->getNodeType() == NODE_TYPE_NUMBER);
-  EXPECT_TRUE(if_node->getConditionNode()->getNumberValue() == 1);
+  EXPECT_TRUE(cast_node<nodeExpression>(if_node->getConditionNode())->getNumberValue() == 1);
 }
 
 
@@ -764,7 +765,7 @@ TEST(parser, whilestatement) {
   EXPECT_TRUE(while_node->getNodeType() == NODE_TYPE_STATEMENT_WHILE);
   EXPECT_EQ(while_node->getBodyNode()->getBodySize(), 4);
   EXPECT_TRUE(while_node->getConditionNode()->getNodeType() == NODE_TYPE_NUMBER);
-  EXPECT_TRUE(while_node->getConditionNode()->getNumberValue() == 1);
+  EXPECT_TRUE(cast_node<nodeExpression>(while_node->getConditionNode())->getNumberValue() == 1);
 
   process.stop();
 }
@@ -854,7 +855,7 @@ TEST(parser, globalAccesFromFunction) {
   EXPECT_EQ(var_b->getDatatypeSize(), 4); //int var_b;
   EXPECT_EQ(var_b->getStackOffset(), -8);// int var_b;
   //testing symbol resolver, needs to find the declaration node for identifiers
-  EXPECT_TRUE(STRINGS_EQUAL(var_b->getValueNode()->getRightNode()->getDeclarationNode()->getStringValue().c_str(), global->getStringValue().c_str())); 
+  EXPECT_TRUE(STRINGS_EQUAL(cast_node<nodeExpression>(cast_node<nodeExpression>(var_b)->getValueNode())->getRightNode()->getDeclarationNode()->getStringValue().c_str(), global->getStringValue().c_str()));
   statements.pop_back();
 
   var_b = statements.back();
@@ -1058,7 +1059,7 @@ TEST(parser, unary) {
   statements.pop_front();
   statements.pop_front();// int val
 
-  std::shared_ptr < node > ptr_assignment = statements.front();
+  std::shared_ptr < nodeExpression > ptr_assignment = cast_node<nodeExpression>(statements.front());
   EXPECT_EQ(ptr_assignment->getRightNode()->getNodeType(), nodeType::NODE_TYPE_UNARY);
   EXPECT_TRUE(STRINGS_EQUAL(ptr_assignment->getRightNode()->getStringValue().c_str(), "&"));
 
@@ -1133,6 +1134,8 @@ TEST(codegen, function) {
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
   
 }
+
+
 
 TEST(codegen, functionArguments) {
 

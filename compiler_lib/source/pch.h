@@ -9,7 +9,7 @@
 #include <cstring>
 
 // add headers that you want to pre-compile here
-#include "../framework.h"
+//#include "../framework.h"
 #define STRINGS_EQUAL(str, str2) \
   (str && str2 && (strcmp(str, str2) == 0))
 #endif // PCH_H

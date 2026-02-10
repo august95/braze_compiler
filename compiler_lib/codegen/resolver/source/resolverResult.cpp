@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "../../source/pch.h"
 #include "../resolverResult.h"
 
 void resolverResult::addEntity(std::shared_ptr<resolverEntity> entity)

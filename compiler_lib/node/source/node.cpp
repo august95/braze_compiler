@@ -1,15 +1,13 @@
-#include "pch.h"
+#include "../../source/pch.h"
 #include "../node.h"
-#include "../braze_compiler.h"
+#include "../../braze_compiler.h"
 
 node::node()
     : m_body_size(0),
       m_node_type(nodeType::NODE_TYPE_BLANK),
-      m_number_val(0),
       m_stack_offset(0),
       m_is_function_argument(0),
       m_is_global(0),
-      m_exp_type(EXPRESSION_FLAG_NONE),
       m_stack_size(0),
       m_stack_addition(4),
       m_padding(0),
@@ -22,11 +20,9 @@ node::node(filePosition file_position)
     : m_file_position(file_position),
       m_node_type(nodeType::NODE_TYPE_BLANK),
       m_body_size(0),
-      m_number_val(0),
       m_stack_offset(0),
       m_is_function_argument(0),
       m_is_global(0),
-      m_exp_type(EXPRESSION_FLAG_NONE),
       m_stack_size(0),
       m_stack_addition(4),
       m_padding(0),
@@ -39,11 +35,9 @@ node::node(nodeType node_type, filePosition file_position)
     : m_node_type(node_type),
       m_file_position(file_position),
       m_body_size(0),
-      m_number_val(0),
       m_stack_offset(0),
       m_is_function_argument(0),
       m_is_global(0),
-      m_exp_type(EXPRESSION_FLAG_NONE),
       m_stack_size(0),
       m_stack_addition(4),
       m_padding(0),
@@ -52,15 +46,6 @@ node::node(nodeType node_type, filePosition file_position)
 {
 }
 
-bool node::isValidExpressionType()
-{
-  return m_node_type == NODE_TYPE_EXPRESSION ||
-         m_node_type == NODE_TYPE_EXPRESSION_PARANTHESES ||
-         m_node_type == NODE_TYPE_IDENTIFIER ||
-         m_node_type == NODE_TYPE_UNARY ||
-         m_node_type == NODE_TYPE_NUMBER ||
-         m_node_type == NODE_TYPE_STRING;
-}
 
 int node::getDatatypeSize()
 {
@@ -182,81 +167,5 @@ void node::calculateStackOffset(int &stack_offset)
       }
     }
     m_body_node->calculateStackOffset(stack_offset);
-  }
-}
-
-void node::generateExpressionFlag()
-{
-  if (STRINGS_EQUAL(m_string_value.c_str(), "+"))
-  {
-    m_exp_type = EXPRESSION_IS_ADDITION;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), "-"))
-  {
-    m_exp_type = EXPRESSION_IS_SUBTRACTION;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), "*"))
-  {
-    m_exp_type = EXPRESSION_IS_MULTPILICATION;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), "/"))
-  {
-    m_exp_type = EXPRESSION_IS_DIVISION;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), "%"))
-  {
-    m_exp_type = EXPRESSION_IS_MODULUS;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), ">"))
-  {
-    m_exp_type = EXPRESSION_IS_ABOVE;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), "<"))
-  {
-    m_exp_type = EXPRESSION_IS_BELOW;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), ">="))
-  {
-    m_exp_type = EXPRESSION_IS_ABOVE_OR_EQUAL;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), "<="))
-  {
-    m_exp_type = EXPRESSION_IS_BELOW_OR_EQUAL;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), "!="))
-  {
-    m_exp_type = EXPRESSION_IS_NOT_EQUAL;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), "=="))
-  {
-    m_exp_type = EXPRESSION_IS_EQUAL;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), "&&"))
-  {
-    m_exp_type = EXPRESSION_LOGICAL_AND;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), "||"))
-  {
-    m_exp_type = EXPRESSION_LOGICAL_OR;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), "<<"))
-  {
-    m_exp_type = EXPRESSION_BITSHIFT_LEFT;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), ">>"))
-  {
-    m_exp_type = EXPRESSION_BITSHIFT_RIGHT;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), "&"))
-  {
-    m_exp_type = EXPRESSION_IS_BITWISE_AND;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), "|"))
-  {
-    m_exp_type = EXPRESSION_IS_BITWISE_OR;
-  }
-  else if (STRINGS_EQUAL(m_string_value.c_str(), "^"))
-  {
-    m_exp_type = EXPRESSION_IS_BITWISE_XOR;
   }
 }

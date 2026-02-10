@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "../../source/pch.h"
 #include "../resolverScope.h"
-#include "../braze_compiler.h"
+#include "../../braze_compiler.h"
 
 resolverScope::resolverScope()
     : m_root_scope(false),
@@ -23,15 +23,15 @@ void resolverScope::follow(std::shared_ptr<node> node, std::shared_ptr<resolverR
   }
   else if (node->getNodeType() == NODE_TYPE_IDENTIFIER)
   {
-    followName(node, result);
+    followName(cast_node<nodeExpression>(node), result);
   }
   else if (node->getNodeType() == NODE_TYPE_EXPRESSION)
   {
-    followExpression(node, result);
+    followExpression(cast_node<nodeExpression>(node), result);
   }
   else if (node->getNodeType() == NODE_TYPE_EXPRESSION_PARANTHESES)
   {
-    followExpression(node->getParenthesesNode(), result);
+    followExpression((cast_node<nodeExpression>(node)->getParenthesesNode()), result);
   }
   else if (node->getNodeType() == NODE_TYPE_UNARY)
   {
@@ -61,7 +61,7 @@ void resolverScope::followName(std::shared_ptr<node> node, std::shared_ptr<resol
   assert(0);
 }
 
-void resolverScope::followExpression(std::shared_ptr<node> node, std::shared_ptr<resolverResult> result)
+void resolverScope::followExpression(std::shared_ptr<nodeExpression> node, std::shared_ptr<resolverResult> result)
 {
 
   if (STRINGS_EQUAL(node->getStringValue().c_str(), "()"))
@@ -70,7 +70,7 @@ void resolverScope::followExpression(std::shared_ptr<node> node, std::shared_ptr
   }
 }
 
-void resolverScope::followFunctionCall(std::shared_ptr<node> node_, std::shared_ptr<resolverResult> result)
+void resolverScope::followFunctionCall(std::shared_ptr<nodeExpression> node_, std::shared_ptr<resolverResult> result)
 {
   assert(node_->getLeftNode()->getNodeType() == NODE_TYPE_IDENTIFIER);
   std::shared_ptr<node> func_name = node_->getLeftNode();
@@ -138,7 +138,7 @@ void resolverScope::followUnaryIndirection(std::shared_ptr<node> node_, std::sha
   result->addEntity(indirection_entity);
 }
 
-void resolverScope::buildFunctionCallArguments(std::shared_ptr<node> node_, std::shared_ptr<resolverEntity> function_call_entity, std::shared_ptr<resolverResult> result, int &function_call_stack_size)
+void resolverScope::buildFunctionCallArguments(std::shared_ptr<nodeExpression> node_, std::shared_ptr<resolverEntity> function_call_entity, std::shared_ptr<resolverResult> result, int &function_call_stack_size)
 {
   // we have multiple arguments separated by opertaor node wiht op ",
   if (!node_)

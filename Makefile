@@ -10,11 +10,13 @@ SOURCES = \
 	compiler_lib/source/asmWriter.cpp \
 	compiler_lib/source/braze_compiler.cpp \
 	compiler_lib/source/codeGenerator.cpp \
+	compiler_lib/source/codeGeneratorExpression.cpp \
 	compiler_lib/source/compilerProcess.cpp \
 	compiler_lib/source/datatype.cpp \
 	compiler_lib/source/filePosition.cpp \
 	compiler_lib/source/lexer.cpp \
-	compiler_lib/source/node.cpp \
+	compiler_lib/source/node/node.cpp \
+	compiler_lib/source/node/nodeExpression.cpp \
 	compiler_lib/source/parser.cpp \
 	compiler_lib/source/precedenceHandler.cpp \
 	compiler_lib/source/resolver.cpp \

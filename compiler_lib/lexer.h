@@ -9,7 +9,7 @@
 
 #include "filePosition.h"
 #include "token.h"
-#include "charStreamInterface.h"
+#include "../charstream/charStreamInterface.h"
 
 class lexer
 {

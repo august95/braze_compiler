@@ -2,7 +2,7 @@
 #include "resolverScope.h"
 #include "resolverEntity.h"
 #include "resolverResult.h"
-#include "node.h"
+#include "../../node/node.h"
 #include <vector>
 #include <iostream>
 #include <memory>
