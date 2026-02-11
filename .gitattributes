@@ -1,0 +1,42 @@
+# Normalize all text files
+* text=auto
+
+# C++ source files
+*.cpp  text eol=lf
+*.cc   text eol=lf
+*.c    text eol=lf
+*.h    text eol=lf
+*.hpp  text eol=lf
+*.hh   text eol=lf
+*.inl  text eol=lf
+
+# Build system files
+CMakeLists.txt text eol=lf
+*.cmake text eol=lf
+Makefile text eol=lf
+*.mk text eol=lf
+
+# Shell scripts
+*.sh text eol=lf
+
+# Windows batch files
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Visual Studio project files (keep CRLF for Windows tooling)
+*.sln  text eol=crlf
+*.vcxproj text eol=crlf
+*.vcxproj.filters text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.ico binary
+*.exe binary
+*.dll binary
+*.lib binary
+*.a binary
+*.so binary
