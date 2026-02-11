@@ -10,79 +10,51 @@
 
 
 
-#define EXPRESSION_GEN_MATHABLE (      \
-    EXPRESSION_IS_ADDITION |           \
-    EXPRESSION_IS_SUBTRACTION |        \
-    EXPRESSION_IS_MULTPILICATION |     \
-    EXPRESSION_IS_DIVISION |           \
-    EXPRESSION_IS_MODULUS |            \
-    EXPRESSION_IS_FUNCTION_CALL |      \
-    EXPRESSION_INDIRECTION |           \
-    EXPRESSION_GET_ADDRESS |           \
-    EXPRESSION_IS_ABOVE |              \
-    EXPRESSION_IS_ABOVE_OR_EQUAL |     \
-    EXPRESSION_IS_BELOW |              \
-    EXPRESSION_IS_BELOW_OR_EQUAL |     \
-    EXPRESSION_IS_EQUAL |              \
-    EXPRESSION_IS_NOT_EQUAL |          \
-    EXPRESSION_LOGICAL_AND |           \
-    EXPRESSION_LOGICAL_OR |            \
-    EXPRESSION_IN_LOGICAL_EXPRESSION | \
-    EXPRESSION_BITSHIFT_LEFT |         \
-    EXPRESSION_BITSHIFT_RIGHT |        \
-    EXPRESSION_IS_BITWISE_OR |         \
-    EXPRESSION_IS_BITWISE_AND |        \
-    EXPRESSION_IS_BITWISE_XOR)
-
-#define EXPRESSION_LOGICAL_OPERATOR ( \
-    EXPRESSION_LOGICAL_AND |          \
-    EXPRESSION_LOGICAL_OR)
 
 
-enum nodeType
+
+enum nodeType : std::uint64_t
 {
-  NODE_TYPE_UNDEFINED,
-  NODE_TYPE_EXPRESSION,
-  NODE_TYPE_EXPRESSION_PARANTHESES,
-  NODE_TYPE_NUMBER,
-  NODE_TYPE_IDENTIFIER,
-  NODE_TYPE_STRING,
-  NODE_TYPE_VARIABLE,
-  NODE_TYPE_VARIABLE_LIST,
-  NODE_TYPE_LIST,
-  NODE_TYPE_FUNCTION,
-  NODE_TYPE_BODY,
-  NODE_TYPE_STATEMENT_RETURN,
-  NODE_TYPE_STATEMENT_IF,
-  NODE_TYPE_STATEMENT_ELSE,
-  NODE_TYPE_STATEMENT_WHILE,
-  NODE_TYPE_STATEMENT_DO_WHILE,
-  NODE_TYPE_STATEMENT_FOR,
-  NODE_TYPE_STATEMENT_BREAK,
-  NODE_TYPE_STATEMENT_CONTINUE,
-  NODE_TYPE_STATEMENT_SWITCH,
-  NODE_TYPE_STATEMENT_CASE,
-  NODE_TYPE_STATEMENT_DEFAULT,
-  NODE_TYPE_STATEMENT_GOTO,
-  NODE_TYPE_UNARY,
-  NODE_TYPE_TENARY,
-  NODE_TYPE_LABEL,
-  NODE_TYPE_STRUCT,
-  NODE_TYPE_UNION,
-  NODE_TYPE_BRACKET,
-  NODE_TYPE_CAST,
-  NODE_TYPE_BLANK
+  NODE_TYPE_UNDEFINED               = 0x0000000000,
+  
+  NODE_TYPE_EXPRESSION              = 0x0000000080,
+  NODE_TYPE_EXPRESSION_PARANTHESES  = 0x0000000001 | NODE_TYPE_EXPRESSION,
+  NODE_TYPE_NUMBER                  = 0x0000000002 | NODE_TYPE_EXPRESSION,
+  NODE_TYPE_IDENTIFIER              = 0x0000000004 | NODE_TYPE_EXPRESSION,
+  NODE_TYPE_STRING                  = 0x0000000008 | NODE_TYPE_EXPRESSION,
+  NODE_TYPE_UNARY                   = 0x0000000010 | NODE_TYPE_EXPRESSION,
+  NODE_TYPE_TENARY                  = 0x0000000020 | NODE_TYPE_EXPRESSION,
+  
+  NODE_TYPE_STATEMENT               = 0x0000800000,
+  NODE_TYPE_STATEMENT_GOTO          = 0x0000000100 | NODE_TYPE_STATEMENT,
+  NODE_TYPE_STATEMENT_RETURN        = 0x0000000200 | NODE_TYPE_STATEMENT,
+  NODE_TYPE_STATEMENT_IF            = 0x0000000400 | NODE_TYPE_STATEMENT,
+  NODE_TYPE_STATEMENT_ELSE          = 0x0000000800 | NODE_TYPE_STATEMENT,
+  NODE_TYPE_STATEMENT_WHILE         = 0x0000001000 | NODE_TYPE_STATEMENT,
+  NODE_TYPE_STATEMENT_DO_WHILE      = 0x0000002000 | NODE_TYPE_STATEMENT,
+  NODE_TYPE_STATEMENT_FOR           = 0x0000004000 | NODE_TYPE_STATEMENT,
+  NODE_TYPE_STATEMENT_BREAK         = 0x0000008000 | NODE_TYPE_STATEMENT,
+  NODE_TYPE_STATEMENT_CONTINUE      = 0x0000010000 | NODE_TYPE_STATEMENT,
+  NODE_TYPE_STATEMENT_SWITCH        = 0x0000020000 | NODE_TYPE_STATEMENT,
+  NODE_TYPE_STATEMENT_CASE          = 0x0000040000 | NODE_TYPE_STATEMENT,
+  NODE_TYPE_STATEMENT_DEFAULT       = 0x0000080000 | NODE_TYPE_STATEMENT,
+  
+  //ad decl at                        0x0080000000
+  NODE_TYPE_VARIABLE                = 0x0001000000,
+  NODE_TYPE_VARIABLE_LIST           = 0x0002000000,
+  NODE_TYPE_LIST                    = 0x0004000000,
+  NODE_TYPE_BODY                    = 0x0100000000,
+  NODE_TYPE_FUNCTION                = 0x0200000000,
+  
+  NODE_TYPE_LABEL                   = 0x4000000000,
+  NODE_TYPE_STRUCT                  = 0x8000000000,
+  NODE_TYPE_UNION                   = 0x1000000000,
+  NODE_TYPE_BRACKET                 = 0x2000000000,
+  NODE_TYPE_CAST                    = 0x4000000000,
+  NODE_TYPE_BLANK                   = 0x8000000000
+
 };
 
-// std::shared_ptr<nodeExpression> node_exp
-// 
-//  cast_node<nodeExpression>(if_node->getConditionNode())
-// 
-// cast_node<nodeExpression>(popLastNode())
-// 
-// cast_node<nodeExpression>(node)
-// 
-// cast_node<nodeExpression>(  )
 
 class node
 {
@@ -100,15 +72,12 @@ public:
 
   void setValueNode(std::shared_ptr<node> val_node) { m_value_node = val_node; }
   std::shared_ptr<node> getValueNode() { return m_value_node; }
-  void setBodyNode(std::shared_ptr<node> body_node) { m_body_node = body_node; }
+  virtual void setBodyNode(std::shared_ptr<node> body_node) { m_body_node = body_node; }
   std::shared_ptr<node> getBodyNode() { return m_body_node; }
   int getBodySize() { return m_body_size; }
   void setDeclarationNode(std::shared_ptr<node> declaration_node) { m_declaration_node = declaration_node; }
   std::shared_ptr<node> getDeclarationNode() { return m_declaration_node; }
-  void setConditionNode(std::shared_ptr<node> condition_node) { m_condition_node = condition_node; }
-  std::shared_ptr<node> getConditionNode() { return m_condition_node; }
-  void setNextElseNode(std::shared_ptr<node> next_else_node) { m_next_else_node = next_else_node; }
-  std::shared_ptr<node> getNextElseNode() { return m_next_else_node; }
+
 
   virtual void setDatatype(std::shared_ptr<datatype> dtype) { m_datatype = dtype; }
   std::shared_ptr<datatype> getDatatype();
@@ -127,12 +96,9 @@ public:
   std::list<std::shared_ptr<node>> getFunctionArguments() { return m_function_arguemnt; }
   void setIsFunctionArgument(bool is_function_argument) { m_is_function_argument = is_function_argument; }
   bool getIsFunctionArgument() { return m_is_function_argument; }
-  void setInitNode(std::shared_ptr<node> init_node) { m_init_node = init_node; }
-  std::shared_ptr<node> getInitNode() { return m_init_node; }
-  void setLoopNode(std::shared_ptr<node> loop_node) { m_loop_node = loop_node; }
-  std::shared_ptr<node> getLoopNode() { return m_loop_node; }
 
-  void calculateStackOffset(int &stack_offset);
+
+  virtual void calculateStackOffset(int &stack_offset);
 
   void setIsGlobal(bool is_global) { m_is_global = is_global; }
   bool getIsGlobal() { return m_is_global; }
@@ -171,12 +137,6 @@ protected:
   // used by: identifiers
   std::shared_ptr<node> m_declaration_node;
 
-  // used by: if statmenets and loops
-  std::shared_ptr<node> m_condition_node;
-  std::shared_ptr<node> m_next_else_node;
-  std::shared_ptr<node> m_init_node; // for loop
-  std::shared_ptr<node> m_loop_node; // for loop
-
   //used by: unary
   int m_unary_indirection_depth;
 
@@ -188,42 +148,4 @@ protected:
 
 };
 
-/*
- for future use
 
-
-enum nodeType
-{
-  NODE_TYPE_UNDEFINED          = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_EXPRESSION        = 0b0000000000000000000000000000000000000001,,
-  NODE_TYPE_EXPRESSION_PARANTHESES  = 0b0000000000000000000000000000000000000101,
-  NODE_TYPE_NUMBER          = 0b0000000000000000000000000000000000001001,
-  NODE_TYPE_IDENTIFIER        = 0b0000000000000000000000000000000000010001,
-  NODE_TYPE_STRING          = 0b0000000000000000000000000000000000100001,
-  NODE_TYPE_VARIABLE          = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_VARIABLE_LIST        = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_LIST            = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_FUNCTION          = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_BODY            = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_STATEMENT_RETURN      = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_STATEMENT_IF        = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_STATEMENT_ELSE      = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_STATEMENT_WHILE      = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_STATEMENT_DO_WHILE    = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_STATEMENT_FOR        = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_STATEMENT_BREAK      = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_STATEMENT_CONTINUE    = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_STATEMENT_SWITCH      = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_STATEMENT_CASE      = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_STATEMENT_DEFAULT      = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_STATEMENT_GOTO      = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_UNARY            = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_TENARY          = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_LABEL            = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_STRUCT          = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_UNION            = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_BRACKET          = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_CAST            = 0b0000000000000000000000000000000000000000,
-  NODE_TYPE_BLANK            = 0b0000000000000000000000000000000000000000,
-};
-*/

@@ -1,9 +1,11 @@
 #include "../../source/pch.h"
+#include "../codeGenerator.h"
 #include "../codeGeneratorExpression.h"
 
-codeGeneratorExpression::codeGeneratorExpression(asmWriter& asm_writer, resolver& resolver)
+codeGeneratorExpression::codeGeneratorExpression(asmWriter& asm_writer, resolver& resolver, class codeGenerator* codegen)
   :m_asm_writer(asm_writer),
-   m_resolver(resolver)
+   m_resolver(resolver),
+   m_codegen(codegen)
 {
 }
 
@@ -450,19 +452,7 @@ std::string codeGeneratorExpression::registerString(std::string str)
   {
     return m_strings[str];
   }
-  m_strings[str] = "str_" + std::to_string(generateLableCount());
+  m_strings[str] = "str_" + std::to_string(m_codegen->generateLableCount());
   return m_strings[str];
 }
 
-int codeGeneratorExpression::generateLableCount(bool reset)
-{
-  static int count = 0;
-  count++;
-
-  // static counter lives during all unit tests, needs to be cleared after each tests
-  if (reset)
-  {
-    count = 0;
-  }
-  return count;
-}

@@ -10,6 +10,8 @@
     <ClInclude Include="precedenceHandler.h" />
     <ClInclude Include="scope.h" />
     <ClInclude Include="token.h" />
+    <ClInclude Include="stackMonitor.h" />
+    <ClInclude Include="symbolResolver.h" />
     <ClInclude Include="source\pch.h">
       <Filter>source</Filter>
     </ClInclude>
@@ -40,7 +42,9 @@
     <ClInclude Include="charstream\charStreamInterface.h">
       <Filter>charstream</Filter>
     </ClInclude>
-    <ClInclude Include="compilerProcess.h" />
+    <ClInclude Include="node\nodeStatement.h">
+      <Filter>node</Filter>
+    </ClInclude>
     <ClInclude Include="codegen\resolver\resolver.h">
       <Filter>codegen\resolver</Filter>
     </ClInclude>
@@ -56,7 +60,9 @@
     <ClInclude Include="codegen\resolver\resolverScope.h">
       <Filter>codegen\resolver</Filter>
     </ClInclude>
-    <ClInclude Include="symbolResolver.h" />
+    <ClInclude Include="codegen\codeGeneratorStatement.h">
+      <Filter>codegen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\compilerProcess.cpp">
@@ -81,6 +87,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\scope.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\symbolResolver.cpp">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\token.cpp">
@@ -113,6 +122,9 @@
     <ClCompile Include="charstream\source\charStreamInterface.cpp">
       <Filter>charstream\source</Filter>
     </ClCompile>
+    <ClCompile Include="node\source\nodeStatement.cpp">
+      <Filter>node\source</Filter>
+    </ClCompile>
     <ClCompile Include="codegen\resolver\source\resolver.cpp">
       <Filter>codegen\resolver\source</Filter>
     </ClCompile>
@@ -128,8 +140,8 @@
     <ClCompile Include="codegen\resolver\source\resolverScope.cpp">
       <Filter>codegen\resolver\source</Filter>
     </ClCompile>
-    <ClCompile Include="source\symbolResolver.cpp">
-      <Filter>source</Filter>
+    <ClCompile Include="codegen\source\codeGeneratorStatement.cpp">
+      <Filter>codegen\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,10 +167,10 @@
       <UniqueIdentifier>{860aa67e-ef39-42be-a04a-21c91e23ffa6}</UniqueIdentifier>
     </Filter>
     <Filter Include="codegen\resolver">
-      <UniqueIdentifier>{67297855-ae9e-416a-915e-75611a7884c4}</UniqueIdentifier>
+      <UniqueIdentifier>{39ef904b-4e34-466a-8db5-dc9796f69f26}</UniqueIdentifier>
     </Filter>
     <Filter Include="codegen\resolver\source">
-      <UniqueIdentifier>{3be922b2-191d-4d53-a53c-4d49cf94eca6}</UniqueIdentifier>
+      <UniqueIdentifier>{c9f44123-68dd-4ed3-afca-48864610508a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

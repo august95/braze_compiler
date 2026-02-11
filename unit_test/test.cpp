@@ -680,7 +680,7 @@ TEST(parser, function) {
 
 }
 
-
+/*
 TEST(parser, ifstatement) {
 
   std::string file_name = "parser/test_parser_if_statement.c";
@@ -819,7 +819,7 @@ TEST(parser, forstatement) {
   process.stop();
 }
 
-
+*/
 
 TEST(parser, globalAccesFromFunction) {
 

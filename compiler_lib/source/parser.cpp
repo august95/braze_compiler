@@ -3,6 +3,7 @@
 #include "../braze_compiler.h"
 #include "../precedenceHandler.h"
 #include "../node/nodeExpression.h"
+#include "../node/nodeStatement.h"
 
 #include <memory>
 
@@ -395,10 +396,10 @@ void parser::parseWhileStatement()
   assert(STRINGS_EQUAL(token->getStringValue().c_str(), "while"));
   token = nextToken();
   assert(STRINGS_EQUAL(token->getStringValue().c_str(), "("));
-  std::shared_ptr<node> while_node = std::make_shared<node>(nodeType::NODE_TYPE_STATEMENT_WHILE, token->getFilePosition());
-  std::shared_ptr<node> condition_node;
+  std::shared_ptr<nodeStatement> while_node = std::make_shared<nodeStatement>(nodeType::NODE_TYPE_STATEMENT_WHILE, token->getFilePosition());
+  std::shared_ptr<nodeExpression> condition_node;
   parseExpression();
-  condition_node = popLastNode();
+  condition_node = cast_node<nodeExpression>(popLastNode());
   while_node->setConditionNode(condition_node);
   token = nextToken();
   assert(token->getCharValue() == ')');
@@ -417,7 +418,7 @@ void parser::parseForStatement()
   token = nextToken();
   assert(STRINGS_EQUAL(token->getStringValue().c_str(), "("));
 
-  std::shared_ptr<node> for_node = std::make_shared<node>(nodeType::NODE_TYPE_STATEMENT_FOR, token->getFilePosition());
+  std::shared_ptr<nodeStatement> for_node = std::make_shared<nodeStatement>(nodeType::NODE_TYPE_STATEMENT_FOR, token->getFilePosition());
 
   std::shared_ptr<node> init_node;
   token = peekToken();
@@ -433,9 +434,9 @@ void parser::parseForStatement()
   init_node = popLastNode();
   for_node->setInitNode(init_node);
 
-  std::shared_ptr<node> condition_node;
+  std::shared_ptr<nodeExpression> condition_node;
   parseExpression();
-  condition_node = popLastNode();
+  condition_node = cast_node<nodeExpression>(popLastNode());
   for_node->setConditionNode(condition_node);
   token = nextToken();
   assert(token->getCharValue() == ';');
@@ -457,16 +458,16 @@ void parser::parseForStatement()
 
 void parser::parseIfStatement()
 {
-  std::shared_ptr<token> token = nextToken();
-  assert(STRINGS_EQUAL(token->getStringValue().c_str(), "if"));
-  token = nextToken();
-  assert(STRINGS_EQUAL(token->getStringValue().c_str(), "("));
-  std::shared_ptr<node> if_node = std::make_shared<node>(nodeType::NODE_TYPE_STATEMENT_IF, token->getFilePosition());
-  std::shared_ptr<node> condition_node;
+  std::shared_ptr<token> token_ = nextToken();
+  assert(STRINGS_EQUAL(token_->getStringValue().c_str(), "if"));
+  token_ = nextToken();
+  assert(STRINGS_EQUAL(token_->getStringValue().c_str(), "("));
+  std::shared_ptr<nodeStatement> if_node = std::make_shared<nodeStatement>(nodeType::NODE_TYPE_STATEMENT_IF, token_->getFilePosition());
+  std::shared_ptr<nodeExpression> condition_node;
   parseExpression();
-  condition_node = popLastNode();
-  token = nextToken();
-  assert(token->getCharValue() == ')');
+  condition_node = cast_node<nodeExpression>(popLastNode());
+  token_ = nextToken();
+  assert(token_->getCharValue() == ')');
   std::shared_ptr<node> body_node;
   parseBody();
   body_node = popLastNode();
@@ -474,12 +475,16 @@ void parser::parseIfStatement()
   if_node->setBodyNode(body_node);
   pushNode(if_node);
 
-  parseElseIfOrElseStatement();
+  token_ = peekToken();
+  if( STRINGS_EQUAL(token_->getStringValue().c_str(), "else"))
+  {
+    parseElseIfOrElseStatement();
+   }
 }
 
 void parser::parseElseIfOrElseStatement()
 {
-  std::shared_ptr<node> if_node = peekLastNode();
+  std::shared_ptr<nodeStatement> if_node = cast_node<nodeStatement>(peekLastNode());
   std::shared_ptr<token> token_ = peekToken();
   bool is_else = false;
   while (STRINGS_EQUAL(token_->getStringValue().c_str(), "else"))
@@ -496,13 +501,13 @@ void parser::parseElseIfOrElseStatement()
       is_else = true;
     }
 
-    std::shared_ptr<node> else_node = std::make_shared<node>(is_else ? NODE_TYPE_STATEMENT_ELSE : NODE_TYPE_STATEMENT_IF, token_->getFilePosition());
-    std::shared_ptr<node> condition_node;
+    std::shared_ptr<nodeStatement> else_node = std::make_shared<nodeStatement>(is_else ? NODE_TYPE_STATEMENT_ELSE : NODE_TYPE_STATEMENT_IF, token_->getFilePosition());
+    std::shared_ptr<nodeExpression> condition_node;
     if (!is_else)
     {
       token_ = nextToken(); // pop of '('
       parseExpression();
-      condition_node = popLastNode();
+      condition_node = cast_node<nodeExpression>(popLastNode());
       token_ = nextToken();
       assert(token_->getCharValue() == ')');
     }

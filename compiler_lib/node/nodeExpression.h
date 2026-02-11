@@ -3,6 +3,33 @@
 #include "../datatype.h"
 #include <iostream>
 
+#define EXPRESSION_GEN_MATHABLE (      \
+    EXPRESSION_IS_ADDITION |           \
+    EXPRESSION_IS_SUBTRACTION |        \
+    EXPRESSION_IS_MULTPILICATION |     \
+    EXPRESSION_IS_DIVISION |           \
+    EXPRESSION_IS_MODULUS |            \
+    EXPRESSION_IS_FUNCTION_CALL |      \
+    EXPRESSION_INDIRECTION |           \
+    EXPRESSION_GET_ADDRESS |           \
+    EXPRESSION_IS_ABOVE |              \
+    EXPRESSION_IS_ABOVE_OR_EQUAL |     \
+    EXPRESSION_IS_BELOW |              \
+    EXPRESSION_IS_BELOW_OR_EQUAL |     \
+    EXPRESSION_IS_EQUAL |              \
+    EXPRESSION_IS_NOT_EQUAL |          \
+    EXPRESSION_LOGICAL_AND |           \
+    EXPRESSION_LOGICAL_OR |            \
+    EXPRESSION_IN_LOGICAL_EXPRESSION | \
+    EXPRESSION_BITSHIFT_LEFT |         \
+    EXPRESSION_BITSHIFT_RIGHT |        \
+    EXPRESSION_IS_BITWISE_OR |         \
+    EXPRESSION_IS_BITWISE_AND |        \
+    EXPRESSION_IS_BITWISE_XOR)
+
+#define EXPRESSION_LOGICAL_OPERATOR ( \
+    EXPRESSION_LOGICAL_AND |          \
+    EXPRESSION_LOGICAL_OR)
 
 enum ExpressionType
 {
@@ -49,24 +76,16 @@ public:
   nodeExpression(nodeType node_type, filePosition file_position);
   ~nodeExpression();
 
-  virtual void calculateStackOffset(int& stack_offset);
-
-  bool isValidExpressionType();
   ExpressionType getExpressionType() { return m_exp_type; }
-
 
   void setParenthesesNode(std::shared_ptr<nodeExpression> node) { m_parentheses_node = node; }
   std::shared_ptr<nodeExpression> getParenthesesNode() { return m_parentheses_node; }
-
   std::shared_ptr<nodeExpression> getLeftNode() { return m_left_node; }
   void setLeftNode(std::shared_ptr<nodeExpression> left_node) { m_left_node = left_node; }
   std::shared_ptr<nodeExpression> getRightNode() { return m_right_node; }
   void setRightNode(std::shared_ptr<nodeExpression> right_node) { m_right_node = right_node; }
-
   virtual void setDatatype(std::shared_ptr<datatype> dtype) override { m_datatype_exp = dtype; node::setDatatype(dtype); } //FIXME resolve dtype owership with other datatype owners}
   std::shared_ptr<datatype> getDatatype() { return m_datatype_exp; }
-
-
   virtual void setStringValue(std::string string_value) override { m_string_value_exp = string_value; node::setStringValue(string_value); } //FIXME resolve dtype owership with other datatype owners
   std::string getStringValue() { return m_string_value_exp; }
   void setNumberValue(unsigned long number_val) { m_number_val = number_val; }

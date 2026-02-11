@@ -1,0 +1,50 @@
+#pragma once
+#include "node.h"
+#include "../datatype.h"
+#include "nodeExpression.h"
+
+// std::shared_ptr<nodeStatement> node_exp
+// 
+//  cast_node<nodeStatement>(if_node->getConditionNode())
+// 
+// cast_node<nodeStatement>(popLastNode())
+// 
+// cast_node<nodeStatement>(node)
+// 
+// cast_node<nodeStatement>(  )
+
+// nodeExpression
+//cast_node<nodeExpression>(popLastNode());
+
+class nodeStatement :
+    public node
+{
+public:
+  nodeStatement();
+  nodeStatement(filePosition file_position);
+  nodeStatement(nodeType node_type, filePosition file_position);
+
+  virtual void calculateStackOffset(int& stack_offset) override;
+
+  void setConditionNode(std::shared_ptr<nodeExpression> condition_node) { m_condition_node = condition_node; }
+  std::shared_ptr<nodeExpression> getConditionNode() { return m_condition_node; }
+  void setNextElseNode(std::shared_ptr<nodeStatement> next_else_node) { m_next_else_node = next_else_node; }
+  std::shared_ptr<nodeStatement> getNextElseNode() { return m_next_else_node; }
+  void setInitNode(std::shared_ptr<node> init_node) { m_init_node = init_node; }
+  std::shared_ptr<node> getInitNode() { return m_init_node; }
+  void setLoopNode(std::shared_ptr<node> loop_node) { m_loop_node = loop_node; }
+  std::shared_ptr<node> getLoopNode() { return m_loop_node; }
+
+  virtual void setBodyNode(std::shared_ptr<node> body_node) override { m_body_node = body_node; node::setBodyNode(body_node); }
+  std::shared_ptr<node> getBodyNode() { return m_body_node; }
+private:
+
+
+  std::shared_ptr<nodeExpression> m_condition_node;
+  std::shared_ptr<nodeStatement> m_next_else_node;
+  std::shared_ptr<node> m_init_node; 
+  std::shared_ptr<node> m_loop_node;
+
+  std::shared_ptr<node> m_body_node;
+};
+

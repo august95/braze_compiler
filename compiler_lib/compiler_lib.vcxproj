@@ -138,23 +138,25 @@
     <ClInclude Include="codegen\asmWriter.h" />
     <ClInclude Include="codegen\codeGenerator.h" />
     <ClInclude Include="codegen\codeGeneratorExpression.h" />
+    <ClInclude Include="codegen\codeGeneratorStatement.h" />
     <ClInclude Include="codegen\resolver\resolver.h" />
     <ClInclude Include="codegen\resolver\resolverEntity.h" />
     <ClInclude Include="codegen\resolver\resolverEntityData.h" />
     <ClInclude Include="codegen\resolver\resolverResult.h" />
     <ClInclude Include="codegen\resolver\resolverScope.h" />
     <ClInclude Include="codegen\stackMonitor.h" />
-    <ClInclude Include="compilerProcess.h" />
     <ClInclude Include="datatype.h" />
     <ClInclude Include="filePosition.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="node\node.h" />
     <ClInclude Include="node\nodeExpression.h" />
+    <ClInclude Include="node\nodeStatement.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="precedenceHandler.h" />
     <ClInclude Include="scope.h" />
     <ClInclude Include="source\pch.h" />
+    <ClInclude Include="stackMonitor.h" />
     <ClInclude Include="symbolResolver.h" />
     <ClInclude Include="token.h" />
   </ItemGroup>
@@ -170,9 +172,11 @@
     <ClCompile Include="codegen\source\asmWriter.cpp" />
     <ClCompile Include="codegen\source\codeGenerator.cpp" />
     <ClCompile Include="codegen\source\codeGeneratorExpression.cpp" />
+    <ClCompile Include="codegen\source\codeGeneratorStatement.cpp" />
     <ClCompile Include="codegen\source\stackMonitor.cpp" />
     <ClCompile Include="node\source\node.cpp" />
     <ClCompile Include="node\source\nodeExpression.cpp" />
+    <ClCompile Include="node\source\nodeStatement.cpp" />
     <ClCompile Include="source\compilerProcess.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

@@ -13,7 +13,7 @@
 class codeGeneratorExpression
 {
 public:
-  codeGeneratorExpression(asmWriter& asm_writer, resolver& resolver);
+  codeGeneratorExpression(asmWriter& asm_writer, resolver& resolver, class codeGenerator* codegen);
 
   void generateValueNode(std::shared_ptr<nodeExpression> node, std::shared_ptr<resolverEntity> entity);
   void generateExpressionable(std::shared_ptr<nodeExpression> node, int flags);
@@ -42,11 +42,12 @@ private:
   void generateCompare(std::string reg1, std::string reg2);
   void generateString(std::shared_ptr<nodeExpression> node);
   std::string registerString(std::string str);
-public:
-  int generateLableCount(bool reset = false);
+
 private:
   asmWriter& m_asm_writer;
   resolver& m_resolver;
   std::unordered_map<std::string, std::string> m_strings;
+
+  class codeGenerator* m_codegen;
 };
 

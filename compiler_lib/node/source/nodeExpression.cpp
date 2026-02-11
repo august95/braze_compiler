@@ -30,22 +30,6 @@ nodeExpression::~nodeExpression()
 
 }
 
-void nodeExpression::calculateStackOffset(int& stack_offset)
-{
-
-}
-
-bool nodeExpression::isValidExpressionType()
-{
-  return m_node_type == NODE_TYPE_EXPRESSION ||
-    m_node_type == NODE_TYPE_EXPRESSION_PARANTHESES ||
-    m_node_type == NODE_TYPE_IDENTIFIER ||
-    m_node_type == NODE_TYPE_UNARY ||
-    m_node_type == NODE_TYPE_NUMBER ||
-    m_node_type == NODE_TYPE_STRING;
-}
-
-
 void nodeExpression::generateExpressionFlag()
 {
   if (STRINGS_EQUAL(m_string_value_exp.c_str(), "+"))

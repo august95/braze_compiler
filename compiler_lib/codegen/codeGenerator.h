@@ -1,12 +1,15 @@
 #pragma once
 #include <list>
 #include "../node/node.h"
+#include "../node/nodeStatement.h"
+#include "../node/nodeExpression.h"
 #include "../scope.h"
 #include "asmWriter.h"
 #include "resolver/resolver.h"
 #include <unordered_map>
 #include <memory>
 #include "codeGeneratorExpression.h"
+#include "codeGeneratorStatement.h"
 #include "../braze_compiler.h"
 
 
@@ -16,8 +19,7 @@
  * finish operators
  * logical operators
  * check that unsigned logic is correct
- * control flow parsing & generation
- *
+ * return break continue
  */
 class codeGenerator
 {
@@ -35,13 +37,6 @@ public:
   void generateFunctionParameters(std::shared_ptr<node> node_);
   void generateBody(std::shared_ptr<node> node);
   void generateScope(std::shared_ptr<node> node);
-  void generateStatement(std::shared_ptr<node> node);
-  void generateStatementFor(std::shared_ptr<node> node);
-  void generateStatementWhile(std::shared_ptr<node> node);
-  void generateStatementIf(std::shared_ptr<node> node);
-  void generateStatementIf_(std::shared_ptr<node> node, int end_label);
-  void generateStatementIfElse(std::shared_ptr<node> node, int end_label);
-  void generateStatementElse(std::shared_ptr<node> node, int end_label);
   void generateGlobalVariable(std::shared_ptr<node> node);
   void generateGlobalVariablePrimitive(std::shared_ptr<node> node);
   void generateScopedVariable(std::shared_ptr<node> node);
@@ -59,4 +54,5 @@ private:
   resolver m_resolver;
 
   codeGeneratorExpression m_codegen_expression;
+  codeGeneratorStatement m_codegen_statement;
 };
