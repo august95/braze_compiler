@@ -4,6 +4,7 @@
 #include "../resolver/resolverEntityData.h"
 // #include "resolverscope.h"
 #include "../../node/node.h"
+#include "../../node/nodeFunctionDeclaration.h"
 #include <memory>
 
 enum entityType
@@ -31,7 +32,7 @@ public:
   resolverEntity(std::shared_ptr<node> node);
   void createResolverEntityData();
   void addAddress(std::shared_ptr<node> node, bool is_stack = false);
-  void registerFunction(std::shared_ptr<node> node);
+  void registerFunction(std::shared_ptr<nodeFunctionDeclaration> node);
   std::string getAddress();
   void setResolverEntityData(std::shared_ptr<resolverEntityData> entity_data) { m_entity_data = entity_data; }
   std::shared_ptr<resolverEntityData> getResolverEntityData() { return m_entity_data; }

@@ -14,7 +14,7 @@ class codeGeneratorExpression;
 class codeGeneratorStatement
 {
 public:
-  codeGeneratorStatement(asmWriter& asm_writer, resolver& resolver, class codeGeneratorExpression* codegen_expression, class codeGenerator* codegen);
+  codeGeneratorStatement(asmWriter& asm_writer, resolver& resolver, class codeGeneratorExpression* codegen_expression,class codeGeneratorGlobalDecleration* codegen_global_declaration, class codeGenerator* codegen);
 
   void generateStatement(std::shared_ptr<node> node);
 
@@ -25,10 +25,12 @@ private:
   void generateStatementIf_(std::shared_ptr<nodeStatement> node, int end_label);
   void generateStatementIfElse(std::shared_ptr<nodeStatement> node, int end_label);
   void generateStatementElse(std::shared_ptr<nodeStatement> node, int end_label);
+  void generateScopedVariable(std::shared_ptr<nodeVariableDeclaration> node); //todo move to statement
 
 private:
   class codeGenerator* m_codegen;
   class codeGeneratorExpression* m_codegen_expression;
+  class codeGeneratorGlobalDecleration* m_codegen_global_declaration;
   asmWriter& m_asm_writer;
   resolver& m_resolver;
 };

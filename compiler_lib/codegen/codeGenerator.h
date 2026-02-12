@@ -1,15 +1,19 @@
 #pragma once
 #include <list>
 #include "../node/node.h"
-#include "../node/nodeStatement.h"
 #include "../node/nodeExpression.h"
+#include "../node/nodeStatement.h"
+#include "../node/nodeBody.h"
+#include "../node/nodeVariableDeclaration.h"
+#include "../node/nodeFunctionDeclaration.h"
 #include "../scope.h"
 #include "asmWriter.h"
 #include "resolver/resolver.h"
 #include <unordered_map>
 #include <memory>
-#include "codeGeneratorExpression.h"
 #include "codeGeneratorStatement.h"
+#include "codeGeneratorExpression.h"
+#include "codeGeneratorGlobalDecleration.h"
 #include "../braze_compiler.h"
 
 
@@ -32,18 +36,7 @@ public:
   void generateDataSection();
   void generateRoot();
   void generateReadOnlySection();
-  void generateRootNode(std::shared_ptr<node> node);
-  void generateFunction(std::shared_ptr<node> node);
-  void generateFunctionParameters(std::shared_ptr<node> node_);
-  void generateBody(std::shared_ptr<node> node);
-  void generateScope(std::shared_ptr<node> node);
-  void generateGlobalVariable(std::shared_ptr<node> node);
-  void generateGlobalVariablePrimitive(std::shared_ptr<node> node);
-  void generateScopedVariable(std::shared_ptr<node> node);
   int generateLableCount(bool reset = false);
-
-
-
 
 private:
   scope m_root_scope;
@@ -55,4 +48,5 @@ private:
 
   codeGeneratorExpression m_codegen_expression;
   codeGeneratorStatement m_codegen_statement;
+  codeGeneratorGlobalDecleration m_codegen_global_declaration;
 };

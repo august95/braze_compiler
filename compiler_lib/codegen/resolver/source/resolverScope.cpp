@@ -35,7 +35,7 @@ void resolverScope::follow(std::shared_ptr<node> node, std::shared_ptr<resolverR
   }
   else if (node->getNodeType() == NODE_TYPE_UNARY)
   {
-    followUnary(node, result);
+    followUnary(cast_node<nodeExpression>(node), result);
   }
 }
 
@@ -95,7 +95,7 @@ void resolverScope::followFunctionCall(std::shared_ptr<nodeExpression> node_, st
   function_call_entity->setDatatype(function_entity->getDatatype());
 }
 
-void resolverScope::followUnary(std::shared_ptr<node> node_, std::shared_ptr<resolverResult> result)
+void resolverScope::followUnary(std::shared_ptr<nodeExpression> node_, std::shared_ptr<resolverResult> result)
 {
   //indirection
   if (STRINGS_EQUAL(node_->getStringValue().c_str(), "*"))
@@ -110,7 +110,7 @@ void resolverScope::followUnary(std::shared_ptr<node> node_, std::shared_ptr<res
 
 }
 
-void resolverScope::followUnaryAddress(std::shared_ptr<node> node_, std::shared_ptr<resolverResult> result)
+void resolverScope::followUnaryAddress(std::shared_ptr<nodeExpression> node_, std::shared_ptr<resolverResult> result)
 {
   // int val;
   // int ptr* = &val;
@@ -126,7 +126,7 @@ void resolverScope::followUnaryAddress(std::shared_ptr<node> node_, std::shared_
   result->addEntity(unary_address);
 }
 
-void resolverScope::followUnaryIndirection(std::shared_ptr<node> node_, std::shared_ptr<resolverResult> result)
+void resolverScope::followUnaryIndirection(std::shared_ptr<nodeExpression> node_, std::shared_ptr<resolverResult> result)
 {
   follow(node_->getValueNode(), result);
   std::shared_ptr<resolverEntity> indirection_entity = std::make_shared<resolverEntity>(node_);

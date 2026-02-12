@@ -9,7 +9,7 @@ codeGeneratorExpression::codeGeneratorExpression(asmWriter& asm_writer, resolver
 {
 }
 
-void codeGeneratorExpression::generateValueNode(std::shared_ptr<nodeExpression> node, std::shared_ptr<resolverEntity> entity)
+void codeGeneratorExpression::generateValueNode(std::shared_ptr<nodeVariableDeclaration> node, std::shared_ptr<resolverEntity> entity)
 {
   generateExpressionable(cast_node<nodeExpression>(node->getValueNode()), IS_ASSIGNMENT | IS_RIGHT_HAND_OF_ASSIGNMENT);
   m_asm_writer.asmGenPopIns("eax");

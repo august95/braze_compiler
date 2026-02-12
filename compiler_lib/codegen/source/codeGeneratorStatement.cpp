@@ -1,11 +1,17 @@
 #include "../codeGeneratorStatement.h"
 #include "../codeGeneratorExpression.h"
+#include "../codeGeneratorGlobalDecleration.h"
 #include "../codeGenerator.h"
 
-codeGeneratorStatement::codeGeneratorStatement(asmWriter& asm_writer, resolver& resolver, codeGeneratorExpression* codegen_expression, codeGenerator* codegen)
+#define C_STACK_ALIGNMENT 16
+#define STACK_PUSH_SIZE 4
+#define C_ALIGN(size) (size % C_STACK_ALIGNMENT) ? size + (C_STACK_ALIGNMENT - (size % C_STACK_ALIGNMENT)) : size
+
+codeGeneratorStatement::codeGeneratorStatement(asmWriter& asm_writer, resolver& resolver, codeGeneratorExpression* codegen_expression, class codeGeneratorGlobalDecleration* codegen_global_declaration, codeGenerator* codegen)
   :m_asm_writer(asm_writer),
   m_resolver(resolver),
   m_codegen_expression(codegen_expression),
+  m_codegen_global_declaration(codegen_global_declaration),
   m_codegen(codegen)
 {
 }
@@ -15,7 +21,7 @@ void codeGeneratorStatement::generateStatement(std::shared_ptr<node> node)
 
   if (node->getNodeType() == NODE_TYPE_VARIABLE)
   {
-    m_codegen->generateScopedVariable(node);
+    generateScopedVariable(cast_node<nodeVariableDeclaration>(node));
   }
   else if (node->getNodeType() == NODE_TYPE_EXPRESSION)
   {
@@ -46,7 +52,7 @@ void codeGeneratorStatement::generateStatementFor(std::shared_ptr<nodeStatement>
   int for_loop_end = m_codegen->generateLableCount();
   if (node->getInitNode())
   {
-    m_codegen->generateScopedVariable(node->getInitNode());
+    generateScopedVariable(node->getInitNode());
     // m_asm_writer.asmGenPopIns("eax");
   }
 
@@ -67,7 +73,7 @@ void codeGeneratorStatement::generateStatementFor(std::shared_ptr<nodeStatement>
 
   if (node->getBodyNode())
   {
-    m_codegen->generateBody(node->getBodyNode());
+    m_codegen_global_declaration->generateBody(node->getBodyNode());
   }
 
   if (node->getLoopNode())
@@ -90,7 +96,7 @@ void codeGeneratorStatement::generateStatementWhile(std::shared_ptr<nodeStatemen
   m_asm_writer.asmGenPopIns("eax");
   m_asm_writer.asmGen("cmp eax, 0");
   m_asm_writer.asmGen("je .while_end_" + std::to_string(while_end));
-  m_codegen->generateBody(node->getBodyNode());
+  m_codegen_global_declaration->generateBody(node->getBodyNode());
   m_asm_writer.asmGen("jmp .while_start_" + std::to_string(while_start));
   m_asm_writer.asmGen(".while_end_" + std::to_string(while_end) + ":");
 }
@@ -111,7 +117,7 @@ void codeGeneratorStatement::generateStatementIf_(std::shared_ptr<nodeStatement>
   m_asm_writer.asmGenPopIns("eax");
   m_asm_writer.asmGen("cmp eax, 0");                         // if equal, sets zero flag in CPU
   m_asm_writer.asmGen("je .if_" + std::to_string(if_label)); // if zero flag is set in CPU, perfores jump. We dont want to jump when if(0)
-  m_codegen->generateBody(node->getBodyNode());
+  m_codegen_global_declaration->generateBody(node->getBodyNode());
   m_asm_writer.asmGen("jmp .if_end_" + std::to_string(end_label));
   m_asm_writer.asmGen(".if_" + std::to_string(if_label) + ":");
 
@@ -139,5 +145,16 @@ void codeGeneratorStatement::generateStatementIfElse(std::shared_ptr<nodeStateme
 
 void codeGeneratorStatement::generateStatementElse(std::shared_ptr<nodeStatement> node, int end_label)
 {
-  m_codegen->generateBody(node->getBodyNode());
+  m_codegen_global_declaration->generateBody(node->getBodyNode());
+}
+
+void codeGeneratorStatement::generateScopedVariable(std::shared_ptr<nodeVariableDeclaration> node)
+{
+
+  std::shared_ptr<resolverEntity> entity = m_resolver.addEntity(node, true);
+  if (node->getValueNode())
+  {
+    m_codegen_expression->generateValueNode(node, entity);
+  }
+
 }

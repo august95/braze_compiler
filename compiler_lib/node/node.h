@@ -8,11 +8,6 @@
 #include <list>
 #include <memory>
 
-
-
-
-
-
 enum nodeType : std::uint64_t
 {
   NODE_TYPE_UNDEFINED               = 0x0000000000,
@@ -39,15 +34,16 @@ enum nodeType : std::uint64_t
   NODE_TYPE_STATEMENT_CASE          = 0x0000040000 | NODE_TYPE_STATEMENT,
   NODE_TYPE_STATEMENT_DEFAULT       = 0x0000080000 | NODE_TYPE_STATEMENT,
   
-  //ad decl at                        0x0080000000
-  NODE_TYPE_VARIABLE                = 0x0001000000,
-  NODE_TYPE_VARIABLE_LIST           = 0x0002000000,
-  NODE_TYPE_LIST                    = 0x0004000000,
-  NODE_TYPE_BODY                    = 0x0100000000,
-  NODE_TYPE_FUNCTION                = 0x0200000000,
+  NODE_TYPE_VARIABLE_DECLARATION    = 0x0008000000,
+  NODE_TYPE_VARIABLE                = 0x0001000000 | NODE_TYPE_VARIABLE_DECLARATION,
+  NODE_TYPE_VARIABLE_LIST           = 0x0002000000 | NODE_TYPE_VARIABLE_DECLARATION,
+  NODE_TYPE_BODY                    = 0x0010000000,
+  NODE_TYPE_FUNCTION_DECLARATION    = 0x0020000000,
   
-  NODE_TYPE_LABEL                   = 0x4000000000,
-  NODE_TYPE_STRUCT                  = 0x8000000000,
+  //not supported
+  NODE_TYPE_LIST                    = 0x0200000000,
+  NODE_TYPE_LABEL                   = 0x0400000000,
+  NODE_TYPE_STRUCT                  = 0x0800000000,
   NODE_TYPE_UNION                   = 0x1000000000,
   NODE_TYPE_BRACKET                 = 0x2000000000,
   NODE_TYPE_CAST                    = 0x4000000000,
@@ -60,90 +56,26 @@ class node
 {
 public:
   node();
-  node(filePosition file_position);
   node(nodeType node_type, filePosition file_position);
-   
 
-  int getDatatypeSize();
   filePosition getFilePosition() { return m_file_position; }
-
   nodeType getNodeType() { return m_node_type; }
-  void setNodeType(nodeType node_type) { m_node_type = node_type; }
+  virtual void calculateStackOffset(int& stack_offset) = 0;
 
-  void setValueNode(std::shared_ptr<node> val_node) { m_value_node = val_node; }
-  std::shared_ptr<node> getValueNode() { return m_value_node; }
-  virtual void setBodyNode(std::shared_ptr<node> body_node) { m_body_node = body_node; }
-  std::shared_ptr<node> getBodyNode() { return m_body_node; }
-  int getBodySize() { return m_body_size; }
-  void setDeclarationNode(std::shared_ptr<node> declaration_node) { m_declaration_node = declaration_node; }
-  std::shared_ptr<node> getDeclarationNode() { return m_declaration_node; }
+  //create declaration interface
+  virtual std::shared_ptr<datatype> getDatatype() { return 0; }
+  virtual void setIsGlobal(bool is_global) {  }
+  virtual int getDatatypeSize() { return 0; };
+  //end declaration interface
 
-
-  virtual void setDatatype(std::shared_ptr<datatype> dtype) { m_datatype = dtype; }
-  std::shared_ptr<datatype> getDatatype();
-  void setReturnDatatype(std::shared_ptr<datatype> dtype) { m_return_datatype = dtype; }
-  std::shared_ptr<datatype> getReturnDatatype() { return m_return_datatype; }
-  void addStatement(std::shared_ptr<node> statement);
-  //  void setStatements(std::list < std::shared_ptr < node > > statements);
-  std::list<std::shared_ptr<node>> getStatements() { return m_statements; }
-
-
-  void setStackOffset(int stack_offset) { m_stack_offset = stack_offset; }
-  int getStackOffset() { return m_stack_offset; }
-  void generateExpressionFlag();
-
-  void addFunctionArgumentNode(std::shared_ptr<node> node) { m_function_arguemnt.push_back(node); }
-  std::list<std::shared_ptr<node>> getFunctionArguments() { return m_function_arguemnt; }
-  void setIsFunctionArgument(bool is_function_argument) { m_is_function_argument = is_function_argument; }
-  bool getIsFunctionArgument() { return m_is_function_argument; }
-
-
-  virtual void calculateStackOffset(int &stack_offset);
-
-  void setIsGlobal(bool is_global) { m_is_global = is_global; }
-  bool getIsGlobal() { return m_is_global; }
-  bool isFunctionPrototype() { return m_function_prototype; }
-  void setFunctionPrototype(bool function_prototype) { m_function_prototype = function_prototype; }
-  void setUnaryIndirectionDepth(int unary_indirection_depth) { m_unary_indirection_depth = unary_indirection_depth; }
-  int getUnaryIndirectionDepth() { return m_unary_indirection_depth;  }
   virtual void setStringValue(std::string string_value) { m_string_value = string_value; } //FIXME resolve dtype owership with other datatype owners
   std::string getStringValue() { return m_string_value; }
 
 protected:
 
-  // used by: variable nodes
-  std::shared_ptr<node> m_value_node;
-  std::shared_ptr<datatype> m_datatype;
-  bool m_is_global;
-  bool m_is_function_argument;
-  int m_padding;
 
-  // used by: variable nodes and body nodes
-  int m_stack_offset;
-
-  // used by: body nodes
-  std::list<std::shared_ptr<node>> m_statements;
-  int m_body_size;
-
-  // used by: function nodes
-  std::shared_ptr<node> m_body_node;
-  std::shared_ptr<datatype> m_return_datatype;
-  std::list<std::shared_ptr<node>> m_function_arguemnt;
-  int m_stack_size;
-  bool m_function_prototype;
-  // size of ebp and esp, migth be bigger when returning structs
-  int m_stack_addition;
-
-  // used by: identifiers
-  std::shared_ptr<node> m_declaration_node;
-
-  //used by: unary
-  int m_unary_indirection_depth;
-
-  // used by: multiple node types
   nodeType m_node_type;
   filePosition m_file_position;
-
   std::string m_string_value;
 
 };

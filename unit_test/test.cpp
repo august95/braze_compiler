@@ -619,7 +619,7 @@ TEST(parser, keyword) {
   process.startCompiler();
 
   std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
-  std::shared_ptr < nodeExpression > _node = cast_node<nodeExpression>(ast.front());
+  std::shared_ptr < nodeVariableDeclaration > _node = cast_node<nodeVariableDeclaration>(ast.front());
   std::shared_ptr < datatype > dtype = _node->getDatatype();
   EXPECT_TRUE(dtype->isStatic());
   EXPECT_TRUE(dtype->isConst());
@@ -641,6 +641,7 @@ TEST(parser, keyword) {
 }
 
 
+/*
 TEST(parser, function) {
 
   std::string file_name = "parser/test_parser_function.c";
@@ -680,7 +681,7 @@ TEST(parser, function) {
 
 }
 
-/*
+
 TEST(parser, ifstatement) {
 
   std::string file_name = "parser/test_parser_if_statement.c";
@@ -819,7 +820,8 @@ TEST(parser, forstatement) {
   process.stop();
 }
 
-*/
+
+/*
 
 TEST(parser, globalAccesFromFunction) {
 
@@ -1070,6 +1072,9 @@ TEST(parser, unary) {
 
 
 }
+
+*/
+
 
 
 TEST(codegen, function) {

@@ -138,6 +138,7 @@
     <ClInclude Include="codegen\asmWriter.h" />
     <ClInclude Include="codegen\codeGenerator.h" />
     <ClInclude Include="codegen\codeGeneratorExpression.h" />
+    <ClInclude Include="codegen\codeGeneratorGlobalDecleration.h" />
     <ClInclude Include="codegen\codeGeneratorStatement.h" />
     <ClInclude Include="codegen\resolver\resolver.h" />
     <ClInclude Include="codegen\resolver\resolverEntity.h" />
@@ -150,8 +151,11 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="node\node.h" />
+    <ClInclude Include="node\nodeBody.h" />
     <ClInclude Include="node\nodeExpression.h" />
+    <ClInclude Include="node\nodeFunctionDeclaration.h" />
     <ClInclude Include="node\nodeStatement.h" />
+    <ClInclude Include="node\nodeVariableDeclaration.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="precedenceHandler.h" />
     <ClInclude Include="scope.h" />
@@ -172,11 +176,15 @@
     <ClCompile Include="codegen\source\asmWriter.cpp" />
     <ClCompile Include="codegen\source\codeGenerator.cpp" />
     <ClCompile Include="codegen\source\codeGeneratorExpression.cpp" />
+    <ClCompile Include="codegen\source\codeGeneratorGlobalDecleration.cpp" />
     <ClCompile Include="codegen\source\codeGeneratorStatement.cpp" />
     <ClCompile Include="codegen\source\stackMonitor.cpp" />
     <ClCompile Include="node\source\node.cpp" />
+    <ClCompile Include="node\source\nodeBody.cpp" />
     <ClCompile Include="node\source\nodeExpression.cpp" />
+    <ClCompile Include="node\source\nodeFunctionDeclaration.cpp" />
     <ClCompile Include="node\source\nodeStatement.cpp" />
+    <ClCompile Include="node\source\nodeVariableDeclaration.cpp" />
     <ClCompile Include="source\compilerProcess.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

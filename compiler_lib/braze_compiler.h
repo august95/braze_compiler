@@ -6,6 +6,8 @@
 #include <assert.h>
 #include "node/node.h"
 #include "node/nodeExpression.h"
+#include "node/nodeStatement.h"
+#include "node/nodeVariableDeclaration.h"
 
 #include "filePosition.h"
 #include "token.h"
@@ -53,29 +55,36 @@ static void clog(const char *log, filePosition file_position)
 
 
 template <class t>
-bool is_valid(std::shared_ptr<t> node_, nodeType node_type)
+bool is_valid(nodeType node_type)
 {
-  switch (node_type)
+  if (node_type | NODE_TYPE_EXPRESSION)
   {
-  case NODE_TYPE_NUMBER:
-  case NODE_TYPE_EXPRESSION:
-  case NODE_TYPE_EXPRESSION_PARANTHESES:
-  case NODE_TYPE_IDENTIFIER:
     return std::is_same_v<t, nodeExpression>;
-
-  default:
-    return false;
-
   }
-
+  else if (node_type | NODE_TYPE_STATEMENT)
+  {
+    return std::is_same_v<t, nodeStatement>;
+  }
+  else if (node_type | NODE_TYPE_VARIABLE_DECLARATION)
+  {
+    return std::is_same_v<t, nodeVariableDeclaration>;
+  }
+  return false;
 }
 
 template <class nodeType>
 std::shared_ptr<nodeType> cast_node(std::shared_ptr<node> node_)
 {
   // Use std::static_pointer_cast<nodeType> to cast from base class to derived class
+
   if (!node_)
     return std::shared_ptr<nodeType>();
+  /*
+  if (!is_valid<nodeType>(node_->getNodeType()))
+  {
+    assert(0, "invalid node type conversion");
+  }
+  */
   std::shared_ptr<nodeType> cast_node_ = std::static_pointer_cast<nodeType>(node_);
   return cast_node_;
 }

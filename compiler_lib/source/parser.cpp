@@ -2,8 +2,11 @@
 #include "../parser.h"
 #include "../braze_compiler.h"
 #include "../precedenceHandler.h"
-#include "../node/nodeExpression.h"
+#include "../node/nodeBody.h"
 #include "../node/nodeStatement.h"
+#include "../node/nodeVariableDeclaration.h"
+#include "../node/nodeFunctionDeclaration.h"
+#include "../node/nodeExpression.h"
 
 #include <memory>
 
@@ -403,9 +406,9 @@ void parser::parseWhileStatement()
   while_node->setConditionNode(condition_node);
   token = nextToken();
   assert(token->getCharValue() == ')');
-  std::shared_ptr<node> body_node;
+  std::shared_ptr<nodeBody> body_node;
   parseBody();
-  body_node = popLastNode();
+  body_node = cast_node<nodeBody>(peekLastNode());
   while_node->setBodyNode(body_node);
   pushNode(while_node);
 }
@@ -420,18 +423,21 @@ void parser::parseForStatement()
 
   std::shared_ptr<nodeStatement> for_node = std::make_shared<nodeStatement>(nodeType::NODE_TYPE_STATEMENT_FOR, token->getFilePosition());
 
-  std::shared_ptr<node> init_node;
+  std::shared_ptr<nodeVariableDeclaration> init_node;
   token = peekToken();
   if (token->isTokenTypeKeyword())
   {
     parseKeyword();
   }
+  /*
   else
   {
     parseExpression();
     assert(token->getCharValue() == ';');
   }
-  init_node = popLastNode();
+  */
+
+  init_node = cast_node<nodeVariableDeclaration>(popLastNode());
   for_node->setInitNode(init_node);
 
   std::shared_ptr<nodeExpression> condition_node;
@@ -449,9 +455,9 @@ void parser::parseForStatement()
   // body part
   token = nextToken();
   assert(token->getCharValue() == ')');
-  std::shared_ptr<node> body_node;
+  std::shared_ptr<nodeBody> body_node;
   parseBody();
-  body_node = popLastNode();
+  body_node = cast_node<nodeBody>(peekLastNode());
   for_node->setBodyNode(body_node);
   pushNode(for_node);
 }
@@ -468,9 +474,9 @@ void parser::parseIfStatement()
   condition_node = cast_node<nodeExpression>(popLastNode());
   token_ = nextToken();
   assert(token_->getCharValue() == ')');
-  std::shared_ptr<node> body_node;
+  std::shared_ptr<nodeBody> body_node;
   parseBody();
-  body_node = popLastNode();
+  body_node = cast_node<nodeBody>(peekLastNode());
   if_node->setConditionNode(condition_node);
   if_node->setBodyNode(body_node);
   pushNode(if_node);
@@ -511,9 +517,9 @@ void parser::parseElseIfOrElseStatement()
       token_ = nextToken();
       assert(token_->getCharValue() == ')');
     }
-    std::shared_ptr<node> body_node;
+    std::shared_ptr<nodeBody> body_node;
     parseBody();
-    body_node = popLastNode();
+    body_node = cast_node<nodeBody>(popLastNode());
     else_node->setConditionNode(condition_node);
     else_node->setBodyNode(body_node);
     if_node->setNextElseNode(else_node);
@@ -549,35 +555,34 @@ void parser::parseVariableOrFunction()
 
   std::shared_ptr<token> token = nextToken();
   assert(token->isTokenTypeIdentifier() && "expected variable name or function name");
-  std::shared_ptr<nodeExpression> _node = std::make_shared<nodeExpression>(token->getFilePosition());
+
+  std::shared_ptr<nodeVariableDeclaration> var_node = std::make_shared<nodeVariableDeclaration>(NODE_TYPE_VARIABLE, token->getFilePosition());
+  std::shared_ptr<nodeFunctionDeclaration> func_node = std::make_shared<nodeFunctionDeclaration>(NODE_TYPE_FUNCTION_DECLARATION, token->getFilePosition());
   std::string variable_or_function_name = token->getStringValue();
-  _node->setStringValue(variable_or_function_name);
+  var_node->setStringValue(variable_or_function_name);
+  func_node->setStringValue(variable_or_function_name);
 
   token = nextToken();
   if (token->isTokenTypeSymbol() && (token->getCharValue() == ';'))
   {
     // unassigned variable int a;
-    _node->setNodeType(nodeType::NODE_TYPE_VARIABLE);
-    _node->setDatatype(datatype);
-    m_symbol_resolver.addNodeToCurrentScope(_node);
+    var_node->setDatatype(datatype);
+    m_symbol_resolver.addNodeToCurrentScope(var_node);
   }
   else if (token->isTokenTypeOperator() && (token->getStringValue() == "="))
   {
     // assigned variable int a = 50;
-    _node->setNodeType(nodeType::NODE_TYPE_VARIABLE);
-    _node->setDatatype(datatype);
+    var_node->setDatatype(datatype);
     parseExpression();
-    _node->setValueNode(popLastNode());
-    m_symbol_resolver.addNodeToCurrentScope(_node);
+    var_node->setValueNode(cast_node<nodeExpression>(popLastNode()));
+    m_symbol_resolver.addNodeToCurrentScope(var_node);
     nextToken(); // pop off ';'
   }
   else if (token->isTokenTypeOperator() && (token->getStringValue() == "("))
   {
     // parsing function int a(){}
-
-    _node->setNodeType(nodeType::NODE_TYPE_FUNCTION);
-    _node->setReturnDatatype(datatype);
-    pushNode(_node); //_node is popped inside parseFunction
+    func_node->setReturnDatatype(datatype);
+    pushNode(func_node); //_node is popped inside parseFunction
     parseFunction();
 
     m_symbol_resolver.addNodeToCurrentScope(peekLastNode());
@@ -588,13 +593,13 @@ void parser::parseVariableOrFunction()
     cerror("expected function or variable declaration", token->getFilePosition());
     assert(false);
   }
-  pushNode(_node);
+  pushNode(var_node);
 }
 
 void parser::parseFunction()
 {
   m_symbol_resolver.newScope();
-  std::shared_ptr<node> function_node = peekLastNode();
+  std::shared_ptr<nodeFunctionDeclaration> function_node = cast_node<nodeFunctionDeclaration>(peekLastNode());
   // deal with parameters
   std::shared_ptr<token> token = peekToken();
   m_symbol_resolver.newScope();
@@ -611,7 +616,7 @@ void parser::parseFunction()
   if (token->isTokenTypeSymbol() && token->getCharValue() == '{')
   {
     parseBody();
-    std::shared_ptr<node> body_node = popLastNode();
+    std::shared_ptr<nodeBody> body_node = cast_node<nodeBody>(popLastNode());
     function_node->setBodyNode(body_node);
   }
   else
@@ -632,7 +637,7 @@ void parser::parseBody()
   // create new scope
   std::shared_ptr<token> token = nextToken(); // '{'
   std::list<std::shared_ptr<node>> statements;
-  std::shared_ptr<node> body_node = std::make_shared<node>(nodeType::NODE_TYPE_BODY, token->getFilePosition());
+  std::shared_ptr<nodeBody> body_node = std::make_shared<nodeBody>(nodeType::NODE_TYPE_BODY, token->getFilePosition());
   int stack_offset = 0;
   bool single_line_statement = false;
 
@@ -697,7 +702,7 @@ void parser::parseStatement()
 
 void parser::parseFunctionParameters()
 {
-  std::shared_ptr<node> function_node = peekLastNode();
+  std::shared_ptr<nodeFunctionDeclaration> function_node = cast_node<nodeFunctionDeclaration>(peekLastNode());
   std::shared_ptr<token> token = peekToken();
   while (token->getCharValue() != ')')
   {
@@ -712,9 +717,8 @@ void parser::parseFunctionParameters()
       return;
     }
     assert(token->isTokenTypeIdentifier() && "expected variable name or function name");
-    std::shared_ptr<nodeExpression> _node = std::make_shared<nodeExpression>(token->getFilePosition());
+    std::shared_ptr<nodeVariableDeclaration> _node = std::make_shared<nodeVariableDeclaration>(NODE_TYPE_VARIABLE, token->getFilePosition());
     _node->setStringValue(token->getStringValue());
-    _node->setNodeType(NODE_TYPE_VARIABLE);
     _node->setIsFunctionArgument(true);
     _node->setDatatype(datatype);
     function_node->addFunctionArgumentNode(_node);

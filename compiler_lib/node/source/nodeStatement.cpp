@@ -4,12 +4,6 @@ nodeStatement::nodeStatement()
 {
 }
 
-nodeStatement::nodeStatement(filePosition file_position)
-  :node(file_position)
-{
-  m_node_type = NODE_TYPE_STATEMENT;
-}
-
 nodeStatement::nodeStatement(nodeType node_type, filePosition file_position)
   :node(node_type, file_position)
 {

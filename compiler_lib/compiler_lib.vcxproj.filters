@@ -63,6 +63,18 @@
     <ClInclude Include="codegen\codeGeneratorStatement.h">
       <Filter>codegen</Filter>
     </ClInclude>
+    <ClInclude Include="node\nodeVariableDeclaration.h">
+      <Filter>node</Filter>
+    </ClInclude>
+    <ClInclude Include="node\nodeFunctionDeclaration.h">
+      <Filter>node</Filter>
+    </ClInclude>
+    <ClInclude Include="node\nodeBody.h">
+      <Filter>node</Filter>
+    </ClInclude>
+    <ClInclude Include="codegen\codeGeneratorGlobalDecleration.h">
+      <Filter>codegen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\compilerProcess.cpp">
@@ -141,6 +153,18 @@
       <Filter>codegen\resolver\source</Filter>
     </ClCompile>
     <ClCompile Include="codegen\source\codeGeneratorStatement.cpp">
+      <Filter>codegen\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node\source\nodeVariableDeclaration.cpp">
+      <Filter>node\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node\source\nodeFunctionDeclaration.cpp">
+      <Filter>node\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node\source\nodeBody.cpp">
+      <Filter>node\source</Filter>
+    </ClCompile>
+    <ClCompile Include="codegen\source\codeGeneratorGlobalDecleration.cpp">
       <Filter>codegen\source</Filter>
     </ClCompile>
   </ItemGroup>

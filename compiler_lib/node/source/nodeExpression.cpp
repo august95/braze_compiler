@@ -4,16 +4,9 @@
 nodeExpression::nodeExpression()
   :node(),
   m_number_val(0),
-  m_exp_type(EXPRESSION_FLAG_NONE)
-{
-  m_node_type = NODE_TYPE_EXPRESSION;
-}
-
-
-nodeExpression::nodeExpression(filePosition file_position)
-  :node(file_position),
-  m_number_val(0),
-  m_exp_type(EXPRESSION_FLAG_NONE)
+  m_exp_type(EXPRESSION_FLAG_NONE),
+  m_unary_indirection_depth(0),
+  m_stack_offset(0)
 {
   m_node_type = NODE_TYPE_EXPRESSION;
 }
@@ -21,7 +14,9 @@ nodeExpression::nodeExpression(filePosition file_position)
 nodeExpression::nodeExpression(nodeType node_type, filePosition file_position)
   :node(node_type, file_position),
   m_number_val(0),
-  m_exp_type(EXPRESSION_FLAG_NONE)
+  m_exp_type(EXPRESSION_FLAG_NONE),
+  m_unary_indirection_depth(0),
+  m_stack_offset(0)
 {
 }
 

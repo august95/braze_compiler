@@ -15,7 +15,7 @@ class codeGeneratorExpression
 public:
   codeGeneratorExpression(asmWriter& asm_writer, resolver& resolver, class codeGenerator* codegen);
 
-  void generateValueNode(std::shared_ptr<nodeExpression> node, std::shared_ptr<resolverEntity> entity);
+  void generateValueNode(std::shared_ptr<nodeVariableDeclaration> node, std::shared_ptr<resolverEntity> entity);
   void generateExpressionable(std::shared_ptr<nodeExpression> node, int flags);
   void generateExpNode(std::shared_ptr<nodeExpression> node);
   void generateUnary(std::shared_ptr<nodeExpression> node);
