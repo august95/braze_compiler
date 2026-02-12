@@ -72,20 +72,31 @@ class nodeExpression : public node
 {
 public:
   nodeExpression();
-  nodeExpression(filePosition file_position);
   nodeExpression(nodeType node_type, filePosition file_position);
   ~nodeExpression();
 
-  ExpressionType getExpressionType() { return m_exp_type; }
+  virtual void calculateStackOffset(int& stack_offset) override {};
 
+  ExpressionType getExpressionType() { return m_exp_type; }
+  int getDatatypeSize() { return m_declaration_node->getDatatypeSize(); }
+
+  void setDeclarationNode(std::shared_ptr<node> declaration_node) { m_declaration_node = declaration_node; }
+  std::shared_ptr<node> getDeclarationNode() { return m_declaration_node; }
   void setParenthesesNode(std::shared_ptr<nodeExpression> node) { m_parentheses_node = node; }
   std::shared_ptr<nodeExpression> getParenthesesNode() { return m_parentheses_node; }
+  void setValueNode(std::shared_ptr<nodeExpression> val_node) { m_value_node = val_node; }
+  std::shared_ptr<nodeExpression> getValueNode() { return m_value_node; }
   std::shared_ptr<nodeExpression> getLeftNode() { return m_left_node; }
   void setLeftNode(std::shared_ptr<nodeExpression> left_node) { m_left_node = left_node; }
   std::shared_ptr<nodeExpression> getRightNode() { return m_right_node; }
   void setRightNode(std::shared_ptr<nodeExpression> right_node) { m_right_node = right_node; }
-  virtual void setDatatype(std::shared_ptr<datatype> dtype) override { m_datatype_exp = dtype; node::setDatatype(dtype); } //FIXME resolve dtype owership with other datatype owners}
-  std::shared_ptr<datatype> getDatatype() { return m_datatype_exp; }
+  void setDatatype(std::shared_ptr<datatype> dtype) { m_datatype_exp = dtype;}
+  std::shared_ptr<datatype> getDatatype() override { return m_datatype_exp; }
+  void setUnaryIndirectionDepth(int unary_indirection_depth) { m_unary_indirection_depth = unary_indirection_depth; }
+  int getUnaryIndirectionDepth() { return m_unary_indirection_depth; }
+  virtual void setStackOffset(int stack_offset) { m_stack_offset = stack_offset; }
+  int getStackOffset() { return m_stack_offset; }
+
   virtual void setStringValue(std::string string_value) override { m_string_value_exp = string_value; node::setStringValue(string_value); } //FIXME resolve dtype owership with other datatype owners
   std::string getStringValue() { return m_string_value_exp; }
   void setNumberValue(unsigned long number_val) { m_number_val = number_val; }
@@ -98,14 +109,20 @@ public:
   bool isValueNode() { return m_node_type == NODE_TYPE_IDENTIFIER || m_node_type == NODE_TYPE_NUMBER || m_node_type == NODE_TYPE_UNARY || m_node_type == NODE_TYPE_TENARY || m_node_type == NODE_TYPE_STRING; }
 private:
 
+  //nodeVariableDeclaration or nodeFunctionDeclaration
+  std::shared_ptr<node> m_declaration_node;
+
   std::shared_ptr<nodeExpression> m_parentheses_node;
 
-  // for expression nodes
+  std::shared_ptr<nodeExpression> m_value_node;
+
   std::shared_ptr<nodeExpression> m_left_node;
   std::shared_ptr<nodeExpression> m_right_node;
   std::shared_ptr<datatype> m_datatype_exp;
   ExpressionType m_exp_type;
 
+  int m_stack_offset;
+  int m_unary_indirection_depth;
   std::string m_string_value_exp;
   unsigned long m_number_val;
 };
