@@ -1,7 +1,7 @@
-#include "../../source/pch.h"
+#include "../../../source/pch.h"
+#include "../../../braze_compiler.h"
 #include "../resolverEntity.h"
-#include "../../braze_compiler.h"
-#include "../../node/nodeVariableDeclaration.h"
+#include "../../../node/nodeVariableDeclaration.h"
 
 resolverEntity::resolverEntity()
   : m_type(E_NONE),

@@ -1,6 +1,6 @@
-#include "../../source/pch.h"
+#include "../../../source/pch.h"
+#include "../../../braze_compiler.h"
 #include "../resolverScope.h"
-#include "../../braze_compiler.h"
 
 resolverScope::resolverScope()
     : m_root_scope(false),

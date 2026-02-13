@@ -1,4 +1,5 @@
-#include "../../source/pch.h"
+#include "../../../source/pch.h"
+#include "../../../braze_compiler.h"
 #include "../resolverEntityData.h"
 
 resolverEntityData::resolverEntityData(entityDataType entity_type)
