@@ -2,11 +2,11 @@
 #include "../parser.h"
 #include "../braze_compiler.h"
 #include "../precedenceHandler.h"
-#include "../node/nodeBody.h"
-#include "../node/nodeStatement.h"
-#include "../node/nodeVariableDeclaration.h"
-#include "../node/nodeFunctionDeclaration.h"
-#include "../node/nodeExpression.h"
+#include "../node_/nodeBody.h"
+#include "../node_/nodeStatement.h"
+#include "../node_/nodeVariableDeclaration.h"
+#include "../node_/nodeFunctionDeclaration.h"
+#include "../node_/nodeExpression.h"
 
 #include <memory>
 

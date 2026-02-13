@@ -12,13 +12,20 @@ OBJECTS := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(SOURCES))
 
 TARGET = braze
 
+MAIN_SRC = braze_compiler/braze_compiler.cpp
+MAIN_OBJ = $(BUILD_DIR)/braze_compiler/braze_compiler.o
+
 all: $(TARGET)
 
-$(TARGET): $(OBJECTS)
-	$(CXX) $(OBJECTS) -o $@
+$(TARGET): $(OBJECTS) $(MAIN_OBJ)
+	$(CXX) $(OBJECTS) $(MAIN_OBJ) -o $@
 
 # Generic rule that works for ALL cpp files
 $(BUILD_DIR)/%.o: %.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(MAIN_OBJ): $(MAIN_SRC)
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 

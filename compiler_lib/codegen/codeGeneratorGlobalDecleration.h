@@ -2,10 +2,10 @@
 #include <unordered_map>
 #include <memory>
 #include "../braze_compiler.h"
-#include "../node/node.h"
-#include "../node/nodeBody.h"
-#include "../node/nodeFunctionDeclaration.h"
-#include "../node/nodeVariableDeclaration.h"
+#include "../node_/node.h"
+#include "../node_/nodeBody.h"
+#include "../node_/nodeFunctionDeclaration.h"
+#include "../node_/nodeVariableDeclaration.h"
 #include "../scope.h"
 #include "asmWriter.h"
 #include "resolver/resolver.h"

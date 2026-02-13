@@ -15,12 +15,6 @@
     <ClInclude Include="source\pch.h">
       <Filter>source</Filter>
     </ClInclude>
-    <ClInclude Include="node\node.h">
-      <Filter>node</Filter>
-    </ClInclude>
-    <ClInclude Include="node\nodeExpression.h">
-      <Filter>node</Filter>
-    </ClInclude>
     <ClInclude Include="codegen\asmWriter.h">
       <Filter>codegen</Filter>
     </ClInclude>
@@ -42,9 +36,6 @@
     <ClInclude Include="charstream\charStreamInterface.h">
       <Filter>charstream</Filter>
     </ClInclude>
-    <ClInclude Include="node\nodeStatement.h">
-      <Filter>node</Filter>
-    </ClInclude>
     <ClInclude Include="codegen\resolver\resolver.h">
       <Filter>codegen\resolver</Filter>
     </ClInclude>
@@ -63,17 +54,26 @@
     <ClInclude Include="codegen\codeGeneratorStatement.h">
       <Filter>codegen</Filter>
     </ClInclude>
-    <ClInclude Include="node\nodeVariableDeclaration.h">
-      <Filter>node</Filter>
-    </ClInclude>
-    <ClInclude Include="node\nodeFunctionDeclaration.h">
-      <Filter>node</Filter>
-    </ClInclude>
-    <ClInclude Include="node\nodeBody.h">
-      <Filter>node</Filter>
-    </ClInclude>
     <ClInclude Include="codegen\codeGeneratorGlobalDecleration.h">
       <Filter>codegen</Filter>
+    </ClInclude>
+    <ClInclude Include="node_\node.h">
+      <Filter>node_</Filter>
+    </ClInclude>
+    <ClInclude Include="node_\nodeBody.h">
+      <Filter>node_</Filter>
+    </ClInclude>
+    <ClInclude Include="node_\nodeExpression.h">
+      <Filter>node_</Filter>
+    </ClInclude>
+    <ClInclude Include="node_\nodeFunctionDeclaration.h">
+      <Filter>node_</Filter>
+    </ClInclude>
+    <ClInclude Include="node_\nodeStatement.h">
+      <Filter>node_</Filter>
+    </ClInclude>
+    <ClInclude Include="node_\nodeVariableDeclaration.h">
+      <Filter>node_</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -107,12 +107,6 @@
     <ClCompile Include="source\token.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="node\source\node.cpp">
-      <Filter>node\source</Filter>
-    </ClCompile>
-    <ClCompile Include="node\source\nodeExpression.cpp">
-      <Filter>node\source</Filter>
-    </ClCompile>
     <ClCompile Include="codegen\source\asmWriter.cpp">
       <Filter>codegen\source</Filter>
     </ClCompile>
@@ -134,9 +128,6 @@
     <ClCompile Include="charstream\source\charStreamInterface.cpp">
       <Filter>charstream\source</Filter>
     </ClCompile>
-    <ClCompile Include="node\source\nodeStatement.cpp">
-      <Filter>node\source</Filter>
-    </ClCompile>
     <ClCompile Include="codegen\resolver\source\resolver.cpp">
       <Filter>codegen\resolver\source</Filter>
     </ClCompile>
@@ -155,28 +146,31 @@
     <ClCompile Include="codegen\source\codeGeneratorStatement.cpp">
       <Filter>codegen\source</Filter>
     </ClCompile>
-    <ClCompile Include="node\source\nodeVariableDeclaration.cpp">
-      <Filter>node\source</Filter>
-    </ClCompile>
-    <ClCompile Include="node\source\nodeFunctionDeclaration.cpp">
-      <Filter>node\source</Filter>
-    </ClCompile>
-    <ClCompile Include="node\source\nodeBody.cpp">
-      <Filter>node\source</Filter>
-    </ClCompile>
     <ClCompile Include="codegen\source\codeGeneratorGlobalDecleration.cpp">
       <Filter>codegen\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node_\source\node.cpp">
+      <Filter>node_\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node_\source\nodeBody.cpp">
+      <Filter>node_\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node_\source\nodeExpression.cpp">
+      <Filter>node_\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node_\source\nodeFunctionDeclaration.cpp">
+      <Filter>node_\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node_\source\nodeStatement.cpp">
+      <Filter>node_\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node_\source\nodeVariableDeclaration.cpp">
+      <Filter>node_\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">
       <UniqueIdentifier>{d23c64dd-7d77-47ad-b352-4fe2728ec7b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="node">
-      <UniqueIdentifier>{7d4b8170-4ec0-4346-b200-ca09a155c903}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="node\source">
-      <UniqueIdentifier>{264b9de3-ccee-49bf-b223-af3fcb688a5c}</UniqueIdentifier>
     </Filter>
     <Filter Include="codegen">
       <UniqueIdentifier>{7becb17f-6ec9-405e-b02a-5040ed5fe222}</UniqueIdentifier>
@@ -195,6 +189,12 @@
     </Filter>
     <Filter Include="codegen\resolver\source">
       <UniqueIdentifier>{c9f44123-68dd-4ed3-afca-48864610508a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="node_">
+      <UniqueIdentifier>{7d4b8170-4ec0-4346-b200-ca09a155c903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="node_\source">
+      <UniqueIdentifier>{264b9de3-ccee-49bf-b223-af3fcb688a5c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

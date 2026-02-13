@@ -2,8 +2,8 @@
 #include "resolverScope.h"
 #include "resolverEntity.h"
 #include "resolverResult.h"
-#include "../../node/node.h"
-#include "../../node/nodeFunctionDeclaration.h"
+#include "../../node_/node.h"
+#include "../../node_/nodeFunctionDeclaration.h"
 #include <vector>
 #include <iostream>
 #include <memory>

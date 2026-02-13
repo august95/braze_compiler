@@ -3,8 +3,8 @@
 #include <unordered_map>
 #include <memory>
 #include "../braze_compiler.h"
-#include "../node/node.h"
-#include "../node/nodeStatement.h"
+#include "../node_/node.h"
+#include "../node_/nodeStatement.h"
 #include "../scope.h"
 #include "asmWriter.h"
 #include "resolver/resolver.h"

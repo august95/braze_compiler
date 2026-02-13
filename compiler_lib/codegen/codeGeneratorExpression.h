@@ -1,7 +1,7 @@
 #pragma once
 #include <list>
-#include "../node/node.h"
-#include "../node/nodeExpression.h"
+#include "../node_/node.h"
+#include "../node_/nodeExpression.h"
 #include "../scope.h"
 #include "asmWriter.h"
 #include "resolver/resolver.h"

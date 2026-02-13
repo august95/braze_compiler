@@ -4,10 +4,10 @@
 #include "framework.h"
 #include <iostream>
 #include <assert.h>
-#include "node/node.h"
-#include "node/nodeExpression.h"
-#include "node/nodeStatement.h"
-#include "node/nodeVariableDeclaration.h"
+#include "node_/node.h"
+#include "node_/nodeExpression.h"
+#include "node_/nodeStatement.h"
+#include "node_/nodeVariableDeclaration.h"
 
 #include "filePosition.h"
 #include "token.h"

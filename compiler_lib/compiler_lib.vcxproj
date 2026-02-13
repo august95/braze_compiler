@@ -150,12 +150,12 @@
     <ClInclude Include="filePosition.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="lexer.h" />
-    <ClInclude Include="node\node.h" />
-    <ClInclude Include="node\nodeBody.h" />
-    <ClInclude Include="node\nodeExpression.h" />
-    <ClInclude Include="node\nodeFunctionDeclaration.h" />
-    <ClInclude Include="node\nodeStatement.h" />
-    <ClInclude Include="node\nodeVariableDeclaration.h" />
+    <ClInclude Include="node_\node.h" />
+    <ClInclude Include="node_\nodeBody.h" />
+    <ClInclude Include="node_\nodeExpression.h" />
+    <ClInclude Include="node_\nodeFunctionDeclaration.h" />
+    <ClInclude Include="node_\nodeStatement.h" />
+    <ClInclude Include="node_\nodeVariableDeclaration.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="precedenceHandler.h" />
     <ClInclude Include="scope.h" />
@@ -179,12 +179,12 @@
     <ClCompile Include="codegen\source\codeGeneratorGlobalDecleration.cpp" />
     <ClCompile Include="codegen\source\codeGeneratorStatement.cpp" />
     <ClCompile Include="codegen\source\stackMonitor.cpp" />
-    <ClCompile Include="node\source\node.cpp" />
-    <ClCompile Include="node\source\nodeBody.cpp" />
-    <ClCompile Include="node\source\nodeExpression.cpp" />
-    <ClCompile Include="node\source\nodeFunctionDeclaration.cpp" />
-    <ClCompile Include="node\source\nodeStatement.cpp" />
-    <ClCompile Include="node\source\nodeVariableDeclaration.cpp" />
+    <ClCompile Include="node_\source\node.cpp" />
+    <ClCompile Include="node_\source\nodeBody.cpp" />
+    <ClCompile Include="node_\source\nodeExpression.cpp" />
+    <ClCompile Include="node_\source\nodeFunctionDeclaration.cpp" />
+    <ClCompile Include="node_\source\nodeStatement.cpp" />
+    <ClCompile Include="node_\source\nodeVariableDeclaration.cpp" />
     <ClCompile Include="source\compilerProcess.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

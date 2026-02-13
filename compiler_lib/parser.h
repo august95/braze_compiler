@@ -3,8 +3,8 @@
 // receives a list of tokens, creates an abstract syntax tree with nodes
 
 #include "token.h"
-#include "node/node.h"
-#include "node/nodeExpression.h"
+#include "node_/node.h"
+#include "node_/nodeExpression.h"
 #include "datatype.h"
 #include "scope.h"
 #include "symbolResolver.h"

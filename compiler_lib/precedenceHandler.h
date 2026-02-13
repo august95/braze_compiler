@@ -1,6 +1,6 @@
 #pragma once
-#include "node/node.h"
-#include "node/nodeExpression.h"
+#include "node_/node.h"
+#include "node_/nodeExpression.h"
 #include <memory>
 
 const static unsigned int TOTAL_OPERATOR_GROUPS = 14;

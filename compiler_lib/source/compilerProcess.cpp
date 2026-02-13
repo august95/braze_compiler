@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "../compilerProcess.h"
 #include "../braze_compiler.h"
-#include "../../charstream/charStreamFile.h"
-#include "../../charstream/charStreamArgs.h"
+#include "../charstream/charStreamFile.h"
+#include "../charstream/charStreamArgs.h"
 #include "../codegen/asmWriter.h"
 #include <cstdio> // For fopen, fclose, fread, fwrite, etc.
 

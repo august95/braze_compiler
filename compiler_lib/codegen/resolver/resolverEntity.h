@@ -3,8 +3,8 @@
 #include <list>
 #include "../resolver/resolverEntityData.h"
 // #include "resolverscope.h"
-#include "../../node/node.h"
-#include "../../node/nodeFunctionDeclaration.h"
+#include "../../node_/node.h"
+#include "../../node_/nodeFunctionDeclaration.h"
 #include <memory>
 
 enum entityType

@@ -1,6 +1,6 @@
 #pragma once
-#include "../../node/node.h"
-#include "../../node/nodeVariableDeclaration.h"
+#include "../../node_/node.h"
+#include "../../node_/nodeVariableDeclaration.h"
 #include "../../datatype.h"
 #include <string>
 #include <memory>
