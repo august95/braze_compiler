@@ -24,5 +24,6 @@
     <None Include="..\test_file.c">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="..\Makefile" />
   </ItemGroup>
 </Project>
