@@ -1,6 +1,5 @@
 #include "../../source/pch.h"
 #include "../nodeExpression.h"
-#include "../node.h"
 
 nodeExpression::nodeExpression()
   :node(),

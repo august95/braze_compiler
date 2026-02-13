@@ -1,5 +1,4 @@
 #include "../nodeStatement.h"
-#include "../node.h"
 
 nodeStatement::nodeStatement()
 {
