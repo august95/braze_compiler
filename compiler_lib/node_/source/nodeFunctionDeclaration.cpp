@@ -1,5 +1,5 @@
 #include "../nodeFunctionDeclaration.h"
-
+#include "../node.h"
 
 nodeFunctionDeclaration::nodeFunctionDeclaration()
 :node(),

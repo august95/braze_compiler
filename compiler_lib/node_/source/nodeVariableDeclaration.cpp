@@ -1,5 +1,6 @@
 #include "../nodeVariableDeclaration.h"
 #include "../../braze_compiler.h"
+#include "../node.h"
 
 nodeVariableDeclaration::nodeVariableDeclaration()
   : m_is_function_argument(0),

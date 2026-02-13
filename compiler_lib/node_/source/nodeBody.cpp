@@ -1,4 +1,5 @@
 #include "../nodeBody.h"
+#include "../node.h"
 
 nodeBody::nodeBody()
   : node(),
