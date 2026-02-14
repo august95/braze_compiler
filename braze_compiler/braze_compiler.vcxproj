@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\Makefile" />
     <None Include="..\test_file.c">
       <FileType>CppCode</FileType>
     </None>

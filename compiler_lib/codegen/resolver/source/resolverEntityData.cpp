@@ -1,4 +1,5 @@
-#include "pch.h"
+#include "../../../source/pch.h"
+#include "../../../braze_compiler.h"
 #include "../resolverEntityData.h"
 
 resolverEntityData::resolverEntityData(entityDataType entity_type)
@@ -9,7 +10,7 @@ resolverEntityData::resolverEntityData(entityDataType entity_type)
 {
 }
 
-void resolverEntityData::setVariableNode(std::shared_ptr<node> node, bool is_local_stack)
+void resolverEntityData::setVariableNode(std::shared_ptr<nodeVariableDeclaration> node, bool is_local_stack)
 {
   m_entity_type = VARIABLE;
   m_node = node;

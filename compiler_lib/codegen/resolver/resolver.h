@@ -2,7 +2,8 @@
 #include "resolverScope.h"
 #include "resolverEntity.h"
 #include "resolverResult.h"
-#include "node.h"
+#include "../../node_/node.h"
+#include "../../node_/nodeFunctionDeclaration.h"
 #include <vector>
 #include <iostream>
 #include <memory>
@@ -10,7 +11,7 @@ class resolver
 {
 public:
   resolver();
-  void registerFunction(std::shared_ptr<node> function_node);
+  void registerFunction(std::shared_ptr<nodeFunctionDeclaration> function_node);
   void createNewScope(bool local_stack, bool stack);
   std::shared_ptr<resolverEntity> addEntity(std::shared_ptr<node> node, bool is_local_stack = false);
   void follow(std::shared_ptr<node> node, std::shared_ptr<resolverResult> &result);

@@ -1,40 +1,82 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="asmWriter.h" />
     <ClInclude Include="braze_compiler.h" />
-    <ClInclude Include="codeGenerator.h" />
-    <ClInclude Include="compilerProcess.h" />
     <ClInclude Include="datatype.h" />
     <ClInclude Include="filePosition.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="lexer.h" />
-    <ClInclude Include="node.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="precedenceHandler.h" />
-    <ClInclude Include="resolver.h" />
-    <ClInclude Include="resolverScope.h" />
     <ClInclude Include="scope.h" />
     <ClInclude Include="token.h" />
-    <ClInclude Include="resolverEntityData.h" />
-    <ClInclude Include="resolverEntity.h" />
-    <ClInclude Include="resolverResult.h" />
     <ClInclude Include="stackMonitor.h" />
     <ClInclude Include="symbolResolver.h" />
     <ClInclude Include="source\pch.h">
       <Filter>source</Filter>
     </ClInclude>
-    <ClInclude Include="charStreamInterface.h" />
-    <ClInclude Include="charStreamFile.h" />
-    <ClInclude Include="charStreamArgs.h" />
+    <ClInclude Include="codegen\asmWriter.h">
+      <Filter>codegen</Filter>
+    </ClInclude>
+    <ClInclude Include="codegen\codeGenerator.h">
+      <Filter>codegen</Filter>
+    </ClInclude>
+    <ClInclude Include="codegen\codeGeneratorExpression.h">
+      <Filter>codegen</Filter>
+    </ClInclude>
+    <ClInclude Include="codegen\stackMonitor.h">
+      <Filter>codegen</Filter>
+    </ClInclude>
+    <ClInclude Include="charstream\charStreamArgs.h">
+      <Filter>charstream</Filter>
+    </ClInclude>
+    <ClInclude Include="charstream\charStreamFile.h">
+      <Filter>charstream</Filter>
+    </ClInclude>
+    <ClInclude Include="charstream\charStreamInterface.h">
+      <Filter>charstream</Filter>
+    </ClInclude>
+    <ClInclude Include="codegen\resolver\resolver.h">
+      <Filter>codegen\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="codegen\resolver\resolverEntity.h">
+      <Filter>codegen\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="codegen\resolver\resolverEntityData.h">
+      <Filter>codegen\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="codegen\resolver\resolverResult.h">
+      <Filter>codegen\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="codegen\resolver\resolverScope.h">
+      <Filter>codegen\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="codegen\codeGeneratorStatement.h">
+      <Filter>codegen</Filter>
+    </ClInclude>
+    <ClInclude Include="codegen\codeGeneratorGlobalDecleration.h">
+      <Filter>codegen</Filter>
+    </ClInclude>
+    <ClInclude Include="node_\node.h">
+      <Filter>node_</Filter>
+    </ClInclude>
+    <ClInclude Include="node_\nodeBody.h">
+      <Filter>node_</Filter>
+    </ClInclude>
+    <ClInclude Include="node_\nodeExpression.h">
+      <Filter>node_</Filter>
+    </ClInclude>
+    <ClInclude Include="node_\nodeFunctionDeclaration.h">
+      <Filter>node_</Filter>
+    </ClInclude>
+    <ClInclude Include="node_\nodeStatement.h">
+      <Filter>node_</Filter>
+    </ClInclude>
+    <ClInclude Include="node_\nodeVariableDeclaration.h">
+      <Filter>node_</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\asmWriter.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\codeGenerator.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="source\compilerProcess.cpp">
       <Filter>source</Filter>
     </ClCompile>
@@ -50,34 +92,13 @@
     <ClCompile Include="source\lexer.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\node.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="source\parser.cpp">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\precedenceHandler.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\resolver.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\resolverEntity.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\resolverEntityData.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\resolverResult.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\resolverScope.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="source\scope.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\stackMonitor.cpp">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\symbolResolver.cpp">
@@ -86,19 +107,94 @@
     <ClCompile Include="source\token.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\charStreamInterface.cpp">
-      <Filter>source</Filter>
+    <ClCompile Include="codegen\source\asmWriter.cpp">
+      <Filter>codegen\source</Filter>
     </ClCompile>
-    <ClCompile Include="source\charStreamFile.cpp">
-      <Filter>source</Filter>
+    <ClCompile Include="codegen\source\codeGenerator.cpp">
+      <Filter>codegen\source</Filter>
     </ClCompile>
-    <ClCompile Include="source\charStreamArgs.cpp">
-      <Filter>source</Filter>
+    <ClCompile Include="codegen\source\codeGeneratorExpression.cpp">
+      <Filter>codegen\source</Filter>
+    </ClCompile>
+    <ClCompile Include="codegen\source\stackMonitor.cpp">
+      <Filter>codegen\source</Filter>
+    </ClCompile>
+    <ClCompile Include="charstream\source\charStreamArgs.cpp">
+      <Filter>charstream\source</Filter>
+    </ClCompile>
+    <ClCompile Include="charstream\source\charStreamFile.cpp">
+      <Filter>charstream\source</Filter>
+    </ClCompile>
+    <ClCompile Include="charstream\source\charStreamInterface.cpp">
+      <Filter>charstream\source</Filter>
+    </ClCompile>
+    <ClCompile Include="codegen\resolver\source\resolver.cpp">
+      <Filter>codegen\resolver\source</Filter>
+    </ClCompile>
+    <ClCompile Include="codegen\resolver\source\resolverEntity.cpp">
+      <Filter>codegen\resolver\source</Filter>
+    </ClCompile>
+    <ClCompile Include="codegen\resolver\source\resolverEntityData.cpp">
+      <Filter>codegen\resolver\source</Filter>
+    </ClCompile>
+    <ClCompile Include="codegen\resolver\source\resolverResult.cpp">
+      <Filter>codegen\resolver\source</Filter>
+    </ClCompile>
+    <ClCompile Include="codegen\resolver\source\resolverScope.cpp">
+      <Filter>codegen\resolver\source</Filter>
+    </ClCompile>
+    <ClCompile Include="codegen\source\codeGeneratorStatement.cpp">
+      <Filter>codegen\source</Filter>
+    </ClCompile>
+    <ClCompile Include="codegen\source\codeGeneratorGlobalDecleration.cpp">
+      <Filter>codegen\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node_\source\node.cpp">
+      <Filter>node_\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node_\source\nodeBody.cpp">
+      <Filter>node_\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node_\source\nodeExpression.cpp">
+      <Filter>node_\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node_\source\nodeFunctionDeclaration.cpp">
+      <Filter>node_\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node_\source\nodeStatement.cpp">
+      <Filter>node_\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node_\source\nodeVariableDeclaration.cpp">
+      <Filter>node_\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">
       <UniqueIdentifier>{d23c64dd-7d77-47ad-b352-4fe2728ec7b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="codegen">
+      <UniqueIdentifier>{7becb17f-6ec9-405e-b02a-5040ed5fe222}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="charstream">
+      <UniqueIdentifier>{bd8baaf0-7d09-4f24-a6b7-9c6055ea0047}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="charstream\source">
+      <UniqueIdentifier>{1aa4c869-74c2-41ab-8d79-721ef8347d6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="codegen\source">
+      <UniqueIdentifier>{860aa67e-ef39-42be-a04a-21c91e23ffa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="codegen\resolver">
+      <UniqueIdentifier>{39ef904b-4e34-466a-8db5-dc9796f69f26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="codegen\resolver\source">
+      <UniqueIdentifier>{c9f44123-68dd-4ed3-afca-48864610508a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="node_">
+      <UniqueIdentifier>{7d4b8170-4ec0-4346-b200-ca09a155c903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="node_\source">
+      <UniqueIdentifier>{264b9de3-ccee-49bf-b223-af3fcb688a5c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -1,12 +1,12 @@
-#include "pch.h"
-#include "../braze_compiler.h"
+#include "../../../source/pch.h"
+#include "../../../braze_compiler.h"
 #include "../resolver.h"
 
 resolver::resolver()
 {
 }
 
-void resolver::registerFunction(std::shared_ptr<node> function_node)
+void resolver::registerFunction(std::shared_ptr<nodeFunctionDeclaration> function_node)
 {
   std::shared_ptr<resolverEntity> resolver_entity = std::make_shared<resolverEntity>(function_node);
   resolver_entity->createResolverEntityData();

@@ -1,5 +1,7 @@
-#include "pch.h"
+#include "../../../source/pch.h"
+#include "../../../braze_compiler.h"
 #include "../resolverEntity.h"
+#include "../../../node_/nodeVariableDeclaration.h"
 
 resolverEntity::resolverEntity()
   : m_type(E_NONE),
@@ -34,9 +36,9 @@ void resolverEntity::createResolverEntityData()
 void resolverEntity::addAddress(std::shared_ptr<node> node, bool is_local_stack)
 {
   if (m_entity_data)
-    m_entity_data->setVariableNode(node, is_local_stack);
+    m_entity_data->setVariableNode(cast_node<nodeVariableDeclaration>(node), is_local_stack);
 }
-void resolverEntity::registerFunction(std::shared_ptr<node> node)
+void resolverEntity::registerFunction(std::shared_ptr<nodeFunctionDeclaration> node)
 {
   if (m_entity_data)
     m_entity_data->registerFunction(node);

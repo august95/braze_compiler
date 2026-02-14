@@ -1,7 +1,7 @@
-#include "pch.h"
+#include "../../source/pch.h"
 #include "../stackMonitor.h"
 #include <assert.h>
-#include "../braze_compiler.h"
+#include "../../braze_compiler.h"
 
 stackMonitor::stackMonitor()
 {

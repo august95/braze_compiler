@@ -5,7 +5,8 @@
 #include <sstream>
 #include <cctype>
 #include <string>
-#include "../compiler_lib/source/compiler_lib.cpp"
+#include "../compiler_lib/braze_compiler.h"
+#include "../compiler_lib/source/pch.h"
 #include "../compiler_lib/compilerProcess.h"
 
 void printHelpString();

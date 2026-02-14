@@ -131,25 +131,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="asmWriter.h" />
     <ClInclude Include="braze_compiler.h" />
-    <ClInclude Include="charStreamArgs.h" />
-    <ClInclude Include="charStreamFile.h" />
-    <ClInclude Include="charStreamInterface.h" />
-    <ClInclude Include="codeGenerator.h" />
-    <ClInclude Include="compilerProcess.h" />
+    <ClInclude Include="charstream\charStreamArgs.h" />
+    <ClInclude Include="charstream\charStreamFile.h" />
+    <ClInclude Include="charstream\charStreamInterface.h" />
+    <ClInclude Include="codegen\asmWriter.h" />
+    <ClInclude Include="codegen\codeGenerator.h" />
+    <ClInclude Include="codegen\codeGeneratorExpression.h" />
+    <ClInclude Include="codegen\codeGeneratorGlobalDecleration.h" />
+    <ClInclude Include="codegen\codeGeneratorStatement.h" />
+    <ClInclude Include="codegen\resolver\resolver.h" />
+    <ClInclude Include="codegen\resolver\resolverEntity.h" />
+    <ClInclude Include="codegen\resolver\resolverEntityData.h" />
+    <ClInclude Include="codegen\resolver\resolverResult.h" />
+    <ClInclude Include="codegen\resolver\resolverScope.h" />
+    <ClInclude Include="codegen\stackMonitor.h" />
     <ClInclude Include="datatype.h" />
     <ClInclude Include="filePosition.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="lexer.h" />
-    <ClInclude Include="node.h" />
+    <ClInclude Include="node_\node.h" />
+    <ClInclude Include="node_\nodeBody.h" />
+    <ClInclude Include="node_\nodeExpression.h" />
+    <ClInclude Include="node_\nodeFunctionDeclaration.h" />
+    <ClInclude Include="node_\nodeStatement.h" />
+    <ClInclude Include="node_\nodeVariableDeclaration.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="precedenceHandler.h" />
-    <ClInclude Include="resolver.h" />
-    <ClInclude Include="resolverEntity.h" />
-    <ClInclude Include="resolverEntityData.h" />
-    <ClInclude Include="resolverResult.h" />
-    <ClInclude Include="resolverScope.h" />
     <ClInclude Include="scope.h" />
     <ClInclude Include="source\pch.h" />
     <ClInclude Include="stackMonitor.h" />
@@ -157,23 +165,26 @@
     <ClInclude Include="token.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\asmWriter.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderOutputFile>
-    </ClCompile>
-    <ClCompile Include="source\charStreamArgs.cpp" />
-    <ClCompile Include="source\charStreamFile.cpp" />
-    <ClCompile Include="source\charStreamInterface.cpp" />
-    <ClCompile Include="source\codeGenerator.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderOutputFile>
-    </ClCompile>
+    <ClCompile Include="charstream\source\charStreamArgs.cpp" />
+    <ClCompile Include="charstream\source\charStreamFile.cpp" />
+    <ClCompile Include="charstream\source\charStreamInterface.cpp" />
+    <ClCompile Include="codegen\resolver\source\resolver.cpp" />
+    <ClCompile Include="codegen\resolver\source\resolverEntity.cpp" />
+    <ClCompile Include="codegen\resolver\source\resolverEntityData.cpp" />
+    <ClCompile Include="codegen\resolver\source\resolverResult.cpp" />
+    <ClCompile Include="codegen\resolver\source\resolverScope.cpp" />
+    <ClCompile Include="codegen\source\asmWriter.cpp" />
+    <ClCompile Include="codegen\source\codeGenerator.cpp" />
+    <ClCompile Include="codegen\source\codeGeneratorExpression.cpp" />
+    <ClCompile Include="codegen\source\codeGeneratorGlobalDecleration.cpp" />
+    <ClCompile Include="codegen\source\codeGeneratorStatement.cpp" />
+    <ClCompile Include="codegen\source\stackMonitor.cpp" />
+    <ClCompile Include="node_\source\node.cpp" />
+    <ClCompile Include="node_\source\nodeBody.cpp" />
+    <ClCompile Include="node_\source\nodeExpression.cpp" />
+    <ClCompile Include="node_\source\nodeFunctionDeclaration.cpp" />
+    <ClCompile Include="node_\source\nodeStatement.cpp" />
+    <ClCompile Include="node_\source\nodeVariableDeclaration.cpp" />
     <ClCompile Include="source\compilerProcess.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -209,13 +220,6 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </PrecompiledHeaderOutputFile>
     </ClCompile>
-    <ClCompile Include="source\node.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderOutputFile>
-    </ClCompile>
     <ClCompile Include="source\parser.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -230,49 +234,7 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </PrecompiledHeaderOutputFile>
     </ClCompile>
-    <ClCompile Include="source\resolver.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderOutputFile>
-    </ClCompile>
-    <ClCompile Include="source\resolverEntity.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderOutputFile>
-    </ClCompile>
-    <ClCompile Include="source\resolverEntityData.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderOutputFile>
-    </ClCompile>
-    <ClCompile Include="source\resolverResult.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderOutputFile>
-    </ClCompile>
-    <ClCompile Include="source\resolverScope.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderOutputFile>
-    </ClCompile>
     <ClCompile Include="source\scope.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderOutputFile>
-    </ClCompile>
-    <ClCompile Include="source\stackMonitor.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </PrecompiledHeaderFile>
