@@ -5,6 +5,13 @@
 #include "../compiler_lib/charstream/charStreamFile.h"
 #include "../compiler_lib/braze_compiler.h"
 #include "../compiler_lib/scope.h"
+#include "../compiler_lib/node_/node.h"
+#include "../compiler_lib/node_/nodeExpression.h"
+#include "../compiler_lib/node_/nodeBody.h"
+#include "../compiler_lib/node_/nodeStatement.h"
+#include "../compiler_lib/node_/nodeVariableDeclaration.h"
+#include "../compiler_lib/node_/nodeFunctionDeclaration.h"
+
 #include "test_helper.cpp"
 #include <string>
 #include <list>
@@ -641,7 +648,7 @@ TEST(parser, keyword) {
 }
 
 
-/*
+
 TEST(parser, function) {
 
   std::string file_name = "parser/test_parser_function.c";
@@ -662,7 +669,7 @@ TEST(parser, function) {
   process.startCompiler();
 
   std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
-  std::shared_ptr < node > _node = ast.front();
+  std::shared_ptr < nodeFunctionDeclaration > _node = cast_node<nodeFunctionDeclaration>(ast.front());
 
   EXPECT_EQ(_node->getStringValue(), "main");
   EXPECT_EQ(_node->getBodyNode()->getBodySize(), 8 );
@@ -670,12 +677,12 @@ TEST(parser, function) {
   EXPECT_EQ(statements.size(), 3 );
 
   statements.pop_back(); // var_val + 50
-  std::shared_ptr < node > var_a = statements.back();
+  std::shared_ptr < nodeVariableDeclaration > var_a = cast_node<nodeVariableDeclaration>(statements.back());
   EXPECT_EQ(var_a->getDatatypeSize(), 4); //int var_b;
   EXPECT_EQ(var_a->getStackOffset(), -8);// int var_b;
   statements.pop_back();
 
-  var_a = statements.back();
+  var_a = cast_node<nodeVariableDeclaration>(statements.back());
   EXPECT_EQ(var_a->getDatatypeSize(), 4); //int var_val;
   EXPECT_EQ(var_a->getStackOffset(), -4);// int var_val;
 
@@ -704,15 +711,15 @@ TEST(parser, ifstatement) {
   process.startCompiler();
 
   std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
-  std::shared_ptr < node > _node = ast.front();
+  std::shared_ptr < nodeFunctionDeclaration > _node = cast_node<nodeFunctionDeclaration>(ast.back());
 
   EXPECT_EQ(_node->getStringValue(), "main");
   EXPECT_EQ(_node->getBodyNode()->getBodySize(), 4 );
 
-  std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
+  std::list < std::shared_ptr < node > > statements = cast_node<nodeFunctionDeclaration>(_node)->getBodyNode()->getStatements();
   EXPECT_EQ(statements.size(), 1 );
 
-  std::shared_ptr < node > if_node = statements.back();
+  std::shared_ptr < nodeStatement > if_node = cast_node<nodeStatement>(statements.back());
 
   EXPECT_TRUE(if_node->getNodeType() == NODE_TYPE_STATEMENT_IF);
   EXPECT_EQ(if_node->getBodyNode()->getBodySize(), 4);
@@ -753,15 +760,15 @@ TEST(parser, whilestatement) {
   process.startCompiler();
 
   std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
-  std::shared_ptr < node > _node = ast.front();
+  std::shared_ptr < nodeFunctionDeclaration > _node = cast_node<nodeFunctionDeclaration>(ast.back());
 
   EXPECT_EQ(_node->getStringValue(), "main");
   EXPECT_EQ(_node->getBodyNode()->getBodySize(), 4);
 
-  std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
+  std::list < std::shared_ptr < node > > statements = cast_node<nodeFunctionDeclaration>(_node)->getBodyNode()->getStatements();
   EXPECT_EQ(statements.size(), 1);
 
-  std::shared_ptr < node > while_node = statements.back();
+  std::shared_ptr < nodeStatement > while_node = cast_node<nodeStatement>(statements.back());
 
   EXPECT_TRUE(while_node->getNodeType() == NODE_TYPE_STATEMENT_WHILE);
   EXPECT_EQ(while_node->getBodyNode()->getBodySize(), 4);
@@ -792,15 +799,15 @@ TEST(parser, forstatement) {
   process.startCompiler();
 
   std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
-  std::shared_ptr < node > _node = ast.front();
+  std::shared_ptr < nodeFunctionDeclaration > _node = cast_node<nodeFunctionDeclaration>(ast.back());
 
   EXPECT_EQ(_node->getStringValue(), "main");
   EXPECT_EQ(_node->getBodyNode()->getBodySize(), 8);
 
-  std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
+  std::list < std::shared_ptr < node > > statements = cast_node<nodeFunctionDeclaration>(_node)->getBodyNode()->getStatements();
   EXPECT_EQ(statements.size(), 1);
 
-  std::shared_ptr < node > for_node = statements.back();
+  std::shared_ptr < nodeStatement > for_node =  cast_node<nodeStatement>(statements.back());
 
   EXPECT_TRUE(for_node->getNodeType() == NODE_TYPE_STATEMENT_FOR);
   EXPECT_EQ(for_node->getBodyNode()->getBodySize(), 4);
@@ -821,8 +828,8 @@ TEST(parser, forstatement) {
 }
 
 
-/*
 
+/*
 TEST(parser, globalAccesFromFunction) {
 
   std::string file_name = "parser/test_parser_global_access_from_function.c";
@@ -842,7 +849,7 @@ TEST(parser, globalAccesFromFunction) {
   process.initialize(file_path + file_name);
   process.startCompiler();
 
-  std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+  std::list < std::shared_ptr < nodeFunctionDeclaration > > ast = cast_node<nodeFunctionDeclaration>(ast.front());
   std::shared_ptr < node > global = ast.front();
   ast.pop_front();
   std::shared_ptr < node > _node = ast.front();
