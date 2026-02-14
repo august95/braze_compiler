@@ -18,43 +18,40 @@ codeGeneratorGlobalDecleration::codeGeneratorGlobalDecleration(asmWriter& asm_wr
 }
 
 
-
 void codeGeneratorGlobalDecleration::generateFunctionDeclaration(std::shared_ptr<nodeFunctionDeclaration> node)
 {
-  if (node->getNodeType() == NODE_TYPE_FUNCTION_DECLARATION)
+  if (node->isFunctionPrototype())
   {
-    m_resolver.registerFunction(node);
-    if (node->isFunctionPrototype())
-    {
-      m_asm_writer.asmGen("extern " + node->getStringValue());
-    }
-    else
-    {
-      // function declaration
-      std::string function_name = node->getStringValue();
-      m_asm_writer.asmGen("global " + function_name);
-      m_asm_writer.asmGen(function_name + ":");
-
-      bool has_stack_size = C_ALIGN(node->getBodyNode()->getBodySize()) != 0;
-      m_asm_writer.asmGenPushEbp(C_ALIGN(node->getBodyNode()->getBodySize()));
-
-      m_resolver.createNewScope(true, false);
-      generateFunctionParameters(node);
-
-      m_resolver.createNewScope(true, false);
-      generateBody(cast_node<nodeBody>(node->getBodyNode()));
-      m_resolver.removeScope();
-
-      m_resolver.removeScope();
-      m_asm_writer.asmGenPopEbp(C_ALIGN(node->getBodyNode()->getBodySize()));
-    }
+    generateFunctionPrototpe(node);
+    return;
   }
+  generateFunctionDeclaration_(node);
 }
 
-void codeGeneratorGlobalDecleration::generateFunctionDeclaration(std::shared_ptr<nodeFunctionDeclaration> node)
+void codeGeneratorGlobalDecleration::generateFunctionDeclaration_(std::shared_ptr<nodeFunctionDeclaration> node)
 {
-  // deal with forward declaration
-  generateFunctionDeclaration(node);
+  m_resolver.registerFunction(node);
+  std::string function_name = node->getStringValue();
+  m_asm_writer.asmGen("global " + function_name);
+  m_asm_writer.asmGen(function_name + ":");
+  m_asm_writer.asmGenPushEbp(C_ALIGN(node->getBodyNode()->getBodySize()));
+
+  m_resolver.createNewScope(true, false);
+  generateFunctionParameters(node);
+
+  m_resolver.createNewScope(true, false);
+  generateBody(cast_node<nodeBody>(node->getBodyNode()));
+  m_resolver.removeScope();
+
+  m_resolver.removeScope(); //function parameters
+
+  m_asm_writer.asmGenPopEbp(C_ALIGN(node->getBodyNode()->getBodySize()));  
+}
+
+void codeGeneratorGlobalDecleration::generateFunctionPrototpe(std::shared_ptr<nodeFunctionDeclaration> node)
+{
+  m_resolver.registerFunction(node);
+  m_asm_writer.asmGen("extern " + node->getStringValue());
 }
 
 void codeGeneratorGlobalDecleration::generateFunctionParameters(std::shared_ptr<nodeFunctionDeclaration> node_)

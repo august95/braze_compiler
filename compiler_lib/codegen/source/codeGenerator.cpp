@@ -72,7 +72,7 @@ void codeGenerator::generateTextSection()
     }
     if (node->getNodeType() == NODE_TYPE_FUNCTION_DECLARATION)
     {
-      m_codegen_global_declaration.generateFunction(cast_node<nodeFunctionDeclaration>(node));
+      m_codegen_global_declaration.generateFunctionDeclaration(cast_node<nodeFunctionDeclaration>(node));
     }
   }
 }

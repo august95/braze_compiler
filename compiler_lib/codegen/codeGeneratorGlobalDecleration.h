@@ -17,11 +17,12 @@ class codeGeneratorGlobalDecleration
 public:
   codeGeneratorGlobalDecleration(asmWriter& asm_writer, resolver& resolver, class codeGeneratorStatement* codegen_statement, class codeGeneratorExpression* codegen_expression, class codeGenerator* codegen);
   void generateGlobalVariable(std::shared_ptr<nodeVariableDeclaration> node);
-  void generateFunctionDeclaration(std::shared_ptr<nodeFunctionDeclaration> node);
   void generateBody(std::shared_ptr<nodeBody> node); //todo: move
+  void generateFunctionDeclaration(std::shared_ptr<nodeFunctionDeclaration> node);
 
 private:
-  void generateFunctionDeclaration(std::shared_ptr<nodeFunctionDeclaration> node);
+  void generateFunctionDeclaration_(std::shared_ptr<nodeFunctionDeclaration> node);
+  void generateFunctionPrototpe(std::shared_ptr<nodeFunctionDeclaration> node);
   void generateFunctionParameters(std::shared_ptr<nodeFunctionDeclaration> node_);
   void generateScope(std::shared_ptr<nodeBody> node);
   void generateGlobalVariablePrimitive(std::shared_ptr<nodeVariableDeclaration> node);
