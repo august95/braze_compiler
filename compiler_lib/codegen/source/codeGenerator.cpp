@@ -38,7 +38,7 @@ int codeGenerator::startCodeGeneration()
 
   generateDataSection();
 
-  generateRoot();
+  generateTextSection();
 
   generateReadOnlySection();
 
@@ -60,7 +60,7 @@ void codeGenerator::generateDataSection()
   }
 }
 
-void codeGenerator::generateRoot()
+void codeGenerator::generateTextSection()
 {
   m_asm_writer.asmGen("section .text");
 

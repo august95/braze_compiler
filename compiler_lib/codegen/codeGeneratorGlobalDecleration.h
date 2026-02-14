@@ -17,7 +17,7 @@ class codeGeneratorGlobalDecleration
 public:
   codeGeneratorGlobalDecleration(asmWriter& asm_writer, resolver& resolver, class codeGeneratorStatement* codegen_statement, class codeGeneratorExpression* codegen_expression, class codeGenerator* codegen);
   void generateGlobalVariable(std::shared_ptr<nodeVariableDeclaration> node);
-  void generateFunction(std::shared_ptr<nodeFunctionDeclaration> node);
+  void generateFunctionDeclaration(std::shared_ptr<nodeFunctionDeclaration> node);
   void generateBody(std::shared_ptr<nodeBody> node); //todo: move
 
 private:

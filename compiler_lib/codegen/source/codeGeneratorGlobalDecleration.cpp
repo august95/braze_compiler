@@ -51,7 +51,7 @@ void codeGeneratorGlobalDecleration::generateFunctionDeclaration(std::shared_ptr
   }
 }
 
-void codeGeneratorGlobalDecleration::generateFunction(std::shared_ptr<nodeFunctionDeclaration> node)
+void codeGeneratorGlobalDecleration::generateFunctionDeclaration(std::shared_ptr<nodeFunctionDeclaration> node)
 {
   // deal with forward declaration
   generateFunctionDeclaration(node);

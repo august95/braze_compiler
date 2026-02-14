@@ -34,7 +34,7 @@ public:
   void setFileName(std::string filenam, asmWriter::WriteMode write_mode = asmWriter::WriteMode::W_FILE);
   int startCodeGeneration();
   void generateDataSection();
-  void generateRoot();
+  void generateTextSection();
   void generateReadOnlySection();
   int generateLableCount(bool reset = false);
 
