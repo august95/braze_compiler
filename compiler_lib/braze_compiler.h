@@ -7,7 +7,9 @@
 #include "node_/node.h"
 #include "node_/nodeExpression.h"
 #include "node_/nodeStatement.h"
+#include "node_/nodeBody.h"
 #include "node_/nodeVariableDeclaration.h"
+#include "node_/nodeFunctionDeclaration.h"
 
 #include "filePosition.h"
 #include "token.h"
@@ -53,21 +55,28 @@ static void clog(const char *log, filePosition file_position)
   std::cout << "Log: " << log << "  in " << file_position.getLocationString().c_str() << "\n";
 }
 
-
 template <class t>
 bool is_valid(nodeType node_type)
 {
-  if (node_type | NODE_TYPE_EXPRESSION)
+  if (node_type & NODE_TYPE_EXPRESSION)
   {
     return std::is_same_v<t, nodeExpression>;
   }
-  else if (node_type | NODE_TYPE_STATEMENT)
+  else if (node_type & NODE_TYPE_STATEMENT)
   {
     return std::is_same_v<t, nodeStatement>;
   }
-  else if (node_type | NODE_TYPE_VARIABLE_DECLARATION)
+  else if (node_type & NODE_TYPE_VARIABLE_DECLARATION)
   {
     return std::is_same_v<t, nodeVariableDeclaration>;
+  }
+  else if (node_type & NODE_TYPE_BODY)
+  {
+    return std::is_same_v<t, nodeBody>;
+  }
+  else if (node_type & NODE_TYPE_FUNCTION_DECLARATION)
+  {
+    return std::is_same_v<t, nodeFunctionDeclaration>;
   }
   return false;
 }
@@ -79,12 +88,13 @@ std::shared_ptr<nodeType> cast_node(std::shared_ptr<node> node_)
 
   if (!node_)
     return std::shared_ptr<nodeType>();
-  /*
+
   if (!is_valid<nodeType>(node_->getNodeType()))
   {
-    assert(0, "invalid node type conversion");
+    cerror("Could not cast node!");
+    exit(-1);
   }
-  */
+
   std::shared_ptr<nodeType> cast_node_ = std::static_pointer_cast<nodeType>(node_);
   return cast_node_;
 }
