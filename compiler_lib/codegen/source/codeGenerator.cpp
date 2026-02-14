@@ -53,7 +53,7 @@ void codeGenerator::generateDataSection()
 
   for (auto node : m_ast)
   {
-    if (node->getNodeType() == NODE_TYPE_VARIABLE)
+    if (node->getNodeType() & NODE_TYPE_VARIABLE_DECLARATION)
     {
       m_codegen_global_declaration.generateGlobalVariable(cast_node<nodeVariableDeclaration>(node));
     }
@@ -70,7 +70,7 @@ void codeGenerator::generateTextSection()
     {
       // Global variables already processed in generateDataSection
     }
-    if (node->getNodeType() == NODE_TYPE_FUNCTION_DECLARATION)
+    if (node->getNodeType() & NODE_TYPE_FUNCTION_DECLARATION)
     {
       m_codegen_global_declaration.generateFunctionDeclaration(cast_node<nodeFunctionDeclaration>(node));
     }
