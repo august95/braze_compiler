@@ -7,6 +7,7 @@
 #include <iostream>
 #include <list>
 #include <memory>
+#include <cstdint>
 
 enum nodeType : std::uint64_t
 {
