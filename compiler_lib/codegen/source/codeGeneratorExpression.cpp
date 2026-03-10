@@ -224,19 +224,7 @@ void codeGeneratorExpression::generateAssignmentExpression(std::shared_ptr<nodeE
 
 void codeGeneratorExpression::generateUnary(std::shared_ptr<nodeExpression> node)
 {
-  if (resolveNodeForValue(node))
-  {
-    return;
-  }
-  else if (STRINGS_EQUAL(node->getStringValue().c_str(), "*"))
-  {
-
-  }
-  else if (STRINGS_EQUAL(node->getStringValue().c_str(), "&"))
-  {
-
-    return;
-  }
+  resolveNodeForValue(node);  
 }
 
 void codeGeneratorExpression::generateNumber(std::shared_ptr<nodeExpression> node, int flags)
