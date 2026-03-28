@@ -4,6 +4,9 @@ BUILD_DIR = build
 CXX = g++
 CXXFLAGS = -Wall -Wextra -std=c++17 -g -Icompiler_lib
 
+braze_compiler_version := $(shell cat braze_compiler/braze_compiler_version)
+CXXFLAGS += -DBRAZE_VERSION=\"$(braze_compiler_version)\"
+
 # Recursively grab all .cpp files inside compiler_lib
 SOURCES := $(shell find compiler_lib -name "*.cpp")
 
