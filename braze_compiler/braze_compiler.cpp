@@ -59,6 +59,11 @@ int main(int argc, char* argv[]) {
       printHelpString();
       return 0;
     }
+    if (STRINGS_EQUAL(argv[1], "-v") || STRINGS_EQUAL(argv[1], "-version") || STRINGS_EQUAL(argv[1], "version"))
+    {
+      std::cout << "braze compiler " << BRAZE_VERSION;
+      return 0;
+    }
   }
 
   //std::cout <<"\ncompiling " << input_file << " to " << output_bin << "\n\n";
@@ -107,4 +112,5 @@ void printHelpString()
   std::cout << "\nan executable bin named <file_to_compile> (no suffix) will be created ";
   std::cout << "\n\nfor example, call: ./braze --input_file test_file.c \n";
   std::cout << "\nin command mode, no output binary is created. Assembly code is written to cout \n";
+  std::cout << "\n-v -version to see version of braze \n";
 }
