@@ -27,6 +27,31 @@ std::string file_path = "D:/a/braze_compiler/braze_compiler/unit_test/test_files
 #endif // __LOCAL__
 
 
+/*
+TEST(debug, debug) {
+
+
+  std::string target =
+    "section .data\n"
+    "section .text\n"
+    "section .rodata\n"
+    ;
+
+
+  std::string file_name = "../test_file.c";
+  std::string asm_file = file_name + ".asm";
+
+
+  compileProcess process;
+  process.initialize(file_name);
+  process.startCompiler();
+  //  compareFiles(target, file_path + asm_file);
+  //EXPECT_TRUE(compareFiles(target, file_path + asm_file));
+
+  process.stop();
+}
+*/
+
 
 TEST(lexer, symbols) {
 
