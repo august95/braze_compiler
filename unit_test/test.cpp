@@ -27,6 +27,31 @@ std::string file_path = "D:/a/braze_compiler/braze_compiler/unit_test/test_files
 #endif // __LOCAL__
 
 
+/*
+TEST(debug, debug) {
+
+
+  std::string target =
+    "section .data\n"
+    "section .text\n"
+    "section .rodata\n"
+    ;
+
+
+  std::string file_name = "../test_file.c";
+  std::string asm_file = file_name + ".asm";
+
+
+  compileProcess process;
+  process.initialize(file_name);
+  process.startCompiler();
+  //  compareFiles(target, file_path + asm_file);
+  //EXPECT_TRUE(compareFiles(target, file_path + asm_file));
+
+  process.stop();
+}
+*/
+
 
 TEST(lexer, symbols) {
 
@@ -1808,18 +1833,18 @@ TEST(codegen, whilestatement) {
     "push ebp\n"
     "mov ebp, esp\n"
     "sub esp, 16\n"
-//    ".entry_point_1:\n"
-    ".while_start_1:\n"
+    ".entry_point_1:\n"
+    ".while_start_3:\n"
     "push dword 1\n"
     "pop eax\n"
     "cmp eax, 0\n"
-    "je .while_end_2\n"
+    "je .while_end_4\n"
     "push dword 4\n"
     "pop eax\n"
     "mov dword [ebp-4], eax\n"
-    "jmp .while_start_1\n"
-    ".while_end_2:\n"
-//    ".exit_point_2:\n"
+    "jmp .while_start_3\n"
+    ".while_end_4:\n"
+    ".exit_point_2:\n"
     "add esp, 16\n"
     "pop ebp\n"
     "ret\n"
@@ -1863,7 +1888,7 @@ TEST(codegen, forstatement) {
     "pop eax\n"
     "mov dword [ebp-4], eax\n"
     "jmp .for_loop1\n"
-//    ".entry_point_3:\n"
+    ".entry_point_3:\n"
     "push dword [ebp-4]\n"
     "push dword 1\n"
     "pop ecx\n"
@@ -1897,7 +1922,7 @@ TEST(codegen, forstatement) {
     "mov dword [ebp-4], eax\n"
     "jmp .for_loop1\n"
     ".for_loop_end2:\n"
-//    ".exit_point_4:\n"
+    ".exit_point_4:\n"
     "add esp, 16\n"
     "pop ebp\n"
     "ret\n"
@@ -2205,4 +2230,114 @@ TEST(codegen, singlelinestatement) {
 
   process.stop();
 }
+TEST(codegen, continueAndBreak) {
 
+
+  //main()
+  //{
+  //  int a = 5;
+  //  if (a > 10)
+  //    int a = 10;
+  //  else if (a < 10)
+  //    int b = a;
+  //  else
+  //    int c = 3;
+  //}
+
+  std::string target =
+     "section .data\n"
+    "section .text\n"
+    "global main\n"
+    "main:\n"
+    "push ebp\n"
+    "mov ebp, esp\n"
+    "sub esp, 16\n"
+    //"push dword 0\n"
+    //"pop eax\n"
+    //"mov dword [ebp-4], eax\n"
+    "push dword 0\n"
+    "pop eax\n"
+    "mov dword [ebp-4], eax\n"
+    "jmp .for_loop1\n"
+    ".entry_point_3:\n"
+    "push dword [ebp-4]\n"
+    "push dword 1\n"
+    "pop ecx\n"
+    "pop eax\n"
+    "add eax, ecx\n"
+    "push eax\n"
+    "pop eax\n"
+    "mov dword [ebp-4], eax\n"
+    ".for_loop1:\n"
+    "push dword [ebp-4]\n"
+    "push dword 10\n"
+    "pop ecx\n"
+    "pop eax\n"
+    "cmp eax, ecx\n"
+    "setl al\n"
+    "movzx eax, al\n"
+    "push eax\n"
+    "pop eax\n"
+    "cmp eax, 0\n"
+    "je .for_loop_end2\n"
+    "push dword [ebp-4]\n"
+    "push dword 5\n"
+    "pop ecx\n"
+    "pop eax\n"
+    "cmp eax, ecx\n"
+    "sete al\n"
+    "movzx eax, al\n"
+    "push eax\n"
+    "pop eax\n"
+    "cmp eax, 0\n"
+    "je .if_6\n"
+    "jmp .entry_point_3\n"
+    "jmp .if_end_5\n"
+    ".if_6:\n"
+    ".if_end_5:\n"
+    "push dword [ebp-4]\n"
+    "push dword 6\n"
+    "pop ecx\n"
+    "pop eax\n"
+    "cmp eax, ecx\n"
+    "sete al\n"
+    "movzx eax, al\n"
+    "push eax\n"
+    "pop eax\n"
+    "cmp eax, 0\n"
+    "je .if_8\n"
+    "jmp .exit_point_4\n"
+    "jmp .if_end_7\n"
+    ".if_8:\n"
+    ".if_end_7:\n"
+    "push dword [ebp-4]\n"
+    "push dword 1\n"
+    "pop ecx\n"
+    "pop eax\n"
+    "add eax, ecx\n"
+    "push eax\n"
+    "pop eax\n"
+    "mov dword [ebp-4], eax\n"
+    "jmp .for_loop1\n"
+    ".for_loop_end2:\n"
+    ".exit_point_4:\n"
+    "add esp, 16\n"
+    "pop ebp\n"
+    "ret\n"
+    "section .rodata\n"
+    ;
+
+
+  std::string file_name = "codegeneration/test_codegen_continue_break.c";
+  std::string asm_file = file_name + ".asm";
+
+  const int num_of_tokens = 5;
+
+  compileProcess process;
+  process.initialize(file_path + file_name);
+  process.startCompiler();
+  //  compareFiles(target, file_path + asm_file);
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
+
+  process.stop();
+}

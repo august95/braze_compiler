@@ -98,3 +98,5 @@ std::shared_ptr<nodeType> cast_node(std::shared_ptr<node> node_)
   std::shared_ptr<nodeType> cast_node_ = std::static_pointer_cast<nodeType>(node_);
   return cast_node_;
 }
+
+#define _RETURN_ADDRESS_STACK_SIZE_ 4

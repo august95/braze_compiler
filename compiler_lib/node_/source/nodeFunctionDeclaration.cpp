@@ -1,10 +1,10 @@
 #include "../nodeFunctionDeclaration.h"
-
+#include "../../braze_compiler.h"
 
 nodeFunctionDeclaration::nodeFunctionDeclaration()
 :node(),
   m_stack_size(0),
-  m_stack_addition(4),
+  m_stack_addition(_RETURN_ADDRESS_STACK_SIZE_),
   m_function_prototype(0)
 {
   m_node_type = NODE_TYPE_FUNCTION_DECLARATION;
@@ -13,7 +13,7 @@ nodeFunctionDeclaration::nodeFunctionDeclaration()
 nodeFunctionDeclaration::nodeFunctionDeclaration(nodeType node_type, filePosition file_position)
   : node(node_type, file_position),
   m_stack_size(0),
-  m_stack_addition(4),
+  m_stack_addition(_RETURN_ADDRESS_STACK_SIZE_),
   m_function_prototype(0)
 {
 }

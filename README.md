@@ -16,12 +16,12 @@ sudo apt-get install -y build-essential gcc make gcc-multilib g++-multilib nasm
 
 Feature list:
 1. Local and global variables of primitive type: char, int, short, long, void. R and L values are supported.
-2. Function declarations, function prototypes and function calls, all with parameters
+2. Function declarations, function prototypes and function calls, all with parameters are supported
 3. String support
 4. Most operators are implemented, but not logical operators( && and ||) and bitwise operators (>> and <<)
 5. if, else if and else statements is supported
-6. while loop is supported, break and continue statement do not work
-7. for loop is supported, break and continue statement do not work
+6. while loop is supported, continue and break is supported
+7. for loop is supported, continue and break is supported
   * Init part of the for loop must contain a variable declaration. Condition and loop part must be present.
 8. pointer arithmentic is partially supported
 
