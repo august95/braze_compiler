@@ -39,6 +39,14 @@ void codeGeneratorStatement::generateStatement(std::shared_ptr<node> node)
   {
     generateStatementFor(cast_node<nodeStatement>(node));
   }
+  else if (node->getNodeType() == NODE_TYPE_STATEMENT_CONTINUE)
+  {
+    generateStatementContinue(cast_node<nodeStatement>(node));
+  }
+  else if (node->getNodeType() == NODE_TYPE_STATEMENT_BREAK)
+  {
+    generateStatementBreak(cast_node<nodeStatement>(node));
+  }
   else if (node->getNodeType() == NODE_TYPE_UNARY)
   {
     m_codegen_expression->generateUnary(cast_node<nodeExpression>(node));
@@ -57,6 +65,8 @@ void codeGeneratorStatement::generateStatementFor(std::shared_ptr<nodeStatement>
   }
 
   m_asm_writer.asmGen("jmp .for_loop" + std::to_string(for_loop_start));
+  generateEntryPoint();
+  generateExitPoint();
   if (node->getLoopNode())
   {
     m_codegen_expression->generateExpressionable(cast_node<nodeExpression>(node->getLoopNode()), 0);
@@ -84,10 +94,14 @@ void codeGeneratorStatement::generateStatementFor(std::shared_ptr<nodeStatement>
 
   m_asm_writer.asmGen("jmp .for_loop" + std::to_string(for_loop_start));
   m_asm_writer.asmGen(".for_loop_end" + std::to_string(for_loop_end) + ":");
+  finishEntryPoint();
+  finishExitPoint();
 }
 
 void codeGeneratorStatement::generateStatementWhile(std::shared_ptr<nodeStatement> node)
 {
+  generateEntryPoint();
+  generateExitPoint();
   int while_start = m_codegen->generateLableCount();
   int while_end = m_codegen->generateLableCount();
 
@@ -99,6 +113,9 @@ void codeGeneratorStatement::generateStatementWhile(std::shared_ptr<nodeStatemen
   m_codegen_global_declaration->generateBody(node->getBodyNode());
   m_asm_writer.asmGen("jmp .while_start_" + std::to_string(while_start));
   m_asm_writer.asmGen(".while_end_" + std::to_string(while_end) + ":");
+
+  finishEntryPoint();
+  finishExitPoint();
 }
 
 void codeGeneratorStatement::generateStatementIf(std::shared_ptr<nodeStatement> node)
@@ -157,4 +174,58 @@ void codeGeneratorStatement::generateScopedVariable(std::shared_ptr<nodeVariable
     m_codegen_expression->generateValueNode(node, entity);
   }
 
+}
+
+
+void codeGeneratorStatement::generateStatementBreak(std::shared_ptr<nodeStatement> node)
+{
+  if (node->getNodeType() != NODE_TYPE_STATEMENT_BREAK)
+  {
+    cerror("expected break node!");
+    assert(0);
+  }
+  if (m_exit_point_stack.empty())
+  {
+    cerror("no place to break!");
+    assert(0);
+  }
+  m_asm_writer.asmGen("jmp " + m_exit_point_stack.back().m_label);
+}
+
+
+void codeGeneratorStatement::generateStatementContinue(std::shared_ptr<nodeStatement> node)
+{
+  if (node->getNodeType() != NODE_TYPE_STATEMENT_CONTINUE)
+  {
+    cerror("expected continue node!");
+    assert(0);
+  }
+  if (m_entry_point_stack.empty())
+  {
+    cerror("no place to continue!");
+    assert(0);
+  }
+  m_asm_writer.asmGen("jmp " + m_entry_point_stack.back().m_label);
+}
+
+void codeGeneratorStatement::generateEntryPoint()
+{
+  m_entry_point_stack.push_back(entryPoint(m_codegen->generateLableCount()));
+  m_asm_writer.asmGen(m_entry_point_stack.back().m_label+":");
+}
+
+void codeGeneratorStatement::finishEntryPoint()
+{
+  m_entry_point_stack.pop_back();
+}
+
+void codeGeneratorStatement::generateExitPoint()
+{
+  m_exit_point_stack.push_back(exitPoint(m_codegen->generateLableCount()));
+}
+
+void codeGeneratorStatement::finishExitPoint()
+{
+  m_asm_writer.asmGen(m_exit_point_stack.back().m_label+":");
+  m_exit_point_stack.pop_back();
 }

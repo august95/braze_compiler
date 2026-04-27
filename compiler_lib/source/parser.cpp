@@ -391,6 +391,14 @@ void parser::parseKeyword()
   {
     parseForStatement();
   }
+  else if (STRINGS_EQUAL(token->getStringValue().c_str(), "break"))
+  {
+    parseBreak();
+  }
+  else if (STRINGS_EQUAL(token->getStringValue().c_str(), "continue"))
+  {
+    parseContinue();
+  }
 }
 
 void parser::parseWhileStatement()
@@ -787,6 +795,38 @@ void parser::parseIndirectionUnary()
   unary_node->setUnaryIndirectionDepth(pointer_depth);
   unary_node->setDatatype(operand_node->getDatatype());
   pushNode(unary_node);
+}
+
+void parser::parseBreak()
+{
+  std::shared_ptr<token> token = nextToken();
+  if (!STRINGS_EQUAL(token->getStringValue().c_str(), "break"))
+  {
+    cerror("expected break keyword", token->getFilePosition());
+    assert(0);
+  }
+  pushNode(std::make_shared<nodeExpression>(NODE_TYPE_STATEMENT_BREAK, token->getFilePosition()));
+  if (';' != nextToken()->getCharValue())
+  {
+    cerror("expected ';'");
+    assert(0);
+  }
+}
+
+void parser::parseContinue()
+{
+  std::shared_ptr<token> token = nextToken();
+  if (!STRINGS_EQUAL(token->getStringValue().c_str(), "continue"))
+  {
+    cerror("expected continue keyword", token->getFilePosition());
+    assert(0);
+  }
+  pushNode(std::make_shared<nodeExpression>(NODE_TYPE_STATEMENT_CONTINUE, token->getFilePosition()));
+  if (';' != nextToken()->getCharValue())
+  {
+    cerror("expected ';'");
+    assert(0);
+  }
 }
 
 std::shared_ptr<datatype> parser::parseDatatype()

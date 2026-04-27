@@ -68,7 +68,9 @@ private:
   void parseSymbol();
   void parseUnary();
   void parseNormalUnary();
-  void parseIndirectionUnary();
+  void parseIndirectionUnary();    
+  void parseBreak();
+  void parseContinue();
 
   std::shared_ptr<datatype> parseDatatype();
 
