@@ -23,7 +23,8 @@ public:
   std::shared_ptr<nodeVariableDeclaration> getInitNode() { return m_init_node; }
   void setLoopNode(std::shared_ptr<node> loop_node) { m_loop_node = loop_node; }
   std::shared_ptr<node> getLoopNode() { return m_loop_node; }
-
+  void setReturnValueNode(std::shared_ptr<nodeExpression> return_value_node) { m_return_value_node = return_value_node; }
+  std::shared_ptr<nodeExpression> getReturnValueNode() { return m_return_value_node; }
   void setBodyNode(std::shared_ptr<nodeBody> body_node) { m_body_node = body_node; }
   std::shared_ptr<nodeBody> getBodyNode() { return m_body_node; }
 private:
@@ -33,7 +34,7 @@ private:
   std::shared_ptr<nodeStatement> m_next_else_node;
   std::shared_ptr<nodeVariableDeclaration> m_init_node;
   std::shared_ptr<node> m_loop_node;
-
+  std::shared_ptr<nodeExpression> m_return_value_node;
   std::shared_ptr<nodeBody> m_body_node;
 };
 

@@ -21,6 +21,7 @@ public:
 private:
   void generateStatementFor(std::shared_ptr<nodeStatement> node);
   void generateStatementWhile(std::shared_ptr<nodeStatement> node);
+  void generateStatementReturn(std::shared_ptr<nodeStatement> node);
   void generateStatementIf(std::shared_ptr<nodeStatement> node);
   void generateStatementIf_(std::shared_ptr<nodeStatement> node, int end_label);
   void generateStatementIfElse(std::shared_ptr<nodeStatement> node, int end_label);

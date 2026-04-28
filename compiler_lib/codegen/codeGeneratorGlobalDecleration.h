@@ -19,6 +19,7 @@ public:
   void generateGlobalVariable(std::shared_ptr<nodeVariableDeclaration> node);
   void generateBody(std::shared_ptr<nodeBody> node); //todo: move
   void generateFunctionDeclaration(std::shared_ptr<nodeFunctionDeclaration> node);
+  std::shared_ptr<nodeFunctionDeclaration> m_current_function;
 
 private:
   void generateFunctionDeclaration_(std::shared_ptr<nodeFunctionDeclaration> node);

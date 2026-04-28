@@ -4,10 +4,6 @@
 #include "../codeGenerator.h"
 
 
-#define C_STACK_ALIGNMENT 16
-#define STACK_PUSH_SIZE 4
-#define C_ALIGN(size) (size % C_STACK_ALIGNMENT) ? size + (C_STACK_ALIGNMENT - (size % C_STACK_ALIGNMENT)) : size
-
 codeGeneratorGlobalDecleration::codeGeneratorGlobalDecleration(asmWriter& asm_writer, resolver& resolver, codeGeneratorStatement* codegen_statement, codeGeneratorExpression* codegen_expression, codeGenerator* codegen)
   :m_asm_writer(asm_writer),
   m_resolver(resolver),
@@ -30,6 +26,7 @@ void codeGeneratorGlobalDecleration::generateFunctionDeclaration(std::shared_ptr
 
 void codeGeneratorGlobalDecleration::generateFunctionDeclaration_(std::shared_ptr<nodeFunctionDeclaration> node)
 {
+  m_current_function = node;
   m_resolver.registerFunction(node);
   std::string function_name = node->getStringValue();
   m_asm_writer.asmGen("global " + function_name);
@@ -46,6 +43,7 @@ void codeGeneratorGlobalDecleration::generateFunctionDeclaration_(std::shared_pt
   m_resolver.removeScope(); //function parameters
 
   m_asm_writer.asmGenPopEbp(C_ALIGN(node->getBodyNode()->getBodySize()));  
+  m_current_function = 0;
 }
 
 void codeGeneratorGlobalDecleration::generateFunctionPrototpe(std::shared_ptr<nodeFunctionDeclaration> node)
