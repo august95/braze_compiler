@@ -379,17 +379,21 @@ void parser::parseKeyword()
     // static const int func_or_variable ...
     parseVariableOrFunction();
   }
+  else if (STRINGS_EQUAL(token->getStringValue().c_str(), "return"))
+  {
+    parseReturn();
+  }
   else if (STRINGS_EQUAL(token->getStringValue().c_str(), "if"))
   {
     parseIfStatement();
   }
-  else if (STRINGS_EQUAL(token->getStringValue().c_str(), "while"))
-  {
-    parseWhileStatement();
-  }
   else if (STRINGS_EQUAL(token->getStringValue().c_str(), "for"))
   {
     parseForStatement();
+  }
+  else if (STRINGS_EQUAL(token->getStringValue().c_str(), "while"))
+  {
+    parseWhileStatement();
   }
   else if (STRINGS_EQUAL(token->getStringValue().c_str(), "break"))
   {
@@ -399,6 +403,24 @@ void parser::parseKeyword()
   {
     parseContinue();
   }
+}
+
+
+void parser::parseReturn()
+{
+  std::shared_ptr<token> token = nextToken();
+  assert(STRINGS_EQUAL(token->getStringValue().c_str(), "return"));
+  std::shared_ptr<nodeStatement> return_node = std::make_shared<nodeStatement>(nodeType::NODE_TYPE_STATEMENT_RETURN, token->getFilePosition());
+  token = peekToken();
+  //we have a return value
+  if (token->getCharValue() != ';')
+  {
+    parseExpression();
+    return_node->setReturnValueNode(cast_node<nodeExpression>(popLastNode()));
+  }
+  token = nextToken();
+  assert(token->getCharValue() == ';');
+  pushNode(return_node);
 }
 
 void parser::parseWhileStatement()

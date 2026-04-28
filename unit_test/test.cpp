@@ -2336,7 +2336,62 @@ TEST(codegen, continueAndBreak) {
   compileProcess process;
   process.initialize(file_path + file_name);
   process.startCompiler();
-  //  compareFiles(target, file_path + asm_file);
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
+
+  process.stop();
+}
+
+TEST(codegen, continuReturn) {
+//  int main()
+//  {
+//    int a = 0x0000dead;
+//    return a;
+//  }
+//   
+//  int test()
+//  {
+//    return;
+//  }
+
+  std::string target =
+    "section .data\n"
+    "section .text\n"
+    "global main\n"
+    "main:\n"
+    "push ebp\n"
+    "mov ebp, esp\n"
+    "sub esp, 16\n"
+    "push dword 57005\n"
+    "pop eax\n"
+    "mov dword [ebp-4], eax\n"
+    "push dword [ebp-4]\n"
+    "pop eax\n"
+    "add esp, 16\n"
+    "pop ebp\n"
+    "ret\n"
+    "add esp, 16\n"
+    "pop ebp\n"
+    "ret\n"
+    "global test\n"
+    "test:\n"
+    "push ebp\n"
+    "mov ebp, esp\n"
+    "pop ebp\n"
+    "ret\n"
+    "pop ebp\n"
+    "ret\n"
+    "section .rodata\n"
+    ;
+
+
+  std::string file_name = "codegeneration/test_codegen_return.c";
+  std::string asm_file = file_name + ".asm";
+
+  const int num_of_tokens = 5;
+
+  compileProcess process;
+  process.initialize(file_path + file_name);
+  process.startCompiler();
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
   process.stop();

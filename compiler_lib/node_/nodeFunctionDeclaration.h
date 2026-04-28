@@ -20,6 +20,8 @@ public:
   void addFunctionArgumentNode(std::shared_ptr<node> node) { m_function_arguemnt.push_back(node); }
   std::list<std::shared_ptr<node>> getFunctionArguments() { return m_function_arguemnt; }
 
+  int getStackSize() { return m_stack_size; }
+
 
   bool isFunctionPrototype() { return m_function_prototype; }
   void setFunctionPrototype(bool function_prototype) { m_function_prototype = function_prototype; }

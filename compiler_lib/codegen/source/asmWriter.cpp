@@ -1,6 +1,7 @@
 #include "../../source/pch.h"
 #include "../asmWriter.h"
 #include <stdarg.h>
+#include "../../braze_compiler.h"
 
 asmWriter::asmWriter()
     : file(0),
@@ -135,6 +136,17 @@ void asmWriter::discardUnusedStack()
     return;
   }
   asmGen("add esp, " + std::to_string(stack_addition));
+}
+
+
+void asmWriter::discardStackFrame(int function_size)
+{
+  int size = C_ALIGN(function_size);
+  if (size == 0)
+  {
+    return;
+  }
+  asmGen("add esp, " + std::to_string(size));
 }
 
 void asmWriter::addStack(int stack_size)

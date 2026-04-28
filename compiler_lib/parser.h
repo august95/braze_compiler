@@ -55,6 +55,7 @@ private:
   void parseNormalExpression();
   void parseIncrementOperator();
   void parseKeyword();
+  void parseReturn();
   void parseWhileStatement();
   void parseForStatement();
   void parseIfStatement();

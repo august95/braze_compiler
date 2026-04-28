@@ -22,7 +22,9 @@ enum
   GET_ADDRESS = 0x8
 };
 
-
+#define C_STACK_ALIGNMENT 16
+#define STACK_PUSH_SIZE 4
+#define C_ALIGN(size) (size % C_STACK_ALIGNMENT) ? size + (C_STACK_ALIGNMENT - (size % C_STACK_ALIGNMENT)) : size
 
 // TODO: add contex for where the error message was called. PARSER, LEXER, filename, line, col
 static void cerror(const char *error)

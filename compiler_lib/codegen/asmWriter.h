@@ -24,6 +24,7 @@ class asmWriter
   void asmGenReduceRegister(std::string reg, int size, bool is_signed = false);
   int initialize(std::string filename);
   void discardUnusedStack();
+  void discardStackFrame(int function_size);
   void addStack(int stack_size);
   void close();
   void setWriteMode(WriteMode mode){m_mode = mode;}

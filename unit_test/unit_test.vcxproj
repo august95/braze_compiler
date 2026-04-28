@@ -119,6 +119,9 @@
     <None Include="test_files\codegeneration\test_codegen_continue_break.c">
       <FileType>CppCode</FileType>
     </None>
+    <None Include="test_files\codegeneration\test_codegen_return.c">
+      <FileType>CppCode</FileType>
+    </None>
     <ClCompile Include="test_helper.cpp" />
     <None Include="test_files\codegeneration\test_codegen_unary.c">
       <FileType>CppCode</FileType>

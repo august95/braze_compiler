@@ -27,6 +27,10 @@ void codeGeneratorStatement::generateStatement(std::shared_ptr<node> node)
   {
     m_codegen_expression->generateExpNode(cast_node<nodeExpression>(node));
   }
+  else if (node->getNodeType() == NODE_TYPE_STATEMENT_RETURN)
+  {
+    generateStatementReturn(cast_node<nodeStatement>(node));
+  }
   else if (node->getNodeType() == NODE_TYPE_STATEMENT_IF)
   {
     generateStatementIf(cast_node<nodeStatement>(node));
@@ -116,6 +120,23 @@ void codeGeneratorStatement::generateStatementWhile(std::shared_ptr<nodeStatemen
 
   finishEntryPoint();
   finishExitPoint();
+}
+
+
+void codeGeneratorStatement::generateStatementReturn(std::shared_ptr<nodeStatement> node)
+{
+  if (node->getReturnValueNode())
+  {
+    m_codegen_expression->generateExpressionable(node->getReturnValueNode(),0);
+    m_asm_writer.asmGenPopIns("eax");
+  }
+  assert(m_codegen_global_declaration->m_current_function);
+  {
+    m_asm_writer.discardStackFrame(m_codegen_global_declaration->m_current_function->getStackSize());
+  }
+  //asmWriter::asmGenPopEbp is not called as it's needed for ending the function scope {}
+  m_asm_writer.asmGen("pop ebp");
+  m_asm_writer.asmGen("ret");
 }
 
 void codeGeneratorStatement::generateStatementIf(std::shared_ptr<nodeStatement> node)
