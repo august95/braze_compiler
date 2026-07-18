@@ -31,7 +31,7 @@ void resolverEntityData::setVariableNode(std::shared_ptr<nodeVariableDeclaration
 
 void resolverEntityData::setStackAsmAddress(bool local_stack, std::string &address, int stack_offset)
 {
-  // FIXME: handle positive stack offset for function parameters
+  //FIXME: add global variables
   if (local_stack)
   {
     if (stack_offset > 0)
