@@ -32,6 +32,7 @@ public:
   void setAbstractSyntaxTree(std::list<std::shared_ptr<node>> ast) { m_ast = ast; }
   void initialize();
   void setFileName(std::string filenam, asmWriter::WriteMode write_mode = asmWriter::WriteMode::W_FILE);
+  void sortASTDeclarations();
   int startCodeGeneration();
   void generateDataSection();
   void generateTextSection();
