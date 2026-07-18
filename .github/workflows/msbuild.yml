@@ -13,8 +13,8 @@ env:
 permissions:
   contents: read
 
+jobs:
 #  Compiler_lib are being built in other tests
-#jobs:
 #  build-compiler_lib:
 #    runs-on: windows-latest
 #
