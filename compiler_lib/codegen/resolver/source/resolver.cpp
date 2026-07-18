@@ -15,6 +15,20 @@ void resolver::registerFunction(std::shared_ptr<nodeFunctionDeclaration> functio
   m_root_scope->addScopeEntity(resolver_entity);
 }
 
+std::shared_ptr<resolverEntity> resolver::registerVariable(std::shared_ptr<node> node)
+{
+  std::shared_ptr<resolverEntity> entity = std::make_shared<resolverEntity>(node);
+  if (node->getNodeType() == NODE_TYPE_VARIABLE)
+  {
+    entity->createResolverEntityData();
+    entity->addAddress(node);
+    m_current_scope->addScopeEntity(entity);
+    entity->setEntityType(E_VARIABLE);
+    // std::cout << "resolver: added variable " << node->getStringValue()<< "  add addess: " << entity->getAddress() << std::endl;
+  }
+  return entity;
+}
+
 void resolver::createNewScope(bool local_stack, bool stack)
 {
   std::shared_ptr<resolverScope> scope = std::make_shared<resolverScope>();
@@ -24,20 +38,6 @@ void resolver::createNewScope(bool local_stack, bool stack)
   scope->setStack(stack);
   // todo: add flags to scope data?
   m_current_scope = scope;
-}
-
-std::shared_ptr<resolverEntity> resolver::addEntity(std::shared_ptr<node> node, bool is_local_stack)
-{
-  std::shared_ptr<resolverEntity> entity = std::make_shared<resolverEntity>(node);
-  if (node->getNodeType() == NODE_TYPE_VARIABLE)
-  {
-    entity->createResolverEntityData();
-    entity->addAddress(node, is_local_stack);
-    m_current_scope->addScopeEntity(entity);
-    entity->setEntityType(E_VARIABLE);
-    // std::cout << "resolver: added variable " << node->getStringValue()<< "  add addess: " << entity->getAddress() << std::endl;
-  }
-  return entity;
 }
 
 void resolver::follow(std::shared_ptr<node> node, std::shared_ptr<resolverResult> &result)

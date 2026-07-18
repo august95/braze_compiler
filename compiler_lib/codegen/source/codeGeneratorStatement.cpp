@@ -189,7 +189,7 @@ void codeGeneratorStatement::generateStatementElse(std::shared_ptr<nodeStatement
 void codeGeneratorStatement::generateScopedVariable(std::shared_ptr<nodeVariableDeclaration> node)
 {
 
-  std::shared_ptr<resolverEntity> entity = m_resolver.addEntity(node, true);
+  std::shared_ptr<resolverEntity> entity = m_resolver.registerVariable(node);
   if (node->getValueNode())
   {
     m_codegen_expression->generateValueNode(node, entity);

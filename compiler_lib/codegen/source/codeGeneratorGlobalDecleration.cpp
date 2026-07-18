@@ -58,7 +58,7 @@ void codeGeneratorGlobalDecleration::generateFunctionParameters(std::shared_ptr<
   for (auto it = function_arguemnt.begin(); it != function_arguemnt.end(); ++it)
   {
     std::shared_ptr<node> argument_node = (*it);
-    std::shared_ptr<resolverEntity> entity = m_resolver.addEntity(argument_node, true);
+    std::shared_ptr<resolverEntity> entity = m_resolver.registerVariable(argument_node);
   }
 }
 
@@ -105,7 +105,7 @@ void codeGeneratorGlobalDecleration::generateGlobalVariablePrimitive(std::shared
     cerror("Codegen: strings not yet implemented");
     return;
   }
-  std::shared_ptr<resolverEntity> entity = m_resolver.addEntity(node, false);
+  std::shared_ptr<resolverEntity> entity = m_resolver.registerVariable(node);
 
   std::string var_name = node->getStringValue();
   std::string var_value = "0";

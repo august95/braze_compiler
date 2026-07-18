@@ -10,7 +10,7 @@ resolverEntityData::resolverEntityData(entityDataType entity_type)
 {
 }
 
-void resolverEntityData::setVariableNode(std::shared_ptr<nodeVariableDeclaration> node, bool is_local_stack)
+void resolverEntityData::setVariableNode(std::shared_ptr<nodeVariableDeclaration> node)
 {
   m_entity_type = VARIABLE;
   m_node = node;
@@ -19,9 +19,9 @@ void resolverEntityData::setVariableNode(std::shared_ptr<nodeVariableDeclaration
 
   // should this be a function?
   // needs to handle global variables as well, not only offset from local base pointer
-  if (is_local_stack)
+  if (!node->getIsGlobal())
   {
-    setStackAsmAddress(is_local_stack, m_address, node->getStackOffset());
+    setStackAsmAddress(!node->getIsGlobal(), m_address, node->getStackOffset());
   }
   else
   {
