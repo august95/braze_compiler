@@ -17,21 +17,18 @@ void resolverEntityData::setVariableNode(std::shared_ptr<nodeVariableDeclaration
   m_datatype = node->getDatatype();
   m_is_stack = true;
 
-  // should this be a function?
-  // needs to handle global variables as well, not only offset from local base pointer
-  if (!node->getIsGlobal())
+  if (node->getIsGlobal())
   {
-    setStackAsmAddress(!node->getIsGlobal(), m_address, node->getStackOffset());
+    setGlobalAsmAddress(m_node->getStringValue(), node->getIsGlobal() ? 0 : node->getStackOffset());
   }
   else
   {
-    setGlobalAsmAddress(m_node->getStringValue(), node->getIsGlobal() ? 0 : node->getStackOffset());
+    setStackAsmAddress(!node->getIsGlobal(), m_address, node->getStackOffset());
   }
 }
 
 void resolverEntityData::setStackAsmAddress(bool local_stack, std::string &address, int stack_offset)
 {
-  //FIXME: add global variables
   if (local_stack)
   {
     if (stack_offset > 0)
