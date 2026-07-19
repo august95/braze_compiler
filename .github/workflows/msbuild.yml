@@ -81,5 +81,5 @@ jobs:
     - name: Compile test file with Braze
       run: ./braze
 
-    - name: Run file compiled by Braze
+    - name: Run program compiled by Braze
       run: ./test_file
