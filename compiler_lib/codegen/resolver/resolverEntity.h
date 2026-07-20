@@ -21,8 +21,9 @@ enum entityType
 
 enum codeGenInstruction
 {
-  CG_LOAD_VALUE_TO_EBX = 0x1,
-  CG_LOAD_FUNCTION_ADDRESS_TO_EBX = 0x2
+//If the root entity is a variable, we might have a pointer access to that variable, in the following entities
+  CG_POINTER_ACCESS = 0x1,
+  CG_FUNCTION_CALL = 0x2
 };
 
 class resolverEntity
