@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
   std::string output_file;
   std::string output_bin;
   std::shared_ptr<std::stringstream> input_args = std::make_shared<std::stringstream>();
-  bool input_file_mode = true;
+  bool input_file_mode = false;
 
   if (argc < 2) {
     std::cout << "\n-h -help or help for arg description\n";
@@ -40,6 +40,7 @@ int main(int argc, char* argv[]) {
       output_bin = input_file;
       const std::string suffix = ".c";
       output_bin.erase(input_file.size()-suffix.size());
+      input_file_mode = true;
     }
 
     if(STRINGS_EQUAL(argv[1], "-h") || STRINGS_EQUAL(argv[1], "-help") || STRINGS_EQUAL(argv[1], "help"))
@@ -53,7 +54,6 @@ int main(int argc, char* argv[]) {
       output_file = "app.out.asm";
       output_bin = "app.out";
       const std::string suffix = ".c";
-      input_file_mode = false;
     }
 
     if(STRINGS_EQUAL(argv[1], "-h") || STRINGS_EQUAL(argv[1], "-help") || STRINGS_EQUAL(argv[1], "help"))
@@ -126,7 +126,7 @@ void printHelpString()
   std::cout << "\nOuput executable binary is named: <file_to_compile> (no suffix) will be created "
                "\n";
   std::cout << "\nbraze are generating *.asm files, that are assembled by nasm into *.o files";
-  std::cout << "\nin command mode, no output binary are created. Assembly code is written to cout! \n";
+  std::cout << "\nUsing --input_code, no output binary are created. Assembly code is written to cout! \n";
 }
 
 void printBanner()
