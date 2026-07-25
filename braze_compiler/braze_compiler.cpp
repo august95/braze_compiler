@@ -42,35 +42,33 @@ int main(int argc, char* argv[]) {
       output_bin.erase(input_file.size()-suffix.size());
       input_file_mode = true;
     }
-
-    if(STRINGS_EQUAL(argv[1], "-h") || STRINGS_EQUAL(argv[1], "-help") || STRINGS_EQUAL(argv[1], "help"))
-    {
-      printHelpString();
-      return 0;
-    }
-    if(STRINGS_EQUAL(argv[1], "--input_code"))
+    else if(STRINGS_EQUAL(argv[1], "--input_code"))
     {
       *input_args << argv[2];
       output_file = "app.out.asm";
       output_bin = "app.out";
       const std::string suffix = ".c";
     }
-
-    if(STRINGS_EQUAL(argv[1], "-h") || STRINGS_EQUAL(argv[1], "-help") || STRINGS_EQUAL(argv[1], "help"))
+    else if(STRINGS_EQUAL(argv[1], "-h") || STRINGS_EQUAL(argv[1], "-help") || STRINGS_EQUAL(argv[1], "help"))
     {
       printHelpString();
       return 0;
     }
-    if (STRINGS_EQUAL(argv[1], "-v") || STRINGS_EQUAL(argv[1], "-version") || STRINGS_EQUAL(argv[1], "version"))
+    else if (STRINGS_EQUAL(argv[1], "-v") || STRINGS_EQUAL(argv[1], "-version") || STRINGS_EQUAL(argv[1], "version"))
     {
       printVersion();
       return 0;
     }
-    if (STRINGS_EQUAL(argv[1], "-braze"))
+    else if (STRINGS_EQUAL(argv[1], "-braze"))
     {
       printBanner(); 
       printVersion();
       return 0;
+    }
+    else
+    {
+      //no args, compile test_file.c
+      input_file_mode = true;
     }
   }
 
