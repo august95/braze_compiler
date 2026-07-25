@@ -79,7 +79,7 @@ jobs:
       run: make
 
     - name: Compile test file with Braze
-      run: ./braze
+      run: ./braze --input_file test_file.c
 
     - name: Run program compiled by Braze
       run: ./test_file
