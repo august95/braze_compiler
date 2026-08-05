@@ -244,7 +244,8 @@ void parser::parseParenthesesExpressionOrFunctionCall()
   std::shared_ptr<nodeExpression> function_call;
   // true for test(50+30) function call
   //  50 + (30 + 20 is not capured here because of the operator
-  if (cast_node<nodeExpression>(peekLastNode())->isValueNode())
+  if (peekLastNode() &&
+     cast_node<nodeExpression>(peekLastNode())->isValueNode())
   {
     function_call = cast_node<nodeExpression>(popLastNode());
   }
