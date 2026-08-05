@@ -198,12 +198,12 @@ void codeGeneratorExpression::generateEntityAccessForUnaryIndirection(std::share
 
 void codeGeneratorExpression::generateEntityAccessStart(std::shared_ptr<resolverEntity> root_entity, std::shared_ptr<resolverResult> result)
 {
-  if (root_entity->getCodeGenInstruction() & CG_LOAD_FUNCTION_ADDRESS_TO_EBX)
+  if (root_entity->getEntityType() == E_FUNCTION)
   {
     m_asm_writer.asmGen("lea ebx, [" + result->getRootAddress() + "]");
     m_asm_writer.asmGenPushIns("ebx", root_entity->getDatatype(), 0);
   }
-  else if (root_entity->getCodeGenInstruction() & CG_LOAD_VALUE_TO_EBX)
+  else if (root_entity->getCodeGenInstruction() & CG_POINTER_ACCESS) //pointer access, resolverScope::followUnaryAddress is setting this flag
   {
     m_asm_writer.asmGen("lea ebx, [" + root_entity->getAddress() + "]");
     m_asm_writer.asmGenPushIns("ebx", root_entity->getDatatype(), 0);

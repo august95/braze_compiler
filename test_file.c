@@ -12,4 +12,5 @@ int braze_test(int iterations)
 int main()
 {
   braze_test(3);
+  return 0;
 }

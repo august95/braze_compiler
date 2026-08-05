@@ -101,4 +101,21 @@ std::shared_ptr<nodeType> cast_node(std::shared_ptr<node> node_)
   return cast_node_;
 }
 
+template <class nodeType>
+std::shared_ptr<nodeType> try_cast_node(std::shared_ptr<node> node_)
+{
+  // Use std::static_pointer_cast<nodeType> to cast from base class to derived class
+
+  if (!node_)
+    return std::shared_ptr<nodeType>();
+
+  if (!is_valid<nodeType>(node_->getNodeType()))
+  {
+    return std::shared_ptr<nodeType>();
+  }
+
+  std::shared_ptr<nodeType> cast_node_ = std::static_pointer_cast<nodeType>(node_);
+  return cast_node_;
+}
+
 #define _RETURN_ADDRESS_STACK_SIZE_ 4

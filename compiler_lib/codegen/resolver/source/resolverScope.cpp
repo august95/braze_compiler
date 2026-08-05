@@ -83,7 +83,7 @@ void resolverScope::followFunctionCall(std::shared_ptr<nodeExpression> node_, st
   }
   std::shared_ptr<resolverEntity> function_call_entity = std::make_shared<resolverEntity>();
   function_call_entity->setEntityType(E_FUNCTION_CALL);
-  function_entity->setCodeGenInstruction(CG_LOAD_FUNCTION_ADDRESS_TO_EBX);
+  function_entity->setCodeGenInstruction(CG_FUNCTION_CALL);
   result->addEntity(function_call_entity);
 
   if (node_->getRightNode())
@@ -122,7 +122,7 @@ void resolverScope::followUnaryAddress(std::shared_ptr<nodeExpression> node_, st
   last_entity->setDatatype(last_entity->getNode()->getDatatype());
   unary_address->setDatatype(last_entity->getNode()->getDatatype());
   //load the address of the variable val into register
-  last_entity->setCodeGenInstruction(CG_LOAD_VALUE_TO_EBX);
+  last_entity->setCodeGenInstruction(CG_POINTER_ACCESS);
   result->addEntity(unary_address);
 }
 

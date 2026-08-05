@@ -2,6 +2,7 @@
 #include "../codeGenerator.h"
 #include "../../braze_compiler.h"
 #include "../../codegen/resolver/resolverResult.h"
+#include <algorithm>
 
 codeGenerator::codeGenerator()
   : m_codegen_expression(m_asm_writer, m_resolver, this),
@@ -29,12 +30,22 @@ void codeGenerator::setFileName(std::string filename, asmWriter::WriteMode write
   m_asm_writer.setWriteMode(write_mode);
 }
 
+void codeGenerator::sortASTDeclarations()
+{
+  //makes sure all global variable declarations comes before function declarations, except from function prototypes
+  m_ast.sort([](const auto& a, const auto& b) {
+    return static_cast<bool>(a->getNodeType() & NODE_TYPE_VARIABLE_DECLARATION)
+      && static_cast<bool>((b->getNodeType() & NODE_TYPE_FUNCTION_DECLARATION) ? !(static_cast<bool> (cast_node<nodeFunctionDeclaration>(b)->isFunctionPrototype())) : 0);
+    });
+}
 int codeGenerator::startCodeGeneration()
 {
 
   initialize();
 
   m_root_scope.init(std::make_shared<scope>(), true);
+
+  sortASTDeclarations();
 
   generateDataSection();
 

@@ -29,6 +29,7 @@ jobs:
     - name: Build braze_compiler Static Library
       run: msbuild compiler_lib/compiler_lib.vcxproj /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:UsePrecompiledHeader=false /p:Platform=${{ env.PLATFORM }}
 
+#  Only unit test support on windows
 #  build-braze_compiler:
 #    runs-on: windows-latest
 #    needs: build-compiler_lib
@@ -78,8 +79,7 @@ jobs:
       run: make
 
     - name: Compile test file with Braze
-      run: ./braze
+      run: ./braze --input_file test_file.c
 
-#  Braze compiler do not support return statement yet, causing the github action to fail with return value != 0
-#    - name: Run file compiled by Braze
-#      run: ./test_file
+    - name: Run program compiled by Braze
+      run: ./test_file

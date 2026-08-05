@@ -21,8 +21,9 @@ enum entityType
 
 enum codeGenInstruction
 {
-  CG_LOAD_VALUE_TO_EBX = 0x1,
-  CG_LOAD_FUNCTION_ADDRESS_TO_EBX = 0x2
+//If the root entity is a variable, we might have a pointer access to that variable, in the following entities
+  CG_POINTER_ACCESS = 0x1,
+  CG_FUNCTION_CALL = 0x2
 };
 
 class resolverEntity
@@ -31,7 +32,7 @@ public:
   resolverEntity();
   resolverEntity(std::shared_ptr<node> node);
   void createResolverEntityData();
-  void addAddress(std::shared_ptr<node> node, bool is_stack = false);
+  void addAddress(std::shared_ptr<node> node);
   void registerFunction(std::shared_ptr<nodeFunctionDeclaration> node);
   std::string getAddress();
   void setResolverEntityData(std::shared_ptr<resolverEntityData> entity_data) { m_entity_data = entity_data; }
