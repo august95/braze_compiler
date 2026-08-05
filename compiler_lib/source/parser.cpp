@@ -327,7 +327,7 @@ void parser::parseNormalExpression()
   std::shared_ptr<nodeExpression> right_node = cast_node<nodeExpression>(popLastNode()); // + L(30) R(20)
   std::shared_ptr<nodeExpression> expression_node = cast_node<nodeExpression>(makeExpressionNode(operator_token->getFilePosition(), operator_token->getStringValue(), left_node, right_node));
 
-  precedenceHandler::reorderExpression(expression_node);
+  precedenceHandler::reorderExpression<nodeExpression, nodeType::NODE_TYPE_EXPRESSION>(expression_node);
 
   pushNode(expression_node);
 }
