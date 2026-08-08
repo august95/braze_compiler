@@ -75,6 +75,9 @@
     <ClInclude Include="node_\nodeVariableDeclaration.h">
       <Filter>node_</Filter>
     </ClInclude>
+    <ClInclude Include="node_\nodePreProcessor.h">
+      <Filter>node_</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\compilerProcess.cpp">
@@ -165,6 +168,9 @@
       <Filter>node_\source</Filter>
     </ClCompile>
     <ClCompile Include="node_\source\nodeVariableDeclaration.cpp">
+      <Filter>node_\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node_\source\nodePreProcessor.cpp">
       <Filter>node_\source</Filter>
     </ClCompile>
   </ItemGroup>

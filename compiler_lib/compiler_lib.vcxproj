@@ -154,6 +154,7 @@
     <ClInclude Include="node_\nodeBody.h" />
     <ClInclude Include="node_\nodeExpression.h" />
     <ClInclude Include="node_\nodeFunctionDeclaration.h" />
+    <ClInclude Include="node_\nodePreProcessor.h" />
     <ClInclude Include="node_\nodeStatement.h" />
     <ClInclude Include="node_\nodeVariableDeclaration.h" />
     <ClInclude Include="parser.h" />
@@ -183,6 +184,7 @@
     <ClCompile Include="node_\source\nodeBody.cpp" />
     <ClCompile Include="node_\source\nodeExpression.cpp" />
     <ClCompile Include="node_\source\nodeFunctionDeclaration.cpp" />
+    <ClCompile Include="node_\source\nodePreProcessor.cpp" />
     <ClCompile Include="node_\source\nodeStatement.cpp" />
     <ClCompile Include="node_\source\nodeVariableDeclaration.cpp" />
     <ClCompile Include="source\compilerProcess.cpp">
