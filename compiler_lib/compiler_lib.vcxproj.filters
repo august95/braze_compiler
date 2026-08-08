@@ -75,6 +75,9 @@
     <ClInclude Include="node_\nodeVariableDeclaration.h">
       <Filter>node_</Filter>
     </ClInclude>
+    <ClInclude Include="preprocessor\preprocessor.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
     <ClInclude Include="node_\nodePreProcessor.h">
       <Filter>node_</Filter>
     </ClInclude>
@@ -170,6 +173,9 @@
     <ClCompile Include="node_\source\nodeVariableDeclaration.cpp">
       <Filter>node_\source</Filter>
     </ClCompile>
+    <ClCompile Include="preprocessor\source\preprocessor.cpp">
+      <Filter>preprocessor\source</Filter>
+    </ClCompile>
     <ClCompile Include="node_\source\nodePreProcessor.cpp">
       <Filter>node_\source</Filter>
     </ClCompile>
@@ -201,6 +207,12 @@
     </Filter>
     <Filter Include="node_\source">
       <UniqueIdentifier>{264b9de3-ccee-49bf-b223-af3fcb688a5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="preprocessor">
+      <UniqueIdentifier>{4dfc6288-3018-4465-a258-dcb5451fe78f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="preprocessor\source">
+      <UniqueIdentifier>{45b38e3e-72b1-4882-aea4-98dfeeace886}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

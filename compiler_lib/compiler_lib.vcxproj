@@ -159,6 +159,7 @@
     <ClInclude Include="node_\nodeVariableDeclaration.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="precedenceHandler.h" />
+    <ClInclude Include="preprocessor\preprocessor.h" />
     <ClInclude Include="scope.h" />
     <ClInclude Include="source\pch.h" />
     <ClInclude Include="stackMonitor.h" />
@@ -187,6 +188,7 @@
     <ClCompile Include="node_\source\nodePreProcessor.cpp" />
     <ClCompile Include="node_\source\nodeStatement.cpp" />
     <ClCompile Include="node_\source\nodeVariableDeclaration.cpp" />
+    <ClCompile Include="preprocessor\source\preprocessor.cpp" />
     <ClCompile Include="source\compilerProcess.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
