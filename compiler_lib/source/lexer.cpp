@@ -271,10 +271,23 @@ bool lexer::is_keyword(std::string _keyword_)
        STRINGS_EQUAL(_keyword_.c_str(), "case") ||
        STRINGS_EQUAL(_keyword_.c_str(), "default") ||
        STRINGS_EQUAL(_keyword_.c_str(), "goto") ||
-       STRINGS_EQUAL(_keyword_.c_str(), "typedef") ||
        STRINGS_EQUAL(_keyword_.c_str(), "const") ||
        STRINGS_EQUAL(_keyword_.c_str(), "extern") ||
-       STRINGS_EQUAL(_keyword_.c_str(), "restrict");
+       STRINGS_EQUAL(_keyword_.c_str(), "restrict") ||
+
+    //preprocessor keywords
+       STRINGS_EQUAL(_keyword_.c_str(), "define") ||
+       STRINGS_EQUAL(_keyword_.c_str(), "typedef") ||
+       STRINGS_EQUAL(_keyword_.c_str(), "undef") ||
+       STRINGS_EQUAL(_keyword_.c_str(), "warning") ||
+       STRINGS_EQUAL(_keyword_.c_str(), "error") ||
+       STRINGS_EQUAL(_keyword_.c_str(), "if") ||
+       STRINGS_EQUAL(_keyword_.c_str(), "eleif") ||
+       STRINGS_EQUAL(_keyword_.c_str(), "ifdef") ||
+       STRINGS_EQUAL(_keyword_.c_str(), "ifndef") ||
+       STRINGS_EQUAL(_keyword_.c_str(), "endif") ||
+       STRINGS_EQUAL(_keyword_.c_str(), "include")
+    ;
 }
 
 std::shared_ptr<token> lexer::makeOperatorTokenOrIncludeString()
