@@ -50,6 +50,8 @@ enum nodeType : std::uint64_t
   NODE_TYPE_CAST                    = 0x4000000000,
   NODE_TYPE_BLANK                   = 0x8000000000
   NODE_TYPE_PREPROCESSOR               = 0x8000000000000,
+  NODE_TYPE_BLANK                      = 0x008000000000,
+
 
 };
 
