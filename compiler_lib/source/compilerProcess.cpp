@@ -36,7 +36,15 @@ int compileProcess::startCompiler()
     return ret;
   }
 
-  m_parser.setTokenList(m_lexer.getTokens());
+  m_pre_processor.setTokenList(std::make_shared< std::list<std::shared_ptr<token> > > (m_lexer.getTokens()));
+  ret = m_pre_processor.startPreProcessor();
+  if (ret != 0)
+  {
+    cerror("failed to preprocess file!");
+    return ret;
+  }
+
+  m_parser.setTokenList(*m_pre_processor.getPreProcessedTokens());
   ret = m_parser.startParser();
   if (ret != 0)
   {
