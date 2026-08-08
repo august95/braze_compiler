@@ -4,6 +4,7 @@
 
 #include "lexer.h"
 #include "parser.h"
+#include "preprocessor/preprocessor.h"
 #include "./codegen/codeGenerator.h"
 #include <memory>
 #include <sstream>
@@ -26,5 +27,6 @@ public:
 private:
   lexer m_lexer;
   parser m_parser;
+  preProcessor m_pre_processor;
   codeGenerator m_code_generator;
 };
