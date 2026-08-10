@@ -44,7 +44,7 @@ int compileProcess::startCompiler()
     return ret;
   }
 
-  m_parser.setTokenList(*m_pre_processor.getPreProcessedTokens());
+  m_parser.setTokenList(m_pre_processor.getPreProcessedTokens());
   ret = m_parser.startParser();
   if (ret != 0)
   {

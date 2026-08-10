@@ -81,6 +81,15 @@
     <ClInclude Include="node_\nodePreProcessor.h">
       <Filter>node_</Filter>
     </ClInclude>
+    <ClInclude Include="preprocessor\preprocessorDefinition.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\preprocessorExpressionableParser.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="preprocessor\preProcessorExpresssionable.h">
+      <Filter>preprocessor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\compilerProcess.cpp">
@@ -178,6 +187,15 @@
     </ClCompile>
     <ClCompile Include="node_\source\nodePreProcessor.cpp">
       <Filter>node_\source</Filter>
+    </ClCompile>
+    <ClCompile Include="preprocessor\source\preprocessordefinition.cpp">
+      <Filter>preprocessor\source</Filter>
+    </ClCompile>
+    <ClCompile Include="preprocessor\source\preprocessorExpressionableParser.cpp">
+      <Filter>preprocessor\source</Filter>
+    </ClCompile>
+    <ClCompile Include="preprocessor\source\preProcessorExpressionable.cpp">
+      <Filter>preprocessor\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

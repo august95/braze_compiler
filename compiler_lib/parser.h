@@ -23,7 +23,7 @@ class parser
 public:
   parser();
 
-  void setTokenList(std::list<std::shared_ptr<token>> tokens) { m_tokens = tokens; };
+  void setTokenList(std::shared_ptr < std::list < std::shared_ptr < token > > > tokens) { m_tokens = tokens; };
   int startParser();
   std::list<std::shared_ptr<node>> getAbstractSyntaxTree() { return m_nodes; }
   std::shared_ptr<scope> lastScope() { return m_last_scope; }
@@ -78,7 +78,7 @@ private:
 private:
   /**/
   std::list<std::shared_ptr<node>> m_nodes;
-  std::list<std::shared_ptr<token>> m_tokens;
+  std::shared_ptr < std::list<std::shared_ptr<token> > > m_tokens;
   std::shared_ptr<scope> m_root_scope;
   std::shared_ptr<scope> m_last_scope;
 

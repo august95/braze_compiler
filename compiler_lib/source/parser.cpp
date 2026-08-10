@@ -15,6 +15,7 @@ parser::parser()
 {
   m_root_scope->init(std::shared_ptr<scope>(), true);
   m_last_scope = m_root_scope;
+  m_tokens = std::make_shared< std::list<std::shared_ptr<token> >>();
 }
 
 int parser::startParser()
@@ -37,40 +38,40 @@ int parser::startParser()
 
 std::shared_ptr<token> parser::nextToken()
 {
-  if (m_tokens.empty())
+  if (m_tokens->empty())
     return std::make_shared<token>();
 
-  std::shared_ptr<token> token = m_tokens.front();
-  m_tokens.pop_front();
+  std::shared_ptr<token> token = m_tokens->front();
+  m_tokens->pop_front();
 
   // ignore new line tokens
-  while (!m_tokens.empty() && token->isTokenTypeNewLine())
+  while (!m_tokens->empty() && token->isTokenTypeNewLine())
   {
-    token = m_tokens.front();
-    m_tokens.pop_front();
+    token = m_tokens->front();
+    m_tokens->pop_front();
   }
   return token;
 }
 
 void parser::pushToken(std::shared_ptr<token> token)
 {
-  m_tokens.push_front(token);
+  m_tokens->push_front(token);
 }
 
 std::shared_ptr<token> parser::peekToken()
 {
-  if (m_tokens.empty())
+  if (m_tokens->empty())
     return std::make_shared<token>();
 
   // ignore new line tokens
-  while (!m_tokens.empty() && m_tokens.front()->isTokenTypeNewLine())
+  while (!m_tokens->empty() && m_tokens->front()->isTokenTypeNewLine())
   {
-    m_tokens.pop_front();
+    m_tokens->pop_front();
   }
   // the loop might have emptied the last token
-  if (m_tokens.empty())
+  if (m_tokens->empty())
     return std::make_shared<token>();
-  return m_tokens.front();
+  return m_tokens->front();
 }
 
 void parser::addNodeToCurrentScope(std::shared_ptr<node> node)
@@ -117,7 +118,7 @@ std::shared_ptr<nodeExpression> parser::makeExpressionNode(filePosition file_pos
 
 void parser::parseTokens()
 {
-  while (!m_tokens.empty())
+  while (!m_tokens->empty())
   {
     parseNextToken();
   }

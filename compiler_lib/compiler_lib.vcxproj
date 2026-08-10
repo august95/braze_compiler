@@ -160,6 +160,9 @@
     <ClInclude Include="parser.h" />
     <ClInclude Include="precedenceHandler.h" />
     <ClInclude Include="preprocessor\preprocessor.h" />
+    <ClInclude Include="preprocessor\preProcessorExpresssionable.h" />
+    <ClInclude Include="preprocessor\preprocessorDefinition.h" />
+    <ClInclude Include="preprocessor\preprocessorExpressionableParser.h" />
     <ClInclude Include="scope.h" />
     <ClInclude Include="source\pch.h" />
     <ClInclude Include="stackMonitor.h" />
@@ -189,6 +192,9 @@
     <ClCompile Include="node_\source\nodeStatement.cpp" />
     <ClCompile Include="node_\source\nodeVariableDeclaration.cpp" />
     <ClCompile Include="preprocessor\source\preprocessor.cpp" />
+    <ClCompile Include="preprocessor\source\preProcessorExpressionable.cpp" />
+    <ClCompile Include="preprocessor\source\preprocessordefinition.cpp" />
+    <ClCompile Include="preprocessor\source\preprocessorExpressionableParser.cpp" />
     <ClCompile Include="source\compilerProcess.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
