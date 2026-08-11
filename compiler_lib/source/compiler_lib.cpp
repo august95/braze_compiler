@@ -3,7 +3,7 @@
 
 #include "pch.h"
 #include "../framework.h"
-#include "../compilerProcess.h"
+#include "../translationUnit.h"
 #include <iostream>
 
 // TODO: This is an example of a library function

@@ -9,10 +9,10 @@
 #include <memory>
 #include <sstream>
 
-class compileProcess
+class translationUnit
 {
 public:
-  compileProcess();
+  translationUnit();
   void initialize(std::string filename);
   void initialize(std::shared_ptr<std::stringstream> input_args);
   int startCompiler();

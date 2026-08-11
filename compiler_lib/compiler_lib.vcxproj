@@ -168,6 +168,7 @@
     <ClInclude Include="stackMonitor.h" />
     <ClInclude Include="symbolResolver.h" />
     <ClInclude Include="token.h" />
+    <ClInclude Include="translationUnit.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="charstream\source\charStreamArgs.cpp" />
@@ -195,13 +196,6 @@
     <ClCompile Include="preprocessor\source\preProcessorExpressionable.cpp" />
     <ClCompile Include="preprocessor\source\preprocessordefinition.cpp" />
     <ClCompile Include="preprocessor\source\preprocessorExpressionableParser.cpp" />
-    <ClCompile Include="source\compilerProcess.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderOutputFile>
-    </ClCompile>
     <ClCompile Include="source\compiler_lib.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -265,6 +259,7 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </PrecompiledHeaderOutputFile>
     </ClCompile>
+    <ClCompile Include="source\translationUnit.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

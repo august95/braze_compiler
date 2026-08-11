@@ -1,17 +1,17 @@
 #include "pch.h"
-#include "../compilerProcess.h"
+#include "../translationUnit.h"
 #include "../braze_compiler.h"
 #include "../charstream/charStreamFile.h"
 #include "../charstream/charStreamArgs.h"
 #include "../codegen/asmWriter.h"
 #include <cstdio> // For fopen, fclose, fread, fwrite, etc.
 
-compileProcess::compileProcess()
+translationUnit::translationUnit()
   : __unit_test_no_code_generation(false)
 {
 }
 
-void compileProcess::initialize(std::string filename)
+void translationUnit::initialize(std::string filename)
 {
   std::shared_ptr<charStreamFile> char_stream = std::make_shared <charStreamFile>();
   char_stream->initialize(filename);
@@ -19,7 +19,7 @@ void compileProcess::initialize(std::string filename)
   m_code_generator.setFileName(filename);
 }
 
-void compileProcess::initialize(std::shared_ptr<std::stringstream> input_args)
+void translationUnit::initialize(std::shared_ptr<std::stringstream> input_args)
 {
   std::shared_ptr<charStreamArgs> char_stream = std::make_shared <charStreamArgs>();
   char_stream->initialize(input_args);
@@ -27,7 +27,7 @@ void compileProcess::initialize(std::shared_ptr<std::stringstream> input_args)
   m_code_generator.setFileName("app.out", asmWriter::WriteMode::W_STDOUT);
 }
 
-int compileProcess::startCompiler()
+int translationUnit::startCompiler()
 {
   int ret = m_lexer.startLexer();
   if (ret != 0)
@@ -67,7 +67,7 @@ int compileProcess::startCompiler()
   // TODO: invoke nasm assembler with obj file containing assembly as parameter
 }
 
-void compileProcess::stop()
+void translationUnit::stop()
 {
   m_code_generator.generateLableCount(true);
 }

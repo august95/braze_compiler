@@ -1,7 +1,7 @@
 #include "pch.h"
 
 #include "../compiler_lib/source/compiler_lib.cpp"
-#include "../compiler_lib/compilerProcess.h"
+#include "../compiler_lib/translationUnit.h"
 #include "../compiler_lib/charstream/charStreamFile.h"
 #include "../compiler_lib/braze_compiler.h"
 #include "../compiler_lib/scope.h"
@@ -27,7 +27,7 @@ std::string file_path = "D:/a/braze_compiler/braze_compiler/unit_test/test_files
 #endif // __LOCAL__
 
 
-/*
+
 TEST(debug, debug) {
 
 
@@ -42,7 +42,7 @@ TEST(debug, debug) {
   std::string asm_file = file_name + ".asm";
 
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_name);
   process.startCompiler();
   //  compareFiles(target, file_path + asm_file);
@@ -50,7 +50,7 @@ TEST(debug, debug) {
 
   process.stop();
 }
-*/
+
 
 
 TEST(lexer, symbols) {
@@ -596,7 +596,7 @@ TEST(parser, string) {
   //"test string"
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.__unit_test_no_code_generation = true;
   process.initialize(file_path + file_name);
   process.startCompiler();
@@ -617,7 +617,7 @@ TEST(parser, expression) {
   //
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.__unit_test_no_code_generation = true;
   process.initialize(file_path + file_name);
   process.startCompiler();
@@ -645,7 +645,7 @@ TEST(parser, keyword) {
   //
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.__unit_test_no_code_generation = true;
   process.initialize(file_path + file_name);
   process.startCompiler();
@@ -688,7 +688,7 @@ TEST(parser, function) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.__unit_test_no_code_generation = true;
   process.initialize(file_path + file_name);
   process.startCompiler();
@@ -730,7 +730,7 @@ TEST(parser, ifstatement) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.__unit_test_no_code_generation = true;
   process.initialize(file_path + file_name);
   process.startCompiler();
@@ -779,7 +779,7 @@ TEST(parser, whilestatement) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.__unit_test_no_code_generation = true;
   process.initialize(file_path + file_name);
   process.startCompiler();
@@ -818,7 +818,7 @@ TEST(parser, forstatement) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.__unit_test_no_code_generation = true;
   process.initialize(file_path + file_name);
   process.startCompiler();
@@ -869,7 +869,7 @@ TEST(parser, globalAccesFromFunction) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.__unit_test_no_code_generation = true;
   process.initialize(file_path + file_name);
   process.startCompiler();
@@ -912,7 +912,7 @@ TEST(parser, functionArgumets) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.__unit_test_no_code_generation = true;
   process.initialize(file_path + file_name);
   process.startCompiler();
@@ -973,7 +973,7 @@ TEST(parser, functionWithSecondScope) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.__unit_test_no_code_generation = true;
   process.initialize(file_path + file_name);
   process.startCompiler();
@@ -1045,7 +1045,7 @@ TEST(codegen, globalVariables) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
 
@@ -1072,7 +1072,7 @@ TEST(parser, unary) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.__unit_test_no_code_generation = true;
   process.initialize(file_path + file_name);
   process.startCompiler();
@@ -1164,7 +1164,7 @@ TEST(codegen, function) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
 //  compareFiles(target, file_path + asm_file);
@@ -1226,7 +1226,7 @@ TEST(codegen, functionArguments) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   //  compareFiles(target, file_path + asm_file);
@@ -1303,7 +1303,7 @@ TEST(codegen, functionArguments2) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   //  compareFiles(target, file_path + asm_file);
@@ -1376,7 +1376,7 @@ TEST(codegen, functionArguments3) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   //  compareFiles(target, file_path + asm_file);
@@ -1438,7 +1438,7 @@ TEST(codegen, functionCall) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   //  compareFiles(target, file_path + asm_file);
@@ -1507,7 +1507,7 @@ TEST(codegen, functionCall2) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   //  compareFiles(target, file_path + asm_file);
@@ -1579,7 +1579,7 @@ TEST(codegen, functionCall3) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   //  compareFiles(target, file_path + asm_file);
@@ -1665,7 +1665,7 @@ TEST(codegen, functionCall4) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   //  compareFiles(target, file_path + asm_file);
@@ -1715,7 +1715,7 @@ TEST(codegen, ifstatement) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   //  compareFiles(target, file_path + asm_file);
@@ -1806,7 +1806,7 @@ TEST(codegen, ifelsestatement) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   //  compareFiles(target, file_path + asm_file);
@@ -1856,7 +1856,7 @@ TEST(codegen, whilestatement) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   //  compareFiles(target, file_path + asm_file);
@@ -1934,7 +1934,7 @@ TEST(codegen, forstatement) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   //  compareFiles(target, file_path + asm_file);
@@ -1993,7 +1993,7 @@ TEST(codegen, unary) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   //  compareFiles(target, file_path + asm_file);
@@ -2061,7 +2061,7 @@ TEST(codegen, unary2) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   //  compareFiles(target, file_path + asm_file);
@@ -2136,7 +2136,7 @@ TEST(codegen, unary3) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   //  compareFiles(target, file_path + asm_file);
@@ -2222,7 +2222,7 @@ TEST(codegen, singlelinestatement) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   //  compareFiles(target, file_path + asm_file);
@@ -2333,7 +2333,7 @@ TEST(codegen, continueAndBreak) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
@@ -2389,7 +2389,7 @@ TEST(codegen, continuReturn) {
 
   const int num_of_tokens = 5;
 
-  compileProcess process;
+  translationUnit process;
   process.initialize(file_path + file_name);
   process.startCompiler();
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));

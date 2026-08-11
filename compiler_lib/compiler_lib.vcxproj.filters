@@ -90,11 +90,9 @@
     <ClInclude Include="preprocessor\preProcessorExpresssionable.h">
       <Filter>preprocessor</Filter>
     </ClInclude>
+    <ClInclude Include="translationUnit.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\compilerProcess.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="source\compiler_lib.cpp">
       <Filter>source</Filter>
     </ClCompile>
@@ -196,6 +194,9 @@
     </ClCompile>
     <ClCompile Include="preprocessor\source\preProcessorExpressionable.cpp">
       <Filter>preprocessor\source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\translationUnit.cpp">
+      <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
