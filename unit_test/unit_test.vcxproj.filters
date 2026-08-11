@@ -124,6 +124,9 @@
     <None Include="test_files\codegeneration\test_codegen_return.c">
       <Filter>test_files\codegeneration</Filter>
     </None>
+    <None Include="test_files\preprocessor\test_preprocessor_define.c">
+      <Filter>test_files\preprocessor</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="test_files">
@@ -137,6 +140,9 @@
     </Filter>
     <Filter Include="test_files\parser">
       <UniqueIdentifier>{833b1d39-e467-43d1-982e-1d6ea801b3dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test_files\preprocessor">
+      <UniqueIdentifier>{498e690f-1c8a-4736-8c9f-844c81b64e5c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

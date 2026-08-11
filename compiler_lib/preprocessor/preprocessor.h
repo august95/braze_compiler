@@ -22,10 +22,16 @@ private:
   void pushPreProcessedToken(std::shared_ptr<token> token);
 
   void handleToken();
+  void handleIdentifier();
   void handleSymbol();
   bool handleHashtagToken();
   void handleIfToken();
   void handleDefinitionToken();
+  void handleIfDef();
+  void handleIfNDef();
+  void undef();
+  void handleWarning();
+  void handleError();
   std::list < std::shared_ptr<token> > handleDefinitionValue();
   void skipToEndif();
   void readToEndif(bool condition);

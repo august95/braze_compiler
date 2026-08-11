@@ -1,4 +1,3 @@
-
 #include "../../source/pch.h"
 #include "../preprocessor.h"
 #include "../preProcessorExpresssionable.h"
@@ -62,11 +61,11 @@ void preProcessor::handleToken()
     handleSymbol();
   }
   /*
-  else if (token->isTokenTypeKeyword())
-  {
-
-  }
   else if (token->isTokenTypeIdentifier())
+  {
+    handleIdentifier();
+  }
+  else if (token->isTokenTypeKeyword())
   {
 
   }
@@ -78,6 +77,20 @@ void preProcessor::handleToken()
   else
   {
     m_tokens_pre_processed->push_back(nextToken());
+  }
+}
+
+void preProcessor::handleIdentifier()
+{
+  std::shared_ptr<token> token = nextToken();
+  std::shared_ptr<preProcessorDefinition> definition = m_definitions.getDefintion(token->getStringValue());
+  if (!!definition)
+  {
+
+  }
+  if (!definition)
+  {
+    m_tokens_pre_processed->push_back(token);
   }
 }
 
@@ -111,12 +124,37 @@ bool preProcessor::handleHashtagToken()
     handleIfToken();
     is_processed =  true;
   }
+  if (STRINGS_EQUAL(token_->getStringValue().c_str(), "ifdef"))
+  {
+    handleIfDef();
+    is_processed =  true;
+  }
+  else if (STRINGS_EQUAL(token_->getStringValue().c_str(), "ifndef"))
+  {
+    handleIfNDef();
+    is_processed =  true;
+  }
   else if (STRINGS_EQUAL(token_->getStringValue().c_str(), "endif"))
   {
     //skipToEndif or readToEndif has been called previously in the call stack
-    //push back the endif, and let the functions deal with it!
+    //push back the endif, and let these functions deal with it!
     pushToken(token_);
     is_processed = true;
+  }
+  else if (STRINGS_EQUAL(token_->getStringValue().c_str(), "undef"))
+  {
+    undef();
+    is_processed =  true;
+  }
+  else if (STRINGS_EQUAL(token_->getStringValue().c_str(), "warning"))
+  {
+    handleWarning();
+    is_processed =  true;
+  }
+  else if (STRINGS_EQUAL(token_->getStringValue().c_str(), "error"))
+  {
+    handleError();
+    is_processed =  true;
   }
 
   return is_processed;
@@ -138,6 +176,39 @@ void preProcessor::handleDefinitionToken()
 
   m_definitions.addDefinition(name_token->getStringValue(), definition_value, argument_tokens);
 
+}
+
+void preProcessor::handleIfDef()
+{
+  std::shared_ptr<token> token = nextToken();
+  std::shared_ptr<preProcessorDefinition> definition = m_definitions.getDefintion(token->getStringValue());
+  readToEndif(!!definition);
+}
+
+void preProcessor::handleIfNDef()
+{
+  std::shared_ptr<token> token = nextToken();
+  std::shared_ptr<preProcessorDefinition> definition = m_definitions.getDefintion(token->getStringValue());
+  readToEndif(!definition);
+}
+
+void preProcessor::undef()
+{
+  std::shared_ptr<token> token = nextToken();
+  m_definitions.removeDefinition(token->getStringValue());
+}
+
+void preProcessor::handleWarning()
+{
+  std::shared_ptr<token> token = nextToken();
+  cwarning(token->getStringValue().c_str());
+}
+
+void preProcessor::handleError()
+{
+  std::shared_ptr<token> token = nextToken();
+  cerror(token->getStringValue().c_str());
+  exit(-1);
 }
 
 std::list<std::shared_ptr<token>> preProcessor::handleDefinitionValue()

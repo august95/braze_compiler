@@ -587,6 +587,21 @@ TEST(lexer, ordinaryCFile) {
 }
 
 
+TEST(preprocessor, define) {
+
+  std::string file_name = "preprocessor/test_preprocessor_define.c";
+  //"test string"
+  const int num_of_tokens = 3;
+
+  translationUnit process;
+  process.__unit_test_no_code_generation = true;
+  process.initialize(file_path + file_name);
+  process.startCompiler();
+  std::list < std::shared_ptr < token > > tokens = process.getTokens();
+  
+  int i = 0;
+
+}
 
 
 TEST(parser, string) {
