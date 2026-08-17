@@ -5,7 +5,6 @@
 preProcessor::preProcessor()
   :m_preprocessor_expressionable_parser(this),
    m_enabled(1)
-  //m_preprocessor_evaluator(this)
 {
 
 }
@@ -60,11 +59,11 @@ void preProcessor::handleToken()
   {
     handleSymbol();
   }
-  /*
   else if (token->isTokenTypeIdentifier())
   {
     handleIdentifier();
   }
+  /*
   else if (token->isTokenTypeKeyword())
   {
 
@@ -86,7 +85,8 @@ void preProcessor::handleIdentifier()
   std::shared_ptr<preProcessorDefinition> definition = m_definitions.getDefintion(token->getStringValue());
   if (!!definition)
   {
-
+    for (auto it = definition->getValueTokens()->begin(); it != definition->getValueTokens()->end(); it++)
+      m_tokens_pre_processed->push_back(*it);
   }
   if (!definition)
   {

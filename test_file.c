@@ -1,3 +1,11 @@
+#define ABC
+#undef ABC
+#ifndef ABC
+#define CDE
+#endif
+
+
+
 int printf(const char* format, ...);
 
 int braze_test(int iterations)

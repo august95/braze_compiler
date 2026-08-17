@@ -127,6 +127,18 @@
     <None Include="test_files\preprocessor\test_preprocessor_define.c">
       <Filter>test_files\preprocessor</Filter>
     </None>
+    <None Include="test_files\preprocessor\test_preprocessor_ifdef.c">
+      <Filter>test_files\preprocessor</Filter>
+    </None>
+    <None Include="test_files\preprocessor\test_preprocessor_undef.c">
+      <Filter>test_files\preprocessor</Filter>
+    </None>
+    <None Include="test_files\preprocessor\test_preprocessor_ifndef.c">
+      <Filter>test_files\preprocessor</Filter>
+    </None>
+    <None Include="test_files\preprocessor\test_preprocessor_if.c">
+      <Filter>test_files\preprocessor</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="test_files">

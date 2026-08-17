@@ -27,7 +27,7 @@ std::string file_path = "D:/a/braze_compiler/braze_compiler/unit_test/test_files
 #endif // __LOCAL__
 
 
-
+/*
 TEST(debug, debug) {
 
 
@@ -42,16 +42,16 @@ TEST(debug, debug) {
   std::string asm_file = file_name + ".asm";
 
 
-  translationUnit process;
-  process.initialize(file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_name);
+  translation_unit.startCompiler();
   //  compareFiles(target, file_path + asm_file);
   //EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
-  process.stop();
+  translation_unit.stop();
 }
 
-
+*/
 
 TEST(lexer, symbols) {
 
@@ -224,51 +224,51 @@ TEST(lexer, identifierOrKeyword) {
   //testClass  return void  avxname ___braze
   //
 
-    const int num_of_tokens = 5;
+  const int num_of_tokens = 5;
 
-    lexer lexer;
-    std::shared_ptr<charStreamFile> char_stream = std::make_shared <charStreamFile>();
-    char_stream->initialize(file_path + file_name);
-    lexer.setCharStreamInterface(char_stream);
-    lexer.startLexer();
+  lexer lexer;
+  std::shared_ptr<charStreamFile> char_stream = std::make_shared <charStreamFile>();
+  char_stream->initialize(file_path + file_name);
+  lexer.setCharStreamInterface(char_stream);
+  lexer.startLexer();
 
-    std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
-    EXPECT_EQ(tokens.size(), num_of_tokens);
+  std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
+  EXPECT_EQ(tokens.size(), num_of_tokens);
 
-    std::shared_ptr < token > token = tokens.front();
-    // perform test
-    EXPECT_EQ(token->getStringValue(), "testClass");
-    EXPECT_TRUE(token->isTokenTypeIdentifier());
-    tokens.pop_front();
+  std::shared_ptr < token > token = tokens.front();
+  // perform test
+  EXPECT_EQ(token->getStringValue(), "testClass");
+  EXPECT_TRUE(token->isTokenTypeIdentifier());
+  tokens.pop_front();
 
-    token = tokens.front();
-    // perform test
-    EXPECT_EQ(token->getStringValue(), "return");
-    EXPECT_TRUE(token->isTokenTypeKeyword());
-    tokens.pop_front();
+  token = tokens.front();
+  // perform test
+  EXPECT_EQ(token->getStringValue(), "return");
+  EXPECT_TRUE(token->isTokenTypeKeyword());
+  tokens.pop_front();
 
-    token = tokens.front();
-    // perform test
-    EXPECT_EQ(token->getStringValue(), "void");
-    EXPECT_TRUE(token->isTokenTypeKeyword());
-    tokens.pop_front();
+  token = tokens.front();
+  // perform test
+  EXPECT_EQ(token->getStringValue(), "void");
+  EXPECT_TRUE(token->isTokenTypeKeyword());
+  tokens.pop_front();
 
-    token = tokens.front();
-    // perform test
-    EXPECT_EQ(token->getStringValue(), "avxname");
-    EXPECT_TRUE(token->isTokenTypeIdentifier());
-    tokens.pop_front();
+  token = tokens.front();
+  // perform test
+  EXPECT_EQ(token->getStringValue(), "avxname");
+  EXPECT_TRUE(token->isTokenTypeIdentifier());
+  tokens.pop_front();
 
-    token = tokens.front();
-    // perform test
-    EXPECT_EQ(token->getStringValue(), "___braze");
-    EXPECT_TRUE(token->isTokenTypeIdentifier());
-    tokens.pop_front();
+  token = tokens.front();
+  // perform test
+  EXPECT_EQ(token->getStringValue(), "___braze");
+  EXPECT_TRUE(token->isTokenTypeIdentifier());
+  tokens.pop_front();
 
 
-  }
+}
 
-  
+
 
 
 
@@ -303,7 +303,7 @@ TEST(lexer, operators)
   EXPECT_EQ(token->getStringValue(), "-");
   tokens.pop_front();
 
-   token = tokens.front();
+  token = tokens.front();
   EXPECT_EQ(token->getStringValue(), "+=");
   tokens.pop_front();
 
@@ -321,7 +321,7 @@ TEST(lexer, operators)
 
 }
 
-  
+
 
 TEST(lexer, numbers) {
 
@@ -343,7 +343,7 @@ TEST(lexer, numbers) {
 
   std::list < std::shared_ptr < token > > tokens = lexer.getTokens();
   EXPECT_EQ(tokens.size(), num_of_tokens);
-  
+
   std::shared_ptr < token > token = tokens.front();
   EXPECT_EQ(token->getNumberValue(), 1234);
   tokens.pop_front();
@@ -593,16 +593,74 @@ TEST(preprocessor, define) {
   //"test string"
   const int num_of_tokens = 3;
 
-  translationUnit process;
-  process.__unit_test_no_code_generation = true;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
-  std::list < std::shared_ptr < token > > tokens = process.getTokens();
-  
-  int i = 0;
-
+  translationUnit  translation_unit;
+  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
+  std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
+  std::shared_ptr < nodeVariableDeclaration > node = cast_node<nodeVariableDeclaration>(ast.front());
+  EXPECT_EQ(node->getValueNode()->getNumberValue(), 0xdead);
 }
 
+TEST(preprocessor, ifdef) {
+
+  std::string file_name = "preprocessor/test_preprocessor_ifdef.c";
+  //"test string"
+  const int num_of_tokens = 3;
+
+  translationUnit  translation_unit;
+  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
+  std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
+  std::shared_ptr < nodeVariableDeclaration > node = cast_node<nodeVariableDeclaration>(ast.front());
+  EXPECT_EQ(node->getValueNode()->getNumberValue(), 0xdead);
+}
+
+TEST(preprocessor, ifndef) {
+
+  std::string file_name = "preprocessor/test_preprocessor_ifndef.c";
+  //"test string"
+  const int num_of_tokens = 3;
+
+  translationUnit  translation_unit;
+  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
+  std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
+  std::shared_ptr < nodeVariableDeclaration > node = cast_node<nodeVariableDeclaration>(ast.front());
+  EXPECT_EQ(node->getValueNode()->getNumberValue(), 0xdead);
+}
+
+TEST(preprocessor, undef) {
+
+  std::string file_name = "preprocessor/test_preprocessor_undef.c";
+  //"test string"
+  const int num_of_tokens = 3;
+
+  translationUnit  translation_unit;
+  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
+  std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
+  std::shared_ptr < nodeVariableDeclaration > node = cast_node<nodeVariableDeclaration>(ast.front());
+  EXPECT_EQ(node->getValueNode()->getNumberValue(), 0xdead);
+}
+
+TEST(preprocessor, if_) {
+
+  std::string file_name = "preprocessor/test_preprocessor_if.c";
+  //"test string"
+  const int num_of_tokens = 3;
+
+  translationUnit  translation_unit;
+  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
+  std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
+  std::shared_ptr < nodeVariableDeclaration > node = cast_node<nodeVariableDeclaration>(ast.front());
+  EXPECT_EQ(node->getValueNode()->getNumberValue(), 0xdead);
+}
 
 TEST(parser, string) {
 
@@ -611,14 +669,14 @@ TEST(parser, string) {
   //"test string"
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.__unit_test_no_code_generation = true;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
 
-  std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+  std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
   std::shared_ptr < nodeExpression > node = cast_node<nodeExpression>(ast.front());
-  EXPECT_EQ( node->getStringValue(), "test string");
+  EXPECT_EQ(node->getStringValue(), "test string");
 }
 
 
@@ -632,12 +690,12 @@ TEST(parser, expression) {
   //
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.__unit_test_no_code_generation = true;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
 
-  std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+  std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
   std::shared_ptr < nodeExpression > node = cast_node<nodeExpression>(ast.front());
   EXPECT_EQ(node->getStringValue(), "=");
   EXPECT_EQ(node->getLeftNode()->getStringValue(), "a");
@@ -660,12 +718,12 @@ TEST(parser, keyword) {
   //
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.__unit_test_no_code_generation = true;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
 
-  std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+  std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
   std::shared_ptr < nodeVariableDeclaration > _node = cast_node<nodeVariableDeclaration>(ast.front());
   std::shared_ptr < datatype > dtype = _node->getDatatype();
   EXPECT_TRUE(dtype->isStatic());
@@ -694,27 +752,27 @@ TEST(parser, function) {
   std::string file_name = "parser/test_parser_function.c";
 
 
-//  int main()
-//  {
-//  int var_val;
-//  int var_b = 0;
-//  var_val + 50;
-//  }
+  //  int main()
+  //  {
+  //  int var_val;
+  //  int var_b = 0;
+  //  var_val + 50;
+  //  }
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.__unit_test_no_code_generation = true;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
 
-  std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+  std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
   std::shared_ptr < nodeFunctionDeclaration > _node = cast_node<nodeFunctionDeclaration>(ast.front());
 
   EXPECT_EQ(_node->getStringValue(), "main");
-  EXPECT_EQ(_node->getBodyNode()->getBodySize(), 8 );
+  EXPECT_EQ(_node->getBodyNode()->getBodySize(), 8);
   std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
-  EXPECT_EQ(statements.size(), 3 );
+  EXPECT_EQ(statements.size(), 3);
 
   statements.pop_back(); // var_val + 50
   std::shared_ptr < nodeVariableDeclaration > var_a = cast_node<nodeVariableDeclaration>(statements.back());
@@ -745,19 +803,19 @@ TEST(parser, ifstatement) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.__unit_test_no_code_generation = true;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
 
-  std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+  std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
   std::shared_ptr < nodeFunctionDeclaration > _node = cast_node<nodeFunctionDeclaration>(ast.back());
 
   EXPECT_EQ(_node->getStringValue(), "main");
-  EXPECT_EQ(_node->getBodyNode()->getBodySize(), 4 );
+  EXPECT_EQ(_node->getBodyNode()->getBodySize(), 4);
 
   std::list < std::shared_ptr < node > > statements = cast_node<nodeFunctionDeclaration>(_node)->getBodyNode()->getStatements();
-  EXPECT_EQ(statements.size(), 1 );
+  EXPECT_EQ(statements.size(), 1);
 
   std::shared_ptr < nodeStatement > if_node = cast_node<nodeStatement>(statements.back());
 
@@ -794,12 +852,12 @@ TEST(parser, whilestatement) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.__unit_test_no_code_generation = true;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
 
-  std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+  std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
   std::shared_ptr < nodeFunctionDeclaration > _node = cast_node<nodeFunctionDeclaration>(ast.back());
 
   EXPECT_EQ(_node->getStringValue(), "main");
@@ -815,7 +873,7 @@ TEST(parser, whilestatement) {
   EXPECT_TRUE(while_node->getConditionNode()->getNodeType() == NODE_TYPE_NUMBER);
   EXPECT_TRUE(cast_node<nodeExpression>(while_node->getConditionNode())->getNumberValue() == 1);
 
-  process.stop();
+  translation_unit.stop();
 }
 
 TEST(parser, forstatement) {
@@ -833,12 +891,12 @@ TEST(parser, forstatement) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.__unit_test_no_code_generation = true;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
 
-  std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+  std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
   std::shared_ptr < nodeFunctionDeclaration > _node = cast_node<nodeFunctionDeclaration>(ast.back());
 
   EXPECT_EQ(_node->getStringValue(), "main");
@@ -847,7 +905,7 @@ TEST(parser, forstatement) {
   std::list < std::shared_ptr < node > > statements = cast_node<nodeFunctionDeclaration>(_node)->getBodyNode()->getStatements();
   EXPECT_EQ(statements.size(), 1);
 
-  std::shared_ptr < nodeStatement > for_node =  cast_node<nodeStatement>(statements.back());
+  std::shared_ptr < nodeStatement > for_node = cast_node<nodeStatement>(statements.back());
 
   EXPECT_TRUE(for_node->getNodeType() == NODE_TYPE_STATEMENT_FOR);
   EXPECT_EQ(for_node->getBodyNode()->getBodySize(), 4);
@@ -864,7 +922,7 @@ TEST(parser, forstatement) {
 
 
 
-  process.stop();
+  translation_unit.stop();
 }
 
 
@@ -884,10 +942,10 @@ TEST(parser, globalAccesFromFunction) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.__unit_test_no_code_generation = true;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
 
   std::list < std::shared_ptr < nodeFunctionDeclaration > > ast = cast_node<nodeFunctionDeclaration>(ast.front());
   std::shared_ptr < node > global = ast.front();
@@ -927,12 +985,12 @@ TEST(parser, functionArgumets) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.__unit_test_no_code_generation = true;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
 
-  std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+  std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
   std::shared_ptr < node > _node = ast.front();
 
   EXPECT_EQ(_node->getStringValue(), "main");
@@ -972,8 +1030,8 @@ TEST(parser, functionWithSecondScope) {
 
 //
 // File Content
-// 
-//  int main() 
+//
+//  int main()
 //  {
 //    int var_a;
 //    {
@@ -988,26 +1046,26 @@ TEST(parser, functionWithSecondScope) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.__unit_test_no_code_generation = true;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
 
-  std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+  std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
   std::shared_ptr < node > _node = ast.front();
 
   EXPECT_EQ(_node->getStringValue(), "main");
   EXPECT_EQ(_node->getBodyNode()->getBodySize(), 16);
   EXPECT_EQ(_node->getReturnDatatype()->getDatatypeSize(), 4);
   EXPECT_EQ(_node->getReturnDatatype()->getPrimitiveType(), primitiveType::DATA_TYPE_INTEGER);
-  
+
   std::list < std::shared_ptr < node > > statements = _node->getBodyNode()->getStatements();
   EXPECT_EQ(statements.size(), 3);
 
   std::shared_ptr < node > var_c = statements.back();
   statements.pop_back();
   std::shared_ptr < node > nested_body_node = statements.back(); // { int var_val; var_val + 50; int var_b;  }
-  
+
   statements.pop_back(); //statemnets.back() now becomes int var_a as the nested body noed is popped
 
   std::shared_ptr < node > var_a = statements.back();
@@ -1027,7 +1085,7 @@ TEST(parser, functionWithSecondScope) {
   EXPECT_EQ(nested_statments.back()->getDatatypeSize(), 4); //int var_b;
   EXPECT_EQ(nested_statments.back()->getStackOffset(), -12);// int var_b;
 
-  
+
   EXPECT_EQ(var_c->getDatatypeSize(), 4); //int var_c;
   EXPECT_EQ(var_c->getStackOffset(), -16);// int var_c;
 }
@@ -1060,9 +1118,9 @@ TEST(codegen, globalVariables) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
 
 
 
@@ -1087,12 +1145,12 @@ TEST(parser, unary) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.__unit_test_no_code_generation = true;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
 
-  std::list < std::shared_ptr < node > > ast = process.getAbstractSyntaxTree();
+  std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
   std::shared_ptr < node > _node = ast.front();
 
 
@@ -1126,15 +1184,15 @@ TEST(parser, unary) {
 
 TEST(codegen, function) {
 
-//  int var = 0;
-//
-//  int main()
-//  {
-//    int a = 0;
-//    int b = 5;
-//    a = var;
-//    var = b + a;
-//  }
+  //  int var = 0;
+  //
+  //  int main()
+  //  {
+  //    int a = 0;
+  //    int b = 5;
+  //    a = var;
+  //    var = b + a;
+  //  }
 
 
   std::string target =
@@ -1179,12 +1237,12 @@ TEST(codegen, function) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
-//  compareFiles(target, file_path + asm_file);
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
+  //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
-  
+
 }
 
 
@@ -1241,9 +1299,9 @@ TEST(codegen, functionArguments) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
@@ -1268,11 +1326,11 @@ TEST(codegen, functionArguments2) {
 
   std::string target =
     "section .data\n"
-//    "; int var\n"
+    //    "; int var\n"
     "var: dd 0\n"
     "section .text\n"
     "global main\n"
-//    "; main function\n"
+    //    "; main function\n"
     "main:\n"
     "push ebp\n"
     "mov ebp, esp\n"
@@ -1318,9 +1376,9 @@ TEST(codegen, functionArguments2) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
@@ -1346,11 +1404,11 @@ TEST(codegen, functionArguments3) {
 
   std::string target =
     "section .data\n"
-//    "; int var\n"
+    //    "; int var\n"
     "var: dd 0\n"
     "section .text\n"
     "global main\n"
-//    "; main function\n"
+    //    "; main function\n"
     "main:\n"
     "push ebp\n"
     "mov ebp, esp\n"
@@ -1391,9 +1449,9 @@ TEST(codegen, functionArguments3) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
@@ -1402,21 +1460,21 @@ TEST(codegen, functionArguments3) {
 
 TEST(codegen, functionCall) {
 
-//  int test()
-//  {
-//    int a = 0;
-//  }
-//
-//  int main()
-//  {
-//    test();
-//  }
+  //  int test()
+  //  {
+  //    int a = 0;
+  //  }
+  //
+  //  int main()
+  //  {
+  //    test();
+  //  }
 
   std::string target =
     "section .data\n"
     "section .text\n"
     "global test\n"
-//    "; test function\n"
+    //    "; test function\n"
     "test:\n"
     "push ebp\n"
     "mov ebp, esp\n"
@@ -1428,7 +1486,7 @@ TEST(codegen, functionCall) {
     "pop ebp\n"
     "ret\n"
     "global main\n"
-//    "; main function\n"
+    //    "; main function\n"
     "main:\n"
     "push ebp\n"
     "mov ebp, esp\n"
@@ -1439,7 +1497,7 @@ TEST(codegen, functionCall) {
     "call ecx\n"
     "push eax\n"
     "pop eax\n"
-     //fixme adde discard stack
+    //fixme adde discard stack
     "push eax\n"
     "add esp, 4\n"
     "pop ebp\n"
@@ -1453,9 +1511,9 @@ TEST(codegen, functionCall) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 }
@@ -1522,9 +1580,9 @@ TEST(codegen, functionCall2) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
@@ -1533,59 +1591,59 @@ TEST(codegen, functionCall2) {
 TEST(codegen, functionCall3) {
 
 
-//  int printf(const char* format, ...);
-//
-//  int braze_test()
-//  {
-//    printf("hello world!");
-//  }
-//
-//  int main()
-//  {
-//    braze_test();
-//  }
+  //  int printf(const char* format, ...);
+  //
+  //  int braze_test()
+  //  {
+  //    printf("hello world!");
+  //  }
+  //
+  //  int main()
+  //  {
+  //    braze_test();
+  //  }
 
   std::string target =
-  "section .data\n"
-  "section .text\n"
-  "extern printf\n"
-  "global braze_test\n"
-//  "; braze_test function\n"
-  "braze_test:\n"
-  "push ebp\n"
-  "mov ebp, esp\n"
-  "lea ebx, [printf]\n"
-  "push ebx\n"
-  "pop ebx\n"
-  "mov ecx, ebx\n"
-  "mov eax, str_1\n"
-  "push eax\n"
-  "call ecx\n"
-  "add esp, 4\n"
-  "push eax\n"
-  "pop eax\n"
-  "push eax\n"
-  "add esp, 4\n"
-  "pop ebp\n"
-  "ret\n"
-  "global main\n"
-//  "; main function\n"
-  "main:\n"
-  "push ebp\n"
-  "mov ebp, esp\n"
-  "lea ebx, [braze_test]\n"
-  "push ebx\n"
-  "pop ebx\n"
-  "mov ecx, ebx\n"
-  "call ecx\n"
-  "push eax\n"
-  "pop eax\n"
-  "push eax\n"
-  "add esp, 4\n"
-  "pop ebp\n"
-  "ret\n"
-  "section .rodata\n"
-  "str_1: db 'h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd', '!', 0\n"
+    "section .data\n"
+    "section .text\n"
+    "extern printf\n"
+    "global braze_test\n"
+    //  "; braze_test function\n"
+    "braze_test:\n"
+    "push ebp\n"
+    "mov ebp, esp\n"
+    "lea ebx, [printf]\n"
+    "push ebx\n"
+    "pop ebx\n"
+    "mov ecx, ebx\n"
+    "mov eax, str_1\n"
+    "push eax\n"
+    "call ecx\n"
+    "add esp, 4\n"
+    "push eax\n"
+    "pop eax\n"
+    "push eax\n"
+    "add esp, 4\n"
+    "pop ebp\n"
+    "ret\n"
+    "global main\n"
+    //  "; main function\n"
+    "main:\n"
+    "push ebp\n"
+    "mov ebp, esp\n"
+    "lea ebx, [braze_test]\n"
+    "push ebx\n"
+    "pop ebx\n"
+    "mov ecx, ebx\n"
+    "call ecx\n"
+    "push eax\n"
+    "pop eax\n"
+    "push eax\n"
+    "add esp, 4\n"
+    "pop ebp\n"
+    "ret\n"
+    "section .rodata\n"
+    "str_1: db 'h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd', '!', 0\n"
     ;
 
 
@@ -1594,9 +1652,9 @@ TEST(codegen, functionCall3) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 }
@@ -1680,12 +1738,12 @@ TEST(codegen, functionCall4) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
-  process.stop();
+  translation_unit.stop();
 
 }
 
@@ -1730,12 +1788,12 @@ TEST(codegen, ifstatement) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
-  process.stop();
+  translation_unit.stop();
 }
 
 
@@ -1743,22 +1801,22 @@ TEST(codegen, ifstatement) {
 TEST(codegen, ifelsestatement) {
 
 
-//  main()
-    //{
-    //  int a = 5;
-    //  if (a > 10)
-    //  {
-    //    int a = 10;
-    //  }
-    //  else if (a < 10)
-    //  {
-    //    int b = a;
-    //  }
-    //  else
-    //  {
-    //    int c = 3;
-    //  }
-    //}
+  //  main()
+      //{
+      //  int a = 5;
+      //  if (a > 10)
+      //  {
+      //    int a = 10;
+      //  }
+      //  else if (a < 10)
+      //  {
+      //    int b = a;
+      //  }
+      //  else
+      //  {
+      //    int c = 3;
+      //  }
+      //}
 
   std::string target =
     "section .data\n"
@@ -1821,25 +1879,25 @@ TEST(codegen, ifelsestatement) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
-  process.stop();
+  translation_unit.stop();
 }
 
 
 TEST(codegen, whilestatement) {
 
-//int main()
-//{
-//  while (1)
-//  {
-//    int a = 4;
-//  }
-//}
+  //int main()
+  //{
+  //  while (1)
+  //  {
+  //    int a = 4;
+  //  }
+  //}
   std::string target =
     "section .data\n"
     "section .text\n"
@@ -1871,13 +1929,13 @@ TEST(codegen, whilestatement) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
-  process.stop();
+  translation_unit.stop();
 }
 
 
@@ -1949,13 +2007,13 @@ TEST(codegen, forstatement) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
-  process.stop();
+  translation_unit.stop();
 }
 
 
@@ -1975,7 +2033,7 @@ TEST(codegen, unary) {
     "section .data\n"
     "section .text\n"
     "global main\n"
-//    "; main function\n"
+    //    "; main function\n"
     "main:\n"
     "push ebp\n"
     "mov ebp, esp\n"
@@ -1986,12 +2044,12 @@ TEST(codegen, unary) {
     "lea ebx, [ebp-8]\n"
     "push ebx\n"
     "pop ebx\n"
-//    "; PUSH ADDRESS &\n"
+    //    "; PUSH ADDRESS &\n"
     "push ebx\n"
     "pop eax\n"
     "mov dword [ebp-4], eax\n"
     "push dword [ebp-4]\n"
-//    "; INDIRECTION\n"
+    //    "; INDIRECTION\n"
     "pop ebx\n"
     "mov ebx, [ebx]\n"
     "push ebx\n"
@@ -2008,13 +2066,13 @@ TEST(codegen, unary) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
-  process.stop();
+  translation_unit.stop();
 }
 
 
@@ -2022,20 +2080,20 @@ TEST(codegen, unary) {
 
 TEST(codegen, unary2) {
 
-//  int main()
-//  {
-//    int a = 0;
-//    int* ptr1 = &a;
-//    int** ptr2 = &ptr1;
-//    int c = **ptr2;
-//  }
+  //  int main()
+  //  {
+  //    int a = 0;
+  //    int* ptr1 = &a;
+  //    int** ptr2 = &ptr1;
+  //    int c = **ptr2;
+  //  }
 
 
   std::string target =
     "section .data\n"
     "section .text\n"
     "global main\n"
-//    "; main function\n"
+    //    "; main function\n"
     "main:\n"
     "push ebp\n"
     "mov ebp, esp\n"
@@ -2046,19 +2104,19 @@ TEST(codegen, unary2) {
     "lea ebx, [ebp-4]\n"
     "push ebx\n"
     "pop ebx\n"
-//    "; PUSH ADDRESS &\n"
+    //    "; PUSH ADDRESS &\n"
     "push ebx\n"
     "pop eax\n"
     "mov dword [ebp-8], eax\n"
     "lea ebx, [ebp-8]\n"
     "push ebx\n"
     "pop ebx\n"
-//    "; PUSH ADDRESS &\n"
+    //    "; PUSH ADDRESS &\n"
     "push ebx\n"
     "pop eax\n"
     "mov dword [ebp-12], eax\n"
     "push dword [ebp-12]\n"
-//    "; INDIRECTION\n"
+    //    "; INDIRECTION\n"
     "pop ebx\n"
     "mov ebx, [ebx]\n"
     "mov ebx, [ebx]\n"
@@ -2076,13 +2134,13 @@ TEST(codegen, unary2) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
-  process.stop();
+  translation_unit.stop();
 }
 
 
@@ -2091,17 +2149,17 @@ TEST(codegen, unary2) {
 
 TEST(codegen, unary3) {
 
-//int test()
-//{
-//  int* a = 0xffc00000;
-//  *a;
-//}
-//
-//
-//int main()
-//{
-//  test();
-//}
+  //int test()
+  //{
+  //  int* a = 0xffc00000;
+  //  *a;
+  //}
+  //
+  //
+  //int main()
+  //{
+  //  test();
+  //}
 
 
 
@@ -2110,7 +2168,7 @@ TEST(codegen, unary3) {
     "section .data\n"
     "section .text\n"
     "global test\n"
- //   "; test function\n"
+    //   "; test function\n"
     "test:\n"
     "push ebp\n"
     "mov ebp, esp\n"
@@ -2119,7 +2177,7 @@ TEST(codegen, unary3) {
     "pop eax\n"
     "mov dword [ebp-4], eax\n"
     "push dword [ebp-4]\n"
-//    "; INDIRECTION\n"
+    //    "; INDIRECTION\n"
     "pop ebx\n"
     "mov ebx, [ebx]\n"
     "push ebx\n"
@@ -2128,7 +2186,7 @@ TEST(codegen, unary3) {
     "pop ebp\n"
     "ret\n"
     "global main\n"
-//    "; main function\n"
+    //    "; main function\n"
     "main:\n"
     "push ebp\n"
     "mov ebp, esp\n"
@@ -2151,13 +2209,13 @@ TEST(codegen, unary3) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
-  process.stop();
+  translation_unit.stop();
 }
 
 
@@ -2165,16 +2223,16 @@ TEST(codegen, unary3) {
 TEST(codegen, singlelinestatement) {
 
 
-      //main()
-      //{
-      //  int a = 5;
-      //  if (a > 10)
-      //    int a = 10;
-      //  else if (a < 10)
-      //    int b = a;
-      //  else
-      //    int c = 3;
-      //}
+  //main()
+  //{
+  //  int a = 5;
+  //  if (a > 10)
+  //    int a = 10;
+  //  else if (a < 10)
+  //    int b = a;
+  //  else
+  //    int c = 3;
+  //}
 
   std::string target =
     "section .data\n"
@@ -2237,13 +2295,13 @@ TEST(codegen, singlelinestatement) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
-  process.stop();
+  translation_unit.stop();
 }
 TEST(codegen, continueAndBreak) {
 
@@ -2260,7 +2318,7 @@ TEST(codegen, continueAndBreak) {
   //}
 
   std::string target =
-     "section .data\n"
+    "section .data\n"
     "section .text\n"
     "global main\n"
     "main:\n"
@@ -2348,25 +2406,25 @@ TEST(codegen, continueAndBreak) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
-  process.stop();
+  translation_unit.stop();
 }
 
 TEST(codegen, continuReturn) {
-//  int main()
-//  {
-//    int a = 0x0000dead;
-//    return a;
-//  }
-//   
-//  int test()
-//  {
-//    return;
-//  }
+  //  int main()
+  //  {
+  //    int a = 0x0000dead;
+  //    return a;
+  //  }
+  //   
+  //  int test()
+  //  {
+  //    return;
+  //  }
 
   std::string target =
     "section .data\n"
@@ -2404,10 +2462,10 @@ TEST(codegen, continuReturn) {
 
   const int num_of_tokens = 5;
 
-  translationUnit process;
-  process.initialize(file_path + file_name);
-  process.startCompiler();
+  translationUnit  translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
-  process.stop();
+  translation_unit.stop();
 }
