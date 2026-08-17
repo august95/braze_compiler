@@ -7,7 +7,7 @@
 #include <string>
 #include "../compiler_lib/braze_compiler.h"
 #include "../compiler_lib/source/pch.h"
-#include "../compiler_lib/compilerProcess.h"
+#include "../compiler_lib/translationUnit.h"
 
 void printHelpString();
 void printBanner();
@@ -77,19 +77,19 @@ int main(int argc, char* argv[]) {
   std::string nasm_output_file = output_bin + ".o";
 
   //avoid libc debugging, allocato on heap
-  compileProcess* process = new compileProcess();
+  translationUnit* translation_unit = new translationUnit();
   if(input_file_mode)
-    process->initialize(input_file);
+    translation_unit->initialize(input_file);
   else
-    process->initialize(input_args);
+    translation_unit->initialize(input_args);
   
   
-  int ret = process->startCompiler();
+  int ret = translation_unit->startCompiler();
   if (ret != 0)
   {
     std::cout << "failed to compile " + input_file + "result: " + std::to_string(ret);
   }
-  delete process;
+  delete translation_unit;
 
   if(input_file_mode)
   {   
