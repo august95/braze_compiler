@@ -5,8 +5,12 @@
 #include <list>
 #include <cstdio>
 
-
+#if defined(_MSC_VER)
 namespace fs = std::experimental::filesystem;
+#else
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
 
 preProcessor::preProcessor()
   :m_preprocessor_expressionable_parser(this),
@@ -325,11 +329,18 @@ std::string preProcessor::generateIncludePath(std::string include_string)
     {
       FILE* file = 0;
       std::string file_path = path + include_string;
-      if (fopen_s(&file, file_path.c_str(), "r") == 0 && file != 0)
+#if defined(_MSC_VER)
+      if (fopen_s(&file, file_path.c_str(), "rb") == 0 && file != 0)
+#else
+      file = fopen64(file_path.c_str(), "rb");
+      if (file != 0)
+#endif
       {
         fclose(file);
         return file_path;
       }
+
+
     }
   }
   else if (include_string.at(0) != '<')  //relative include "
