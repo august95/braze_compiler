@@ -189,7 +189,7 @@ TEST(lexer, stringsAndIncludeStrings) {
 
   token = tokens.front();
   // perform test
-  EXPECT_EQ(token->getStringValue(), "test_file.c");
+  EXPECT_EQ(token->getStringValue(), "<test_file.c>");
   EXPECT_TRUE(token->isTokenTypeString());
   tokens.pop_front();
 
@@ -401,7 +401,7 @@ TEST(lexer, ordinaryCFile) {
 
   token = tokens.front();
   // perform test
-  EXPECT_EQ(token->getStringValue(), "iostream");
+  EXPECT_EQ(token->getStringValue(), "<iostream>");
   tokens.pop_front();
 
   token = tokens.front();
@@ -594,7 +594,7 @@ TEST(preprocessor, define) {
   const int num_of_tokens = 3;
 
   translationUnit  translation_unit;
-  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.__no_code_generation = true;
   translation_unit.initialize(file_path + file_name);
   translation_unit.startCompiler();
   std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
@@ -609,7 +609,7 @@ TEST(preprocessor, ifdef) {
   const int num_of_tokens = 3;
 
   translationUnit  translation_unit;
-  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.__no_code_generation = true;
   translation_unit.initialize(file_path + file_name);
   translation_unit.startCompiler();
   std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
@@ -624,7 +624,7 @@ TEST(preprocessor, ifndef) {
   const int num_of_tokens = 3;
 
   translationUnit  translation_unit;
-  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.__no_code_generation = true;
   translation_unit.initialize(file_path + file_name);
   translation_unit.startCompiler();
   std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
@@ -639,7 +639,7 @@ TEST(preprocessor, undef) {
   const int num_of_tokens = 3;
 
   translationUnit  translation_unit;
-  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.__no_code_generation = true;
   translation_unit.initialize(file_path + file_name);
   translation_unit.startCompiler();
   std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
@@ -654,7 +654,7 @@ TEST(preprocessor, if_) {
   const int num_of_tokens = 3;
 
   translationUnit  translation_unit;
-  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.__no_code_generation = true;
   translation_unit.initialize(file_path + file_name);
   translation_unit.startCompiler();
   std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
@@ -662,6 +662,27 @@ TEST(preprocessor, if_) {
   EXPECT_EQ(node->getValueNode()->getNumberValue(), 0xdead);
 }
 
+TEST(preprocessor, include) 
+{
+
+  std::string file_name = "preprocessor/test_preprocessor_include.c";
+  //"test string"
+  const int num_of_tokens = 3;
+
+  translationUnit  translation_unit;
+  translation_unit.__no_code_generation = true;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
+  std::list < std::shared_ptr < node > > ast = translation_unit.getAbstractSyntaxTree();
+  std::shared_ptr < nodeVariableDeclaration > node = cast_node<nodeVariableDeclaration>(ast.front());
+  EXPECT_EQ(node->getValueNode()->getNumberValue(), 0x2222);
+  EXPECT_TRUE(STRINGS_EQUAL(node->getStringValue().c_str(), "var_2222"));
+
+  ast.pop_front();
+  node = cast_node<nodeVariableDeclaration>(ast.front());
+  EXPECT_EQ(node->getValueNode()->getNumberValue(), 0x1111);
+  EXPECT_TRUE(STRINGS_EQUAL(node->getStringValue().c_str(), "var_1111"));
+}
 TEST(parser, string) {
 
   std::string file_name = "parser/test_parser_string.c";
@@ -670,7 +691,7 @@ TEST(parser, string) {
   const int num_of_tokens = 5;
 
   translationUnit  translation_unit;
-  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.__no_code_generation = true;
   translation_unit.initialize(file_path + file_name);
   translation_unit.startCompiler();
 
@@ -691,7 +712,7 @@ TEST(parser, expression) {
   const int num_of_tokens = 5;
 
   translationUnit  translation_unit;
-  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.__no_code_generation = true;
   translation_unit.initialize(file_path + file_name);
   translation_unit.startCompiler();
 
@@ -719,7 +740,7 @@ TEST(parser, keyword) {
   const int num_of_tokens = 5;
 
   translationUnit  translation_unit;
-  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.__no_code_generation = true;
   translation_unit.initialize(file_path + file_name);
   translation_unit.startCompiler();
 
@@ -762,7 +783,7 @@ TEST(parser, function) {
   const int num_of_tokens = 5;
 
   translationUnit  translation_unit;
-  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.__no_code_generation = true;
   translation_unit.initialize(file_path + file_name);
   translation_unit.startCompiler();
 
@@ -804,7 +825,7 @@ TEST(parser, ifstatement) {
   const int num_of_tokens = 5;
 
   translationUnit  translation_unit;
-  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.__no_code_generation = true;
   translation_unit.initialize(file_path + file_name);
   translation_unit.startCompiler();
 
@@ -853,7 +874,7 @@ TEST(parser, whilestatement) {
   const int num_of_tokens = 5;
 
   translationUnit  translation_unit;
-  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.__no_code_generation = true;
   translation_unit.initialize(file_path + file_name);
   translation_unit.startCompiler();
 
@@ -892,7 +913,7 @@ TEST(parser, forstatement) {
   const int num_of_tokens = 5;
 
   translationUnit  translation_unit;
-  translation_unit.__unit_test_no_code_generation = true;
+  translation_unit.__no_code_generation = true;
   translation_unit.initialize(file_path + file_name);
   translation_unit.startCompiler();
 

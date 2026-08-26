@@ -296,6 +296,8 @@ std::shared_ptr<token> lexer::makeOperatorTokenOrIncludeString()
   if (lastTokenIsInlcudeKeyword())
   {
     std::string include_string = createString('<', '>');
+    include_string.insert(include_string.begin(), '<'); // indicates to preprocessor that we have a '<' include not '"' include
+    include_string.push_back('>'); // or str += ']';
     return std::make_shared<token>(tokenType::TOKEN_TYPE_STRING, getFilePostiion(), include_string);
   }
 

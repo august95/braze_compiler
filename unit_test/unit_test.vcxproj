@@ -137,6 +137,15 @@
     <None Include="test_files\preprocessor\test_preprocessor_if.c">
       <FileType>CppCode</FileType>
     </None>
+    <None Include="test_files\preprocessor\test_preprocessor_include.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\preprocessor\test_preprocessor_include1.c">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="test_files\preprocessor\test_preprocessor_include2.c">
+      <FileType>CppCode</FileType>
+    </None>
     <ClCompile Include="test_helper.cpp" />
     <None Include="test_files\codegeneration\test_codegen_unary.c">
       <FileType>CppCode</FileType>

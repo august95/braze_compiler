@@ -1,10 +1,17 @@
 #include "../../source/pch.h"
 #include "../preprocessor.h"
 #include "../preProcessorExpresssionable.h"
+#include "../../translationUnit.h"
 #include <list>
+#include <cstdio>
+
+
+namespace fs = std::experimental::filesystem;
+
 preProcessor::preProcessor()
   :m_preprocessor_expressionable_parser(this),
-   m_enabled(1)
+   m_enabled(1),
+   m_include_paths({ "./pc_includes/", "../pc_includes/", "/usr/include/braze-includes/", "/usr/include/" })
 {
 
 }
@@ -16,6 +23,12 @@ int preProcessor::startPreProcessor()
     m_tokens_pre_processed = m_tokens_original;
     return 0;
   }
+  m_file_path = m_file_name;
+  while (!m_file_path.empty() && m_file_path.back() != '/')
+  {
+    m_file_path.pop_back();
+  }
+
   m_tokens_pre_processed = std::make_shared  < std::list < std::shared_ptr < token > > >();
   while (!m_tokens_original->empty())
   {
@@ -156,6 +169,11 @@ bool preProcessor::handleHashtagToken()
     handleError();
     is_processed =  true;
   }
+  else if (STRINGS_EQUAL(token_->getStringValue().c_str(), "include"))
+  {
+    handleInclude();
+    is_processed =  true;
+  }
 
   return is_processed;
 }
@@ -209,6 +227,18 @@ void preProcessor::handleError()
   std::shared_ptr<token> token = nextToken();
   cerror(token->getStringValue().c_str());
   exit(-1);
+}
+
+void preProcessor::handleInclude()
+{
+  std::shared_ptr<token>  token_ = nextToken();
+  std::string include_path = generateIncludePath(token_->getStringValue());
+  translationUnit child_unit;
+  //saves stack size
+  child_unit.__no_code_generation = true;
+  child_unit.initialize(include_path);
+  child_unit.startIncludeCompilation();
+  m_tokens_pre_processed->splice(m_tokens_pre_processed->end(), *child_unit.getTokens());
 }
 
 std::list<std::shared_ptr<token>> preProcessor::handleDefinitionValue()
@@ -281,6 +311,39 @@ int preProcessor::parseAndEvaluate(){
   std::shared_ptr <nodePreProcessor> node_ = collection->popLastNode();
   int val = node_->evaluate();
   return val;
+}
+
+std::string preProcessor::generateIncludePath(std::string include_string)
+{
+  std::string include_path;
+  if (include_string.at(0) == '<')
+  {
+    //remove < and >
+    include_string.erase(0, 1);
+    include_string.pop_back();
+    for ( auto& path : m_include_paths) 
+    {
+      FILE* file = 0;
+      std::string file_path = path + include_string;
+      if (fopen_s(&file, file_path.c_str(), "r") == 0 && file != 0)
+      {
+        fclose(file);
+        return file_path;
+      }
+    }
+  }
+  else if (include_string.at(0) != '<')  //relative include "
+  {
+    if (include_string.front() == '/')
+    {
+      //m_file_path migth contain '/' at the end
+      include_string.erase(0, 1);
+    }
+    include_path += m_file_path;
+    include_path += include_string;
+    return include_path;
+  }
+  return std::string();
 }
 
 void preProcessor::definitions::addDefinition(std::string name, std::shared_ptr < std::list<std::shared_ptr<token>>> value_tokens, std::shared_ptr < std::list<std::shared_ptr<token>>> argument_tokens)

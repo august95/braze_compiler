@@ -13,6 +13,7 @@ public:
   void setTokenList(std::shared_ptr < std::list < std::shared_ptr<token > > >  tokens) { m_tokens_original = tokens; };
   std::shared_ptr < std::list < std::shared_ptr < token > > > getPreProcessedTokens() { return m_tokens_pre_processed; }
   int  startPreProcessor();
+  void setFileName(std::string file_name) { m_file_name = file_name; }
 
 private:
   std::shared_ptr<token> nextToken();
@@ -32,10 +33,12 @@ private:
   void undef();
   void handleWarning();
   void handleError();
+  void handleInclude();
   std::list < std::shared_ptr<token> > handleDefinitionValue();
   void skipToEndif();
   void readToEndif(bool condition);
   int parseAndEvaluate();
+  std::string generateIncludePath(std::string include_string);
 
   class definitions
   {
@@ -51,7 +54,10 @@ private:
   std::shared_ptr < std::list < std::shared_ptr < token > > > m_tokens_original;
   std::shared_ptr < std::list < std::shared_ptr < token > > > m_tokens_pre_processed;
   preProcessorExpressionableParser m_preprocessor_expressionable_parser;
+  std::list<std::string> m_include_paths;
   friend preProcessorExpressionableParser;
   friend nodePreProcessor;
+  std::string m_file_name;
+  std::string m_file_path;
   bool m_enabled;
 };

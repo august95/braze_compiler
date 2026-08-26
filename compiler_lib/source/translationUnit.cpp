@@ -7,7 +7,7 @@
 #include <cstdio> // For fopen, fclose, fread, fwrite, etc.
 
 translationUnit::translationUnit()
-  : __unit_test_no_code_generation(false)
+  : __no_code_generation(false)
 {
 }
 
@@ -16,7 +16,12 @@ void translationUnit::initialize(std::string filename)
   std::shared_ptr<charStreamFile> char_stream = std::make_shared <charStreamFile>();
   char_stream->initialize(filename);
   m_lexer.setCharStreamInterface(char_stream);
-  m_code_generator.setFileName(filename);
+  if (!__no_code_generation)
+  {
+    m_code_generator = std::make_shared<codeGenerator>();
+    m_code_generator->setFileName(filename);
+  }
+  m_pre_processor.setFileName(filename);
 }
 
 void translationUnit::initialize(std::shared_ptr<std::stringstream> input_args)
@@ -24,7 +29,7 @@ void translationUnit::initialize(std::shared_ptr<std::stringstream> input_args)
   std::shared_ptr<charStreamArgs> char_stream = std::make_shared <charStreamArgs>();
   char_stream->initialize(input_args);
   m_lexer.setCharStreamInterface(char_stream);
-  m_code_generator.setFileName("app.out", asmWriter::WriteMode::W_STDOUT);
+  m_code_generator->setFileName("app.out", asmWriter::WriteMode::W_STDOUT);
 }
 
 int translationUnit::startCompiler()
@@ -52,11 +57,11 @@ int translationUnit::startCompiler()
     return ret;
   }
 
-  if (__unit_test_no_code_generation)
+  if (__no_code_generation)
     return 0;
-
-  m_code_generator.setAbstractSyntaxTree(m_parser.getAbstractSyntaxTree());
-  ret = m_code_generator.startCodeGeneration();
+  
+  m_code_generator->setAbstractSyntaxTree(m_parser.getAbstractSyntaxTree());
+  ret = m_code_generator->startCodeGeneration();
   if (ret != 0)
   {
     cerror("failed to generate code from abstract syntax tree!");
@@ -64,10 +69,33 @@ int translationUnit::startCompiler()
   }
   return ret;
 
-  // TODO: invoke nasm assembler with obj file containing assembly as parameter
+}
+
+int translationUnit::startIncludeCompilation()
+{
+  int ret = m_lexer.startLexer();
+  if (ret != 0)
+  {
+    cerror("failed to lex file!");
+    return ret;
+  }
+
+  m_pre_processor.setTokenList(std::make_shared< std::list<std::shared_ptr<token> > >(m_lexer.getTokens()));
+  ret = m_pre_processor.startPreProcessor();
+  if (ret != 0)
+  {
+    cerror("failed to preprocess file!");
+    return ret;
+  }
+  return ret;
 }
 
 void translationUnit::stop()
 {
-  m_code_generator.generateLableCount(true);
+  m_code_generator->generateLableCount(true);
+}
+
+std::shared_ptr < std::list < std::shared_ptr < token > > > translationUnit::getTokens()
+{ 
+  return m_pre_processor.getPreProcessedTokens();
 }
