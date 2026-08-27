@@ -104,6 +104,7 @@ void preProcessor::handleIdentifier()
   {
     for (auto it = definition->getValueTokens()->begin(); it != definition->getValueTokens()->end(); it++)
       m_tokens_pre_processed->push_back(*it);
+
   }
   if (!definition)
   {
@@ -395,4 +396,5 @@ std::shared_ptr<preProcessorDefinition> preProcessor::definitions::getDefintion(
       return *it;
     }
   }
+  return std::shared_ptr<preProcessorDefinition> ();
 }

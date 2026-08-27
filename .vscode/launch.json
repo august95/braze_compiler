@@ -27,7 +27,7 @@
             },
             "pipeTransport": {
                 "debuggerPath": "",
-                "pipeProgram": "C:\\Users\\me403\\AppData\\Local\\Microsoft\\WindowsApps\\bash.exe",
+                "pipeProgram": "C:\\Users\\Ingva\\AppData\\Local\\Microsoft\\WindowsApps\\bash.exe",
                 "pipeArgs": ["-c", "\"/usr/bin/gdb --interpreter=mi\""],
                 "pipeCwd": ""
             },
