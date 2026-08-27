@@ -21,13 +21,14 @@ public:
 
   // for unit tests
   std::shared_ptr < std::list < std::shared_ptr < token > > > getTokens();
-  std::list<std::shared_ptr<node>> getAbstractSyntaxTree() { return m_parser.getAbstractSyntaxTree(); }
+  std::list<std::shared_ptr<node>> getAbstractSyntaxTree() { return m_parser->getAbstractSyntaxTree(); }
 
   bool __no_code_generation;
+  bool __no_parsing;
 
 private:
   lexer m_lexer;
-  parser m_parser;
+  std::shared_ptr < parser> m_parser;
   preProcessor m_pre_processor;
   std::shared_ptr<codeGenerator> m_code_generator;
 };

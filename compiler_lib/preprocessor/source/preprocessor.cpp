@@ -240,7 +240,7 @@ void preProcessor::handleInclude()
   std::string include_path = generateIncludePath(token_->getStringValue());
   translationUnit child_unit;
   //saves stack size
-  child_unit.__no_code_generation = true;
+  child_unit.__no_parsing = true;
   child_unit.initialize(include_path);
   child_unit.startIncludeCompilation();
   m_tokens_pre_processed->splice(m_tokens_pre_processed->end(), *child_unit.getTokens());

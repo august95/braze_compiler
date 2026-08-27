@@ -7,7 +7,8 @@
 #include <cstdio> // For fopen, fclose, fread, fwrite, etc.
 
 translationUnit::translationUnit()
-  : __no_code_generation(false)
+  : __no_code_generation(false),
+  __no_parsing(false)
 {
 }
 
@@ -20,6 +21,10 @@ void translationUnit::initialize(std::string filename)
   {
     m_code_generator = std::make_shared<codeGenerator>();
     m_code_generator->setFileName(filename);
+  }
+  if (!__no_parsing)
+  {
+    m_parser = std::make_shared<parser>();
   }
   m_pre_processor.setFileName(filename);
 }
@@ -49,8 +54,12 @@ int translationUnit::startCompiler()
     return ret;
   }
 
-  m_parser.setTokenList(m_pre_processor.getPreProcessedTokens());
-  ret = m_parser.startParser();
+  if (__no_parsing)
+    return 0;
+
+  m_parser->setTokenList(m_pre_processor.getPreProcessedTokens());
+  ret = m_parser->startParser();
+
   if (ret != 0)
   {
     cerror("failed to parse tokens into abstract syntax tree!");
@@ -60,7 +69,7 @@ int translationUnit::startCompiler()
   if (__no_code_generation)
     return 0;
   
-  m_code_generator->setAbstractSyntaxTree(m_parser.getAbstractSyntaxTree());
+  m_code_generator->setAbstractSyntaxTree(m_parser->getAbstractSyntaxTree());
   ret = m_code_generator->startCodeGeneration();
   if (ret != 0)
   {
