@@ -75,6 +75,9 @@
     <ClInclude Include="node_\nodeVariableDeclaration.h">
       <Filter>node_</Filter>
     </ClInclude>
+    <ClInclude Include="node_\nodeStructDeclaration.h">
+      <Filter>node_</Filter>
+    </ClInclude>
     <ClInclude Include="preprocessor\preprocessor.h">
       <Filter>preprocessor</Filter>
     </ClInclude>
@@ -178,6 +181,9 @@
       <Filter>node_\source</Filter>
     </ClCompile>
     <ClCompile Include="node_\source\nodeVariableDeclaration.cpp">
+      <Filter>node_\source</Filter>
+    </ClCompile>
+    <ClCompile Include="node_\source\nodeStructDeclaration.cpp">
       <Filter>node_\source</Filter>
     </ClCompile>
     <ClCompile Include="preprocessor\source\preprocessor.cpp">

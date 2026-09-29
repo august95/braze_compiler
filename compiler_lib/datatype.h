@@ -3,6 +3,8 @@
 #include "filePosition.h"
 #include <memory>
 
+class nodeStructDeclaration;
+
 enum primitiveType
 {
   DATA_TYPE_NONE,
@@ -58,6 +60,9 @@ public:
   void calcualteDatatypeSize();
   static int getPrimitiveTypeSize(primitiveType primitive_type);
   int getDatatypeSize() { return m_datatype_size; }
+  int getDatatypeAlignment();
+  void setStructDefinition(std::shared_ptr<nodeStructDeclaration> definition);
+  std::shared_ptr<nodeStructDeclaration> getStructDefinition() { return m_struct_definition; }
   std::string getStringForPrimitiveSize();
   std::string getDatatypeRegisterSize();
   void getRegToUse(std::string &reg_to_use);
@@ -80,4 +85,5 @@ private:
   unsigned int m_pointer_depth;
   filePosition m_file_position;
   int m_datatype_size; // in bytes
+  std::shared_ptr<nodeStructDeclaration> m_struct_definition;
 };

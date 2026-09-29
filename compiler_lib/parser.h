@@ -11,6 +11,9 @@
 #include <list>
 #include <iostream>
 #include <memory>
+#include <map>
+
+class nodeStructDeclaration;
 
 /*
  * FIXME:
@@ -72,6 +75,8 @@ private:
   void parseIndirectionUnary();    
   void parseBreak();
   void parseContinue();
+  std::shared_ptr<nodeStructDeclaration> parseStructDefinition(std::string name, filePosition file_position);
+  void resolveStructDatatype(std::shared_ptr<datatype> datatype);
 
   std::shared_ptr<datatype> parseDatatype();
 
@@ -83,6 +88,7 @@ private:
   std::shared_ptr<scope> m_last_scope;
 
   symbolResolver m_symbol_resolver;
+  std::map<std::string, std::shared_ptr<nodeStructDeclaration>> m_struct_types;
 
   void _assert_(bool condition, std::string message);
 };

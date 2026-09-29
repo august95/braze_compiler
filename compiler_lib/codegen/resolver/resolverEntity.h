@@ -16,6 +16,7 @@ enum entityType
   E_POINTER,
   E_UNARY_ADDRESS,
   E_INDIRECTION,
+  E_STRUCT_MEMBER,
   E_ARRAY
 };
 
@@ -35,6 +36,7 @@ public:
   void addAddress(std::shared_ptr<node> node);
   void registerFunction(std::shared_ptr<nodeFunctionDeclaration> node);
   std::string getAddress();
+  void setResolvedAddress(std::string address) { m_resolved_address = address; }
   void setResolverEntityData(std::shared_ptr<resolverEntityData> entity_data) { m_entity_data = entity_data; }
   std::shared_ptr<resolverEntityData> getResolverEntityData() { return m_entity_data; }
   std::shared_ptr<node> getNode() { return m_node; }
@@ -59,6 +61,7 @@ public:
   int offest;
   bool m_is_global;
   std::string m_name;
+  std::string m_resolved_address;
   int m_indirection_depth;
   // std::shared_ptr < resolverScope> m_scope;
   entityType m_type;

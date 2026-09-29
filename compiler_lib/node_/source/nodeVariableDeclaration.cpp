@@ -2,19 +2,21 @@
 #include "../../braze_compiler.h"
 
 nodeVariableDeclaration::nodeVariableDeclaration()
-  : m_is_function_argument(0),
+  : m_stack_offset(0),
   m_is_global(0),
+  m_is_function_argument(0),
   m_padding(0),
-  m_stack_offset(0)
+  m_struct_member_offset(0)
 {
 }
 
 nodeVariableDeclaration::nodeVariableDeclaration(nodeType node_type, filePosition file_position)
   :node(node_type, file_position),
-  m_is_function_argument(0),
+  m_stack_offset(0),
   m_is_global(0),
+  m_is_function_argument(0),
   m_padding(0),
-  m_stack_offset(0)
+  m_struct_member_offset(0)
 {
 }
 

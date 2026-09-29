@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "../datatype.h"
 #include "../braze_compiler.h"
+#include "../node_/nodeStructDeclaration.h"
 #include <assert.h>
 #include <cstring>
 
@@ -151,7 +152,14 @@ void datatype::incrementPointerDepth()
 
 void datatype::calcualteDatatypeSize()
 {
-  m_datatype_size = getPrimitiveTypeSize(m_first);
+  if (m_first == primitiveType::DATA_TYPE_STRUCT)
+  {
+    m_datatype_size = m_struct_definition ? m_struct_definition->getStructSize() : 0;
+  }
+  else
+  {
+    m_datatype_size = getPrimitiveTypeSize(m_first);
+  }
   if (m_has_secondary_primitive_type)
   {
     m_datatype_size += getPrimitiveTypeSize(m_second);
@@ -160,6 +168,26 @@ void datatype::calcualteDatatypeSize()
   {
     m_datatype_size = 4; // Fixme: for now 32 bit architecture, pointer size is 4 bytes
   }
+}
+
+void datatype::setStructDefinition(std::shared_ptr<nodeStructDeclaration> definition)
+{
+  m_struct_definition = definition;
+  calcualteDatatypeSize();
+}
+
+int datatype::getDatatypeAlignment()
+{
+  if (m_pointer_depth > 0)
+  {
+    return DATA_SIZE_DWORD;
+  }
+  if (isStruct() && m_struct_definition)
+  {
+    return m_struct_definition->getStructAlignment();
+  }
+  int size = getDatatypeSize();
+  return size > DATA_SIZE_DWORD ? DATA_SIZE_DWORD : size;
 }
 
 int datatype::getPrimitiveTypeSize(primitiveType primitive_type)
@@ -198,6 +226,10 @@ int datatype::getPrimitiveTypeSize(primitiveType primitive_type)
 
   case primitiveType::DATA_TYPE_DOUBLE:
     size = DATA_SIZE_DWORD;
+    break;
+  case primitiveType::DATA_TYPE_STRUCT:
+  case primitiveType::DATA_TYPE_UNION:
+    size = DATA_SIZE_NONE;
     break;
   case primitiveType::DATA_TYPE_BOOL:
     size = DATA_SIZE_BYTE;

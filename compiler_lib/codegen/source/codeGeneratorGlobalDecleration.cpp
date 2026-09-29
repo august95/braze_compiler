@@ -94,6 +94,12 @@ void codeGeneratorGlobalDecleration::generateGlobalVariable(std::shared_ptr<node
     {
       generateGlobalVariablePrimitive(node);
     }
+    else if (datatype->isStruct())
+    {
+      m_resolver.registerVariable(node);
+      m_asm_writer.asmGen(node->getStringValue() + ": times " +
+        std::to_string(datatype->getDatatypeSize()) + " db 0");
+    }
 
   }
 }
@@ -116,4 +122,3 @@ void codeGeneratorGlobalDecleration::generateGlobalVariablePrimitive(std::shared
   }
   m_asm_writer.asmGen(var_name + ": " + datatype->getStringForPrimitiveSize() + " " + var_value);
 }
-

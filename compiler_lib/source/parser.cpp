@@ -7,6 +7,7 @@
 #include "../node_/nodeVariableDeclaration.h"
 #include "../node_/nodeFunctionDeclaration.h"
 #include "../node_/nodeExpression.h"
+#include "../node_/nodeStructDeclaration.h"
 
 #include <memory>
 
@@ -567,8 +568,12 @@ void parser::parseElseIfOrElseStatement()
 
 void parser::parseGlobalKeyword()
 {
+  std::size_t node_count = m_nodes.size();
   parseKeyword();
-  peekLastNode()->setIsGlobal(true);
+  if (m_nodes.size() > node_count)
+  {
+    peekLastNode()->setIsGlobal(true);
+  }
 }
 
 void parser::parseVariableOrFunction()
@@ -577,12 +582,19 @@ void parser::parseVariableOrFunction()
 
   std::shared_ptr<datatype> datatype = parseDatatype();
 
-  if (datatype->isStruct() || datatype->isUnion())
+  if (datatype->isStruct())
   {
-    // #warning "struct not implemented"
-    // If global scope, parse struct declaration or function with struct return type
-    // If inside statement, parse struct variable'
-    //
+    resolveStructDatatype(datatype);
+    if (peekToken()->getCharValue() == ';')
+    {
+      nextToken();
+      return;
+    }
+  }
+  else if (datatype->isUnion())
+  {
+    cerror("union types are not supported", peekToken()->getFilePosition());
+    assert(false);
   }
 
   std::shared_ptr<token> token = nextToken();
@@ -626,6 +638,81 @@ void parser::parseVariableOrFunction()
     assert(false);
   }
   pushNode(var_node);
+}
+
+std::shared_ptr<nodeStructDeclaration> parser::parseStructDefinition(std::string name, filePosition file_position)
+{
+  std::shared_ptr<nodeStructDeclaration> definition =
+    std::make_shared<nodeStructDeclaration>(name, file_position);
+
+  while (peekToken()->getCharValue() != '}')
+  {
+    std::shared_ptr<datatype> member_type = parseDatatype();
+    if (member_type->isStruct())
+    {
+      resolveStructDatatype(member_type);
+    }
+    else if (member_type->isUnion())
+    {
+      cerror("union members are not supported", peekToken()->getFilePosition());
+      assert(false);
+    }
+
+    std::shared_ptr<token> member_name = nextToken();
+    if (!member_name->isTokenTypeIdentifier())
+    {
+      cerror("expected struct member name", member_name->getFilePosition());
+      assert(false);
+    }
+    std::shared_ptr<nodeVariableDeclaration> member =
+      std::make_shared<nodeVariableDeclaration>(NODE_TYPE_VARIABLE, member_name->getFilePosition());
+    member->setStringValue(member_name->getStringValue());
+    member->setDatatype(member_type);
+
+    std::shared_ptr<token> terminator = nextToken();
+    if (!terminator->isTokenTypeSymbol() || terminator->getCharValue() != ';')
+    {
+      cerror("expected ';' after struct member", terminator->getFilePosition());
+      assert(false);
+    }
+    definition->addMember(member);
+  }
+  nextToken();
+  return definition;
+}
+
+void parser::resolveStructDatatype(std::shared_ptr<datatype> datatype)
+{
+  std::shared_ptr<token> tag = nextToken();
+  if (!tag->isTokenTypeIdentifier())
+  {
+    cerror("expected struct tag", tag->getFilePosition());
+    assert(false);
+  }
+
+  std::shared_ptr<nodeStructDeclaration> definition;
+  if (peekToken()->getCharValue() == '{')
+  {
+    if (m_struct_types.find(tag->getStringValue()) != m_struct_types.end())
+    {
+      cerror("duplicate struct definition", tag->getFilePosition());
+      assert(false);
+    }
+    nextToken();
+    definition = parseStructDefinition(tag->getStringValue(), tag->getFilePosition());
+    m_struct_types[tag->getStringValue()] = definition;
+  }
+  else
+  {
+    auto found = m_struct_types.find(tag->getStringValue());
+    if (found == m_struct_types.end())
+    {
+      cerror("unknown struct tag", tag->getFilePosition());
+      assert(false);
+    }
+    definition = found->second;
+  }
+  datatype->setStructDefinition(definition);
 }
 
 void parser::parseFunction()
@@ -739,8 +826,14 @@ void parser::parseFunctionParameters()
   while (token->getCharValue() != ')')
   {
     std::shared_ptr<datatype> datatype = parseDatatype();
-    if (datatype->isStruct() || datatype->isUnion())
+    if (datatype->isStruct())
     {
+      resolveStructDatatype(datatype);
+    }
+    else if (datatype->isUnion())
+    {
+      cerror("union parameters are not supported", peekToken()->getFilePosition());
+      assert(false);
     }
     token = nextToken();
     if (STRINGS_EQUAL(token->getStringValue().c_str(), "..."))
