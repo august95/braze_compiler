@@ -11,7 +11,6 @@ void resolver::registerFunction(std::shared_ptr<nodeFunctionDeclaration> functio
   std::shared_ptr<resolverEntity> resolver_entity = std::make_shared<resolverEntity>(function_node);
   resolver_entity->createResolverEntityData();
   resolver_entity->registerFunction(function_node);
-  //  resolver_entity->setScope(m_current_scope);
   m_root_scope->addScopeEntity(resolver_entity);
 }
 
@@ -24,37 +23,35 @@ std::shared_ptr<resolverEntity> resolver::registerVariable(std::shared_ptr<node>
     entity->addAddress(node);
     m_current_scope->addScopeEntity(entity);
     entity->setEntityType(E_VARIABLE);
-    // std::cout << "resolver: added variable " << node->getStringValue()<< "  add addess: " << entity->getAddress() << std::endl;
   }
   return entity;
 }
 
-void resolver::createNewScope(bool local_stack, bool stack)
+void resolver::createNewScope()
 {
-  std::shared_ptr<resolverScope> scope = std::make_shared<resolverScope>();
-  m_current_scope->setNextScope(scope);
-  scope->setPrevScope(m_current_scope);
-  scope->setLocalStack(local_stack);
-  scope->setStack(stack);
-  // todo: add flags to scope data?
-  m_current_scope = scope;
+  m_current_scope = std::make_shared<resolverScope>(m_current_scope);
 }
 
-void resolver::follow(std::shared_ptr<node> node, std::shared_ptr<resolverResult> &result)
+std::shared_ptr<resolverResult> resolver::follow(std::shared_ptr<node> node)
 {
-  result = std::make_shared<resolverResult>();
+  std::shared_ptr<resolverResult> result = std::make_shared<resolverResult>();
   m_current_scope->follow(node, result);
+  return result;
 }
 
 void resolver::removeScope()
 {
-  m_current_scope = m_current_scope->getPrevScope();
-  // todo add callback on deletion of scope
+  if (m_current_scope == m_root_scope)
+  {
+    cerror("tried to remove root scope!");
+    assert(false);
+    return;
+  }
+  m_current_scope = m_current_scope->getParent();
 }
 
 void resolver::initialize()
 {
   m_root_scope = std::make_shared<resolverScope>();
-  m_root_scope->setRootScope(true);
   m_current_scope = m_root_scope;
 }

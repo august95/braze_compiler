@@ -33,10 +33,10 @@ void codeGeneratorGlobalDecleration::generateFunctionDeclaration_(std::shared_pt
   m_asm_writer.asmGen(function_name + ":");
   m_asm_writer.asmGenPushEbp(C_ALIGN(node->getBodyNode()->getBodySize()));
 
-  m_resolver.createNewScope(true, false);
+  m_resolver.createNewScope();
   generateFunctionParameters(node);
 
-  m_resolver.createNewScope(true, false);
+  m_resolver.createNewScope();
   generateBody(cast_node<nodeBody>(node->getBodyNode()));
   m_resolver.removeScope();
 
@@ -64,7 +64,7 @@ void codeGeneratorGlobalDecleration::generateFunctionParameters(std::shared_ptr<
 
 void codeGeneratorGlobalDecleration::generateBody(std::shared_ptr<nodeBody> node)
 {
-  m_resolver.createNewScope(false, true);
+  m_resolver.createNewScope();
   generateScope(node);
   m_resolver.removeScope();
 }
@@ -116,4 +116,3 @@ void codeGeneratorGlobalDecleration::generateGlobalVariablePrimitive(std::shared
   }
   m_asm_writer.asmGen(var_name + ": " + datatype->getStringForPrimitiveSize() + " " + var_value);
 }
-

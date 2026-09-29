@@ -2,11 +2,8 @@
 #include "../../../braze_compiler.h"
 #include "../resolverScope.h"
 
-resolverScope::resolverScope()
-    : m_root_scope(false),
-      m_is_local_stack(false),
-      m_is_stack(false),
-      flags(false)
+resolverScope::resolverScope(std::shared_ptr<resolverScope> parent)
+    : m_parent(std::move(parent))
 {
 }
 
@@ -17,6 +14,11 @@ void resolverScope::addScopeEntity(std::shared_ptr<resolverEntity> scope_data)
 
 void resolverScope::follow(std::shared_ptr<node> node, std::shared_ptr<resolverResult> result)
 {
+  if (!node)
+  {
+    return;
+  }
+
   if (node->getNodeType() == NODE_TYPE_VARIABLE)
   {
     followName(node, result);
@@ -41,23 +43,28 @@ void resolverScope::follow(std::shared_ptr<node> node, std::shared_ptr<resolverR
 
 void resolverScope::followName(std::shared_ptr<node> node, std::shared_ptr<resolverResult> result)
 {
-  for (auto entity : m_scope_entities)
+  if (!node)
   {
-    if (!entity->getNode()->getStringValue().empty())
+    return;
+  }
+
+  for (const auto& entity : m_scope_entities)
+  {
+    const auto& declaration = entity->getNode();
+    if (declaration && declaration->getStringValue() == node->getStringValue())
     {
-      std::string entity_s = entity->getNode()->getStringValue().c_str();
-      std::string node_s = node->getStringValue().c_str();
-      if (STRINGS_EQUAL(entity_s.c_str(), node_s.c_str()))
-      {
-        result->addEntity(entity);
-        return;
-      }
+      result->addEntity(entity);
+      return;
     }
   }
-  if (m_root_scope != true)
-    return m_prev_scope->follow(node, result);
-  else
-    cerror("searched for node past root scope!");
+
+  if (m_parent)
+  {
+    m_parent->followName(node, result);
+    return;
+  }
+
+  cerror("searched for node past root scope!");
   assert(0);
 }
 
@@ -76,10 +83,11 @@ void resolverScope::followFunctionCall(std::shared_ptr<nodeExpression> node_, st
   std::shared_ptr<node> func_name = node_->getLeftNode();
 
   follow(func_name, result);
-  std::shared_ptr<resolverEntity> function_entity = result->peekEntity();
+  std::shared_ptr<resolverEntity> function_entity = result->peekLastEntity();
   if (!function_entity)
   {
     cerror("could not resolve function!");
+    return;
   }
   std::shared_ptr<resolverEntity> function_call_entity = std::make_shared<resolverEntity>();
   function_call_entity->setEntityType(E_FUNCTION_CALL);
@@ -88,9 +96,8 @@ void resolverScope::followFunctionCall(std::shared_ptr<nodeExpression> node_, st
 
   if (node_->getRightNode())
   {
-    int function_call_stack_size = 0;
-    buildFunctionCallArguments(node_->getRightNode(), function_call_entity, result, function_call_stack_size);
-    function_call_entity->setFunctionCallStacksize(function_call_stack_size);
+    function_call_entity->setFunctionCallStackSize(
+        buildFunctionCallArguments(node_->getRightNode(), function_call_entity));
   }
   function_call_entity->setDatatype(function_entity->getDatatype());
 }
@@ -138,34 +145,30 @@ void resolverScope::followUnaryIndirection(std::shared_ptr<nodeExpression> node_
   result->addEntity(indirection_entity);
 }
 
-void resolverScope::buildFunctionCallArguments(std::shared_ptr<nodeExpression> node_, std::shared_ptr<resolverEntity> function_call_entity, std::shared_ptr<resolverResult> result, int &function_call_stack_size)
+int resolverScope::buildFunctionCallArguments(
+    std::shared_ptr<nodeExpression> node,
+    std::shared_ptr<resolverEntity> function_call_entity)
 {
-  // we have multiple arguments separated by opertaor node wiht op ",
-  if (!node_)
+  if (!node)
   {
-    return;
+    return 0;
   }
-  if (STRINGS_EQUAL(node_->getStringValue().c_str(), ","))
+  if (node->getStringValue() == ",")
   {
-    buildFunctionCallArguments(node_->getLeftNode(), function_call_entity, result, function_call_stack_size);
-    buildFunctionCallArguments(node_->getRightNode(), function_call_entity, result, function_call_stack_size);
+    return buildFunctionCallArguments(node->getLeftNode(), function_call_entity) +
+        buildFunctionCallArguments(node->getRightNode(), function_call_entity);
   }
-  else if (node_->getNodeType() == NODE_TYPE_EXPRESSION_PARANTHESES)
+  if (node->getNodeType() == NODE_TYPE_EXPRESSION_PARANTHESES)
   {
-    buildFunctionCallArguments(node_->getParenthesesNode(), function_call_entity, result, function_call_stack_size);
+    return buildFunctionCallArguments(node->getParenthesesNode(), function_call_entity);
   }
-  else
+
+  function_call_entity->addFunctionArgument(node);
+  if (!node->getDatatype())
   {
-    function_call_entity->addFunctionArgumnet(node_);
-    int datatype_size = 0;
-    if (node_->getDatatype())
-    {
-      datatype_size = node_->getDatatype()->getDatatypeSize();
-    }
-    else
-    {
-      cerror("function argument dont have a dataype size!!");
-    }
-    function_call_stack_size += (datatype_size + datatype::Padding(datatype_size, DATA_SIZE_DWORD));
+    cerror("function argument dont have a datatype size!");
+    return 0;
   }
+  const int datatype_size = node->getDatatype()->getDatatypeSize();
+  return datatype_size + datatype::Padding(datatype_size, DATA_SIZE_DWORD);
 }

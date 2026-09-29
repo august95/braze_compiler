@@ -4,14 +4,10 @@
 
 void resolverResult::addEntity(std::shared_ptr<resolverEntity> entity)
 {
-  if (m_entities.empty())
-  {
-    m_root_entity_data = entity->getResolverEntityData();
-  }
   m_entities.push_back(entity);
 }
 
-std::shared_ptr<resolverEntity> resolverResult::peekEntity()
+std::shared_ptr<resolverEntity> resolverResult::peekLastEntity() const
 {
   if (m_entities.empty())
   {
@@ -20,7 +16,7 @@ std::shared_ptr<resolverEntity> resolverResult::peekEntity()
   return m_entities.back();
 }
 
-std::shared_ptr<resolverEntity> resolverResult::nextEntity()
+std::shared_ptr<resolverEntity> resolverResult::popLastEntity()
 {
   if (m_entities.empty())
   {
@@ -40,7 +36,8 @@ std::shared_ptr<resolverEntity> resolverResult::getRootEntity()
   return m_entities.front();
 }
 
-std::string resolverResult::getRootAddress()
+std::string resolverResult::getRootAddress() const
 {
-  return m_root_entity_data->getAddress();
+  const auto root_entity = getRootEntity();
+  return root_entity ? root_entity->getAddress() : "";
 }

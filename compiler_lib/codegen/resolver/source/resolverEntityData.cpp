@@ -2,59 +2,35 @@
 #include "../../../braze_compiler.h"
 #include "../resolverEntityData.h"
 
-resolverEntityData::resolverEntityData(entityDataType entity_type)
-    : m_entity_type(entity_type),
-      m_is_stack(false),
-      offset(0),
-      m_ptr_depth(0)
+resolverEntityData::resolverEntityData()
 {
 }
 
 void resolverEntityData::setVariableNode(std::shared_ptr<nodeVariableDeclaration> node)
 {
-  m_entity_type = VARIABLE;
-  m_node = node;
-  m_datatype = node->getDatatype();
-  m_is_stack = true;
-
   if (node->getIsGlobal())
   {
-    setGlobalAsmAddress(m_node->getStringValue(), node->getIsGlobal() ? 0 : node->getStackOffset());
+    setGlobalAsmAddress(node->getStringValue());
   }
   else
   {
-    setStackAsmAddress(!node->getIsGlobal(), m_address, node->getStackOffset());
+    const int stack_offset = node->getStackOffset();
+    m_address = stack_offset > 0
+        ? "ebp+" + std::to_string(stack_offset)
+        : "ebp" + std::to_string(stack_offset);
   }
 }
 
-void resolverEntityData::setStackAsmAddress(bool local_stack, std::string &address, int stack_offset)
-{
-  if (local_stack)
-  {
-    if (stack_offset > 0)
-    {
-      address = "ebp+" + std::to_string(stack_offset);
-      return;
-    }
-    address = "ebp" + std::to_string(stack_offset);
-  }
-  else
-  {
-    address = "variable name";
-  }
-}
 void resolverEntityData::registerFunction(std::shared_ptr<node> node)
 {
-  m_entity_type = FUNCTION;
-  setGlobalAsmAddress(node->getStringValue(), 0);
+  setGlobalAsmAddress(node->getStringValue());
 }
 
-void resolverEntityData::setGlobalAsmAddress(std::string name, int offset)
+void resolverEntityData::setGlobalAsmAddress(const std::string& name, int offset)
 {
-  if (offset == 0)
+  m_address = name;
+  if (offset != 0)
   {
-    m_address += name;
-    return;
+    m_address += "+" + std::to_string(offset);
   }
-  m_address += name + "+" + std::to_string(offset);
 }
