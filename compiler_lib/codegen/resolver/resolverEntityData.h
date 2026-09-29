@@ -1,45 +1,18 @@
 #pragma once
 #include "../../node_/node.h"
 #include "../../node_/nodeVariableDeclaration.h"
-#include "../../datatype.h"
 #include <string>
 #include <memory>
-
-enum entityDataType
-{
-  NONE,
-  FUNCTION,
-  VARIABLE,
-  STRUCT,
-  SCOPE
-};
 
 class resolverEntityData
 {
 public:
-  resolverEntityData(entityDataType entity_type = entityDataType::NONE);
+  resolverEntityData();
   void setVariableNode(std::shared_ptr<nodeVariableDeclaration> node);
-  std::string getAddress() { return m_address; }
-  std::string getBaseAddress() { return m_base_address; }
-  void setStackAsmAddress(bool local_stack, std::string &address, int stack_offset);
-  std::shared_ptr<node> getNode() { return m_node; }
+  std::string getAddress() const { return m_address; }
   void registerFunction(std::shared_ptr<node> node);
-  void setGlobalAsmAddress(std::string name, int offset = 0);
-  void increasePtrDepth() { m_ptr_depth++; }
-  int getPtrDepth() { return m_ptr_depth; }
-  // private:
-  //  ie variable function or struct
-  int m_entity_type;
-  // This is the addresss [ebp-4][var_name+4]
-  std::string m_address;
-  // ebp, var_name
-  std::string m_base_address;
-  // -4
-  int offset;
-  int flags;
-  int m_ptr_depth;
+  void setGlobalAsmAddress(const std::string& name, int offset = 0);
 
-  bool m_is_stack;
-  std::shared_ptr<datatype> m_datatype;
-  std::shared_ptr<node> m_node;
+private:
+  std::string m_address;
 };
