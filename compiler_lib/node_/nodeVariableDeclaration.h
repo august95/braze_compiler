@@ -25,6 +25,8 @@ public:
   bool getIsFunctionArgument() { return m_is_function_argument; }
   virtual void setIsGlobal(bool is_global) override { m_is_global = is_global; }
   bool getIsGlobal() { return m_is_global; }
+  void setStructMemberOffset(int offset) { m_struct_member_offset = offset; }
+  int getStructMemberOffset() { return m_struct_member_offset; }
 
   virtual void setStringValue(std::string string_value) { m_string_value = string_value; node::setStringValue(string_value); }
   std::string getStringValue() { return m_string_value; }
@@ -37,5 +39,5 @@ private:
   bool m_is_global;
   bool m_is_function_argument;
   int m_padding;
+  int m_struct_member_offset;
 };
-

@@ -53,6 +53,58 @@ TEST(debug, debug) {
 
 */
 
+TEST(codegen, struct_member_access) {
+  std::string target =
+    "section .data\n"
+    "global: times 8 db 0\n"
+    "section .text\n"
+    "global main\n"
+    "main:\n"
+    "push ebp\n"
+    "mov ebp, esp\n"
+    "sub esp, 16\n"
+    "push dword 3\n"
+    "pop eax\n"
+    "mov byte [ebp-8], al\n"
+    "push dword 7\n"
+    "pop eax\n"
+    "mov word [ebp-8+2], ax\n"
+    "push dword 42\n"
+    "pop eax\n"
+    "mov dword [ebp-8+4], eax\n"
+    "mov eax, [ebp-8]\n"
+    "movzx eax, al\n"
+    "push eax\n"
+    "pop eax\n"
+    "mov byte [global], al\n"
+    "mov eax, [ebp-8+2]\n"
+    "movzx eax, ax\n"
+    "push eax\n"
+    "pop eax\n"
+    "mov word [global+2], ax\n"
+    "push dword [ebp-8+4]\n"
+    "pop eax\n"
+    "mov dword [global+4], eax\n"
+    "push dword [global+4]\n"
+    "pop eax\n"
+    "add esp, 16\n"
+    "pop ebp\n"
+    "ret\n"
+    "add esp, 16\n"
+    "pop ebp\n"
+    "ret\n"
+    "section .rodata\n";
+
+  std::string file_name = "codegeneration/test_codegen_struct.c";
+  std::string asm_file = file_name + ".asm";
+
+  translationUnit translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
+  EXPECT_TRUE(compareFiles(target, file_path + asm_file));
+  translation_unit.stop();
+}
+
 TEST(lexer, symbols) {
 
   std::string file_name = "lexer/test_lexer_symbol.c";

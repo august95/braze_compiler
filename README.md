@@ -24,13 +24,14 @@ Feature list:
 7. for loop is supported, continue and break is supported
   * Init part of the for loop must contain a variable declaration. Condition and loop part must be present.
 8. pointer arithmentic is partially supported
+9. Tagged structs with primitive or nested struct members, local/global instances, and `.` member reads/writes are supported.
 
 Known limitations:
 1. No pre processor support, include doesn't work. In order to use Printf, declare the following prototype at the top of the file, and nasm will link it: "int printf(const char *format, ...);" 
 2. Format specifiers in strings is not supported, example: "test value %d", 10
 3. Return keyword is not suppoerted
 4. Following controll flow constructs are not supported: do while, goto
-5. No structs, typedef or complex types are supported
+5. Unions, typedefs, pointer member access, whole-struct copies, and structs passed or returned by value are not supported.
 6. Global variables must be declared before the first function definition
 
 To see examples of implemented language features goto: /unit_test/test_files/codegeneration/

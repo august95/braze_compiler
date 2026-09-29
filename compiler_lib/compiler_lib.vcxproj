@@ -157,6 +157,7 @@
     <ClInclude Include="node_\nodePreProcessor.h" />
     <ClInclude Include="node_\nodeStatement.h" />
     <ClInclude Include="node_\nodeVariableDeclaration.h" />
+    <ClInclude Include="node_\nodeStructDeclaration.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="precedenceHandler.h" />
     <ClInclude Include="preprocessor\preprocessor.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="node_\source\nodePreProcessor.cpp" />
     <ClCompile Include="node_\source\nodeStatement.cpp" />
     <ClCompile Include="node_\source\nodeVariableDeclaration.cpp" />
+    <ClCompile Include="node_\source\nodeStructDeclaration.cpp" />
     <ClCompile Include="preprocessor\source\preprocessor.cpp" />
     <ClCompile Include="preprocessor\source\preProcessorExpressionable.cpp" />
     <ClCompile Include="preprocessor\source\preprocessordefinition.cpp" />

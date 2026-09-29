@@ -49,6 +49,8 @@ void resolverEntity::registerFunction(std::shared_ptr<nodeFunctionDeclaration> n
 
 std::string resolverEntity::getAddress()
 {
+  if (!m_resolved_address.empty())
+    return m_resolved_address;
   if (m_entity_data)
     return m_entity_data->getAddress();
   return "";

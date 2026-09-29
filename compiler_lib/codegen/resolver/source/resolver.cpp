@@ -18,6 +18,7 @@ void resolver::registerFunction(std::shared_ptr<nodeFunctionDeclaration> functio
 std::shared_ptr<resolverEntity> resolver::registerVariable(std::shared_ptr<node> node)
 {
   std::shared_ptr<resolverEntity> entity = std::make_shared<resolverEntity>(node);
+  entity->setDatatype(node->getDatatype());
   if (node->getNodeType() == NODE_TYPE_VARIABLE)
   {
     entity->createResolverEntityData();

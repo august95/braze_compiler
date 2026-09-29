@@ -115,6 +115,11 @@ bool codeGeneratorExpression::resolveNodeForValue(std::shared_ptr<nodeExpression
   {
     return false;
   }
+  if (entity->getEntityType() == E_STRUCT_MEMBER)
+  {
+    generateMemoryAccess(node, entity, 0);
+    return true;
+  }
   generateEntityAccess(node, result);
   std::shared_ptr < datatype > datatype = m_asm_writer.getDatatypeOnStack();
   if (datatype->getPointerDepth() != 0)
@@ -262,28 +267,30 @@ void codeGeneratorExpression::generateVariableAccess(std::shared_ptr<nodeExpress
 
 void codeGeneratorExpression::generateMemoryAccess(std::shared_ptr<nodeExpression> node, std::shared_ptr<resolverEntity> entity, int flags)
 {
+  std::shared_ptr<datatype> datatype = entity->getDatatype();
   if (flags & GET_ADDRESS)
   {
     // handle pointer access lea instruction
   }
 
-  if (entity->getNode()->getNodeType() == NODE_TYPE_STRUCT)
+  if (datatype->isStruct())
   {
-    // handle struct
+    cerror("loading a whole struct value is not supported", node->getFilePosition());
+    assert(false);
   }
-  else if (entity->getNode()->getDatatypeSize() != DATA_SIZE_DWORD)
+  else if (datatype->getDatatypeSize() != DATA_SIZE_DWORD)
   {
     // handle other sizes than dword
     // alignment in memory is always 4 bytes
     // we need to reduce the number of bytes we are using in the register
-    m_asm_writer.asmGen("mov eax, [" + entity->getResolverEntityData()->getAddress() + "]");
-    m_asm_writer.asmGenReduceRegister("eax", node->getDatatype()->getDatatypeSize(), node->getDatatype()->isSigned());
-    m_asm_writer.asmGenPushIns("eax", node->getDatatype(), node->getStackOffset());
+    m_asm_writer.asmGen("mov eax, [" + entity->getAddress() + "]");
+    m_asm_writer.asmGenReduceRegister("eax", datatype->getDatatypeSize(), datatype->isSigned());
+    m_asm_writer.asmGenPushIns("eax", datatype, node->getStackOffset());
   }
-  else if (entity->getNode()->getDatatypeSize() == DATA_SIZE_DWORD)
+  else if (datatype->getDatatypeSize() == DATA_SIZE_DWORD)
   {
     // we can push this straight to the stack
-    m_asm_writer.asmGenPushIns("dword [" + entity->getResolverEntityData()->getAddress() + "]", node->getDatatype(), node->getStackOffset());
+    m_asm_writer.asmGenPushIns("dword [" + entity->getAddress() + "]", datatype, node->getStackOffset());
   }
   else
   {
@@ -443,4 +450,3 @@ std::string codeGeneratorExpression::registerString(std::string str)
   m_strings[str] = "str_" + std::to_string(m_codegen->generateLableCount());
   return m_strings[str];
 }
-
