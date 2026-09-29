@@ -2,6 +2,8 @@
 #include "../../../braze_compiler.h"
 #include "../resolverScope.h"
 #include "../../../node_/nodeStructDeclaration.h"
+#include <functional>
+#include <vector>
 
 resolverScope::resolverScope()
     : m_root_scope(false),
@@ -71,33 +73,52 @@ void resolverScope::followExpression(std::shared_ptr<nodeExpression> node, std::
   }
   else if (STRINGS_EQUAL(node->getStringValue().c_str(), "."))
   {
-    follow(node->getLeftNode(), result);
-    std::shared_ptr<resolverEntity> base = result->peekEntity();
-    std::shared_ptr<datatype> base_type = base ? base->getDatatype() : std::shared_ptr<datatype>();
-    if (!base_type || !base_type->isStruct() || base_type->getPointerDepth() != 0)
+    std::vector<std::shared_ptr<nodeExpression>> operands;
+    std::function<void(std::shared_ptr<nodeExpression>)> flattenMemberAccess =
+      [&](std::shared_ptr<nodeExpression> expression)
     {
-      cerror("member access requires a struct object", node->getFilePosition());
-      assert(false);
-    }
+      if (expression && expression->getNodeType() == NODE_TYPE_EXPRESSION &&
+          STRINGS_EQUAL(expression->getStringValue().c_str(), "."))
+      {
+        flattenMemberAccess(expression->getLeftNode());
+        flattenMemberAccess(expression->getRightNode());
+      }
+      else
+      {
+        operands.push_back(expression);
+      }
+    };
+    flattenMemberAccess(node);
+    follow(operands.front(), result);
 
-    std::shared_ptr<nodeExpression> member_name = node->getRightNode();
-    std::shared_ptr<nodeVariableDeclaration> member =
-      base_type->getStructDefinition()->findMember(member_name->getStringValue());
-    if (!member)
+    for (auto member_name = std::next(operands.begin()); member_name != operands.end(); ++member_name)
     {
-      cerror("unknown struct member", member_name->getFilePosition());
-      assert(false);
+      std::shared_ptr<resolverEntity> base = result->peekEntity();
+      std::shared_ptr<datatype> base_type = base ? base->getDatatype() : std::shared_ptr<datatype>();
+      if (!base_type || !base_type->isStruct() || base_type->getPointerDepth() != 0)
+      {
+        cerror("member access requires a struct object", (*member_name)->getFilePosition());
+        assert(false);
+      }
+
+      std::shared_ptr<nodeVariableDeclaration> member =
+        base_type->getStructDefinition()->findMember((*member_name)->getStringValue());
+      if (!member)
+      {
+        cerror("unknown struct member", (*member_name)->getFilePosition());
+        assert(false);
+      }
+      std::shared_ptr<resolverEntity> member_entity = std::make_shared<resolverEntity>(member);
+      member_entity->setEntityType(E_STRUCT_MEMBER);
+      member_entity->setDatatype(member->getDatatype());
+      std::string address = base->getAddress();
+      if (member->getStructMemberOffset() != 0)
+      {
+        address += "+" + std::to_string(member->getStructMemberOffset());
+      }
+      member_entity->setResolvedAddress(address);
+      result->addEntity(member_entity);
     }
-    std::shared_ptr<resolverEntity> member_entity = std::make_shared<resolverEntity>(member);
-    member_entity->setEntityType(E_STRUCT_MEMBER);
-    member_entity->setDatatype(member->getDatatype());
-    std::string address = base->getAddress();
-    if (member->getStructMemberOffset() != 0)
-    {
-      address += "+" + std::to_string(member->getStructMemberOffset());
-    }
-    member_entity->setResolvedAddress(address);
-    result->addEntity(member_entity);
   }
 }
 

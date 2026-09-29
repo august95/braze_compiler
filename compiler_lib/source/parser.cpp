@@ -644,6 +644,7 @@ std::shared_ptr<nodeStructDeclaration> parser::parseStructDefinition(std::string
 {
   std::shared_ptr<nodeStructDeclaration> definition =
     std::make_shared<nodeStructDeclaration>(name, file_position);
+  bool has_members = false;
 
   while (peekToken()->getCharValue() != '}')
   {
@@ -657,11 +658,21 @@ std::shared_ptr<nodeStructDeclaration> parser::parseStructDefinition(std::string
       cerror("union members are not supported", peekToken()->getFilePosition());
       assert(false);
     }
+    if (member_type->getDatatypeSize() == 0 && member_type->getPointerDepth() == 0)
+    {
+      cerror("struct members must have a complete object type", peekToken()->getFilePosition());
+      assert(false);
+    }
 
     std::shared_ptr<token> member_name = nextToken();
     if (!member_name->isTokenTypeIdentifier())
     {
       cerror("expected struct member name", member_name->getFilePosition());
+      assert(false);
+    }
+    if (definition->findMember(member_name->getStringValue()))
+    {
+      cerror("duplicate struct member", member_name->getFilePosition());
       assert(false);
     }
     std::shared_ptr<nodeVariableDeclaration> member =
@@ -676,8 +687,14 @@ std::shared_ptr<nodeStructDeclaration> parser::parseStructDefinition(std::string
       assert(false);
     }
     definition->addMember(member);
+    has_members = true;
   }
   nextToken();
+  if (!has_members)
+  {
+    cerror("empty structs are not supported", file_position);
+    assert(false);
+  }
   return definition;
 }
 
