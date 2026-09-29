@@ -10,7 +10,7 @@ public:
   void addEntity(std::shared_ptr<resolverEntity> entity);
   std::shared_ptr<resolverEntity> peekLastEntity() const;
   std::shared_ptr<resolverEntity> popLastEntity();
-  std::shared_ptr<resolverEntity> getRootEntity();
+  std::shared_ptr<resolverEntity> getRootEntity() const;
   std::string getRootAddress() const;
 
 private:

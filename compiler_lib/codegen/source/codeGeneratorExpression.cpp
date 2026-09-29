@@ -108,9 +108,8 @@ void codeGeneratorExpression::generateExpressionLogicalArithmetic(std::shared_pt
 
 bool codeGeneratorExpression::resolveNodeForValue(std::shared_ptr<nodeExpression> node)
 {
-  std::shared_ptr<resolverResult> result;
-  m_resolver.follow(node, result);
-  std::shared_ptr<resolverEntity> entity = result->peekEntity();
+  std::shared_ptr<resolverResult> result = m_resolver.follow(node);
+  std::shared_ptr<resolverEntity> entity = result->peekLastEntity();
   if (!entity)
   {
     return false;
@@ -134,7 +133,7 @@ void codeGeneratorExpression::generateEntityAccess(std::shared_ptr<nodeExpressio
   std::shared_ptr<resolverEntity> root_entity = result->getRootEntity();
   generateEntityAccessStart(root_entity, result);
 
-  while (std::shared_ptr<resolverEntity> entity = result->nextEntity())
+  while (std::shared_ptr<resolverEntity> entity = result->popLastEntity())
   {
     generateEntityAccessForEntity(entity, result);
   }
@@ -162,7 +161,7 @@ void codeGeneratorExpression::generateEntityAccessForFunctionCall(std::shared_pt
   m_asm_writer.asmGenPopIns("ebx");
   m_asm_writer.asmGen("mov ecx, ebx");
   // FIXME: handle funciton arguments
-  std::list<std::shared_ptr<node>> function_arguments = entity->getFunctionArguments();
+  const std::list<std::shared_ptr<node>>& function_arguments = entity->getFunctionArguments();
   for (auto it = function_arguments.rbegin(); it != function_arguments.rend(); ++it)
   {
     std::shared_ptr<node> argument = (*it);
@@ -171,7 +170,7 @@ void codeGeneratorExpression::generateEntityAccessForFunctionCall(std::shared_pt
   // iterate over arguments and call generateExpressionable() to push variables to stack
   m_asm_writer.asmGen("call ecx");
 
-  m_asm_writer.addStack(entity->getFunctionCallStacksize());
+  m_asm_writer.addStack(entity->getFunctionCallStackSize());
   // m_asm_writer.
   m_asm_writer.asmGenPushIns("eax", entity->getDatatype(), 0);
 }
@@ -236,17 +235,15 @@ void codeGeneratorExpression::generateNumber(std::shared_ptr<nodeExpression> nod
 void codeGeneratorExpression::generateIdentifier(std::shared_ptr<nodeExpression> node)
 {
   //always variable, functon calls are expressions with () op
-  std::shared_ptr<resolverResult> result;
-  m_resolver.follow(node, result);
-  std::shared_ptr<resolverEntity> entity = result->peekEntity();
+  std::shared_ptr<resolverResult> result = m_resolver.follow(node);
+  std::shared_ptr<resolverEntity> entity = result->peekLastEntity();
   generateMemoryAccess(node, entity, 0); // push value to stack
 }
 
 void codeGeneratorExpression::generateAssignmentPart(std::shared_ptr<nodeExpression> node, std::string operator_)
 {
-  std::shared_ptr<resolverResult> result;
-  m_resolver.follow(node, result);
-  std::shared_ptr<resolverEntity> entity = result->peekEntity();
+  std::shared_ptr<resolverResult> result = m_resolver.follow(node);
+  std::shared_ptr<resolverEntity> entity = result->peekLastEntity();
   std::string reg_to_use = "eax";
   std::string mov_type = entity->getNode()->getDatatype()->getDatatypeRegisterSize();
   // fixme: add support for asignment of structs!
@@ -443,4 +440,3 @@ std::string codeGeneratorExpression::registerString(std::string str)
   m_strings[str] = "str_" + std::to_string(m_codegen->generateLableCount());
   return m_strings[str];
 }
-

@@ -1,6 +1,7 @@
 #include "../../../source/pch.h"
 #include "../../../braze_compiler.h"
 #include "../resolverScope.h"
+#include <utility>
 
 resolverScope::resolverScope(std::shared_ptr<resolverScope> parent)
     : m_parent(std::move(parent))
@@ -19,25 +20,25 @@ void resolverScope::follow(std::shared_ptr<node> node, std::shared_ptr<resolverR
     return;
   }
 
-  if (node->getNodeType() == NODE_TYPE_VARIABLE)
+  switch (node->getNodeType())
   {
+  case NODE_TYPE_VARIABLE:
     followName(node, result);
-  }
-  else if (node->getNodeType() == NODE_TYPE_IDENTIFIER)
-  {
+    break;
+  case NODE_TYPE_IDENTIFIER:
     followName(cast_node<nodeExpression>(node), result);
-  }
-  else if (node->getNodeType() == NODE_TYPE_EXPRESSION)
-  {
+    break;
+  case NODE_TYPE_EXPRESSION:
     followExpression(cast_node<nodeExpression>(node), result);
-  }
-  else if (node->getNodeType() == NODE_TYPE_EXPRESSION_PARANTHESES)
-  {
-    followExpression((cast_node<nodeExpression>(node)->getParenthesesNode()), result);
-  }
-  else if (node->getNodeType() == NODE_TYPE_UNARY)
-  {
+    break;
+  case NODE_TYPE_EXPRESSION_PARANTHESES:
+    followExpression(cast_node<nodeExpression>(node)->getParenthesesNode(), result);
+    break;
+  case NODE_TYPE_UNARY:
     followUnary(cast_node<nodeExpression>(node), result);
+    break;
+  default:
+    break;
   }
 }
 
@@ -70,8 +71,7 @@ void resolverScope::followName(std::shared_ptr<node> node, std::shared_ptr<resol
 
 void resolverScope::followExpression(std::shared_ptr<nodeExpression> node, std::shared_ptr<resolverResult> result)
 {
-
-  if (STRINGS_EQUAL(node->getStringValue().c_str(), "()"))
+  if (node && node->getStringValue() == "()")
   {
     followFunctionCall(node, result);
   }
@@ -79,12 +79,17 @@ void resolverScope::followExpression(std::shared_ptr<nodeExpression> node, std::
 
 void resolverScope::followFunctionCall(std::shared_ptr<nodeExpression> node_, std::shared_ptr<resolverResult> result)
 {
-  assert(node_->getLeftNode()->getNodeType() == NODE_TYPE_IDENTIFIER);
+  if (!node_ || !node_->getLeftNode() ||
+      node_->getLeftNode()->getNodeType() != NODE_TYPE_IDENTIFIER)
+  {
+    cerror("invalid function call!");
+    return;
+  }
   std::shared_ptr<node> func_name = node_->getLeftNode();
 
   follow(func_name, result);
   std::shared_ptr<resolverEntity> function_entity = result->peekLastEntity();
-  if (!function_entity)
+  if (!function_entity || function_entity->getEntityType() != E_FUNCTION)
   {
     cerror("could not resolve function!");
     return;
@@ -124,6 +129,10 @@ void resolverScope::followUnaryAddress(std::shared_ptr<nodeExpression> node_, st
   // we are creating a pointer out of the identifier val
   follow(node_->getValueNode(), result);
   std::shared_ptr<resolverEntity> last_entity = result->getRootEntity();
+  if (!last_entity || !last_entity->getNode())
+  {
+    return;
+  }
   std::shared_ptr<resolverEntity> unary_address = std::make_shared<resolverEntity>(node_);
   unary_address->setEntityType(E_UNARY_ADDRESS);
   last_entity->setDatatype(last_entity->getNode()->getDatatype());
@@ -136,8 +145,12 @@ void resolverScope::followUnaryAddress(std::shared_ptr<nodeExpression> node_, st
 void resolverScope::followUnaryIndirection(std::shared_ptr<nodeExpression> node_, std::shared_ptr<resolverResult> result)
 {
   follow(node_->getValueNode(), result);
-  std::shared_ptr<resolverEntity> indirection_entity = std::make_shared<resolverEntity>(node_);
   std::shared_ptr<resolverEntity> last_entity = result->getRootEntity();
+  if (!last_entity)
+  {
+    return;
+  }
+  std::shared_ptr<resolverEntity> indirection_entity = std::make_shared<resolverEntity>(node_);
   indirection_entity->setEntityType(E_INDIRECTION);
   indirection_entity->setUnaryIndirectionDepth(node_->getUnaryIndirectionDepth());
   indirection_entity->setDatatype(node_->getDatatype());

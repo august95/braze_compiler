@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <list>
-#include "../resolver/resolverEntityData.h"
+#include "resolverEntityData.h"
 #include "../../node_/node.h"
 #include "../../node_/nodeFunctionDeclaration.h"
 #include <memory>
@@ -50,11 +50,11 @@ public:
   int getUnaryIndirectionDepth() const { return m_indirection_depth; }
 
 private:
-  int m_indirection_depth;
   entityType m_type;
   int m_code_gen_instruction;
-  std::shared_ptr<resolverEntityData> m_entity_data;
+  int m_indirection_depth;
   std::shared_ptr<node> m_node;
+  std::shared_ptr<resolverEntityData> m_entity_data;
   std::shared_ptr<datatype> m_datatype;
   int m_function_call_stack_size;
   std::list<std::shared_ptr<node>> m_function_arguments;

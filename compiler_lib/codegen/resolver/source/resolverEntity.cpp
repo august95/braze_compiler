@@ -5,18 +5,18 @@
 
 resolverEntity::resolverEntity()
   : m_type(E_NONE),
-    m_function_call_stack_size(0),
     m_code_gen_instruction(0),
-    m_indirection_depth(0)
+    m_indirection_depth(0),
+    m_function_call_stack_size(0)
 {
 }
 
 resolverEntity::resolverEntity(std::shared_ptr<node> node)
   : m_type(E_NONE),
-    m_node(node),
-    m_function_call_stack_size(0),
     m_code_gen_instruction(0),
-    m_indirection_depth(0)
+    m_indirection_depth(0),
+    m_node(node),
+    m_function_call_stack_size(0)
 {
 }
 

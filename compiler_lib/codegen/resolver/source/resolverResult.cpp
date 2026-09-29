@@ -27,7 +27,7 @@ std::shared_ptr<resolverEntity> resolverResult::popLastEntity()
   return entity;
 }
 
-std::shared_ptr<resolverEntity> resolverResult::getRootEntity()
+std::shared_ptr<resolverEntity> resolverResult::getRootEntity() const
 {
   if (m_entities.empty())
   {
