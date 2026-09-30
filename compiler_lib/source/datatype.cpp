@@ -149,6 +149,15 @@ void datatype::incrementPointerDepth()
   calcualteDatatypeSize();
 }
 
+void datatype::decrementPointerDepth()
+{
+  if (m_pointer_depth > 0)
+  {
+    m_pointer_depth--;
+    calcualteDatatypeSize();
+  }
+}
+
 void datatype::calcualteDatatypeSize()
 {
   m_datatype_size = getPrimitiveTypeSize(m_first);

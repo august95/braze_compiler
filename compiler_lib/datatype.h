@@ -44,6 +44,7 @@ public:
   bool isExtern() { return m_extern; }
   bool secondaryPrimitiveType() { return m_has_secondary_primitive_type; }
   void incrementPointerDepth();
+  void decrementPointerDepth();
   bool isRValue() { return m_r_value; }
   bool setRValue(bool r_value) { return m_r_value = r_value; }
   unsigned int getPointerDepth() { return m_pointer_depth; }

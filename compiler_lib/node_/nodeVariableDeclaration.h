@@ -13,6 +13,8 @@ public:
   virtual void calculateStackOffset(int& stack_offset) override;
 
   virtual int getDatatypeSize() override;
+  void setArrayLength(int array_length) { m_array_length = array_length; }
+  int getArrayLength() { return m_array_length; }
   void setDatatype(std::shared_ptr<datatype> dtype) { m_datatype = dtype; }
   virtual std::shared_ptr<datatype> getDatatype() override { return m_datatype; }
 
@@ -37,5 +39,5 @@ private:
   bool m_is_global;
   bool m_is_function_argument;
   int m_padding;
+  int m_array_length;
 };
-

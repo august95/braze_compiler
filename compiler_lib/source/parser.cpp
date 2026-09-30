@@ -219,6 +219,11 @@ void parser::parseOperand()
 void parser::parseOperator()
 {
   std::shared_ptr<token> operatort_token = peekToken();
+  if (STRINGS_EQUAL(operatort_token->getStringValue().c_str(), "["))
+  {
+    parseArraySubscript();
+    return;
+  }
   if (STRINGS_EQUAL(operatort_token->getStringValue().c_str(), "("))
   {
     parseParenthesesExpressionOrFunctionCall();
@@ -232,7 +237,32 @@ void parser::parseOperator()
   parseNormalExpression();
 }
 
-void parser::parseParenthesesExpressionOrFunctionCall()
+void parser::parseArraySubscript()
+{
+  std::shared_ptr<nodeExpression> array_node = cast_node<nodeExpression>(popLastNode());
+  std::shared_ptr<token> bracket = nextToken();
+  assert(STRINGS_EQUAL(bracket->getStringValue().c_str(), "["));
+  parseExpression();
+  std::shared_ptr<nodeExpression> index_node = cast_node<nodeExpression>(popLastNode());
+  std::shared_ptr<token> closing_bracket = nextToken();
+  assert(closing_bracket->getCharValue() == ']');
+
+  std::shared_ptr<nodeExpression> subscript_node = makeExpressionNode(
+      bracket->getFilePosition(), "[]", array_node, index_node);
+  std::shared_ptr<datatype> element_type = array_node->getDatatype();
+  if (element_type)
+  {
+    element_type = std::make_shared<datatype>(*element_type);
+    if (element_type->getPointerDepth() > 0)
+    {
+      element_type->decrementPointerDepth();
+    }
+  }
+  subscript_node->setDatatype(element_type);
+  pushNode(subscript_node);
+}
+
+void parser::parseParenthesesExpressionOrFunctionCall(bool parse_following_operators)
 {
   std::shared_ptr<token> token = nextToken();
   assert(STRINGS_EQUAL(token->getStringValue().c_str(), "("));
@@ -263,6 +293,10 @@ void parser::parseParenthesesExpressionOrFunctionCall()
 
   std::shared_ptr<nodeExpression> parentheses_node = std::make_shared<nodeExpression>(NODE_TYPE_EXPRESSION_PARANTHESES, token->getFilePosition());
   parentheses_node->setParenthesesNode(expression_node);
+  if (expression_node)
+  {
+    parentheses_node->setDatatype(expression_node->getDatatype());
+  }
   if (function_call)
   {
     // having function calls as expression type makes precedence much more easer!!! function calls is recognized by having "()" as op
@@ -281,7 +315,7 @@ void parser::parseParenthesesExpressionOrFunctionCall()
   //  50 + func(50) * 30;
   //  50 + (30 +20) - 4
   token = peekToken();
-  if (token->isTokenTypeOperator())
+  if (parse_following_operators && token->isTokenTypeOperator())
   {
     parseExpression();
   }
@@ -327,6 +361,23 @@ void parser::parseNormalExpression()
   parseExpression();                  // parse 30 + 20
   std::shared_ptr<nodeExpression> right_node = cast_node<nodeExpression>(popLastNode()); // + L(30) R(20)
   std::shared_ptr<nodeExpression> expression_node = cast_node<nodeExpression>(makeExpressionNode(operator_token->getFilePosition(), operator_token->getStringValue(), left_node, right_node));
+  if (expression_node->getStringValue() == "+" || expression_node->getStringValue() == "-")
+  {
+    std::shared_ptr<datatype> pointer_type;
+    if (left_node->getDatatype() && left_node->getDatatype()->getPointerDepth() > 0)
+    {
+      pointer_type = left_node->getDatatype();
+    }
+    else if (expression_node->getStringValue() == "+" && right_node->getDatatype() &&
+             right_node->getDatatype()->getPointerDepth() > 0)
+    {
+      pointer_type = right_node->getDatatype();
+    }
+    if (pointer_type)
+    {
+      expression_node->setDatatype(std::make_shared<datatype>(*pointer_type));
+    }
+  }
 
   precedenceHandler::reorderExpression<nodeExpression, nodeType::NODE_TYPE_EXPRESSION>(expression_node);
 
@@ -610,6 +661,19 @@ void parser::parseVariableOrFunction()
     m_symbol_resolver.addNodeToCurrentScope(var_node);
     nextToken(); // pop off ';'
   }
+  else if (token->isTokenTypeOperator() && (token->getStringValue() == "["))
+  {
+    std::shared_ptr<class token> length_token = nextToken();
+    assert(length_token->isTokenTypeNumber() && length_token->getNumberValue() > 0 &&
+           length_token->getNumberValue() <= 0x7fffffffUL);
+    std::shared_ptr<class token> closing_bracket = nextToken();
+    assert(closing_bracket->getCharValue() == ']');
+    token = nextToken();
+    assert(token->getCharValue() == ';');
+    var_node->setDatatype(datatype);
+    var_node->setArrayLength(static_cast<int>(length_token->getNumberValue()));
+    m_symbol_resolver.addNodeToCurrentScope(var_node);
+  }
   else if (token->isTokenTypeOperator() && (token->getStringValue() == "("))
   {
     // parsing function int a(){}
@@ -790,11 +854,17 @@ void parser::parseNormalUnary()
 {
   std::shared_ptr<token> operator_token = nextToken();
   std::string operator_ = operator_token->getStringValue();
-  parseExpression();
+  parseUnaryOperand();
   std::shared_ptr<nodeExpression> operand_node = cast_node<nodeExpression>(popLastNode());
   std::shared_ptr<nodeExpression> unary_node = std::make_shared<nodeExpression>(NODE_TYPE_UNARY, operand_node->getFilePosition());
   unary_node->setValueNode(operand_node);
   unary_node->setStringValue(operator_token->getStringValue());
+  if (operator_ == "&" && operand_node->getDatatype())
+  {
+    std::shared_ptr<datatype> pointer_type = std::make_shared<datatype>(*operand_node->getDatatype());
+    pointer_type->incrementPointerDepth();
+    unary_node->setDatatype(pointer_type);
+  }
   pushNode(unary_node);
 }
 
@@ -811,14 +881,62 @@ void parser::parseIndirectionUnary()
   } while (STRINGS_EQUAL(it_token->getStringValue().c_str(), "*"));
 
   std::string operator_ = operator_token->getStringValue();
-  parseExpression();
+  parseUnaryOperand();
   std::shared_ptr<nodeExpression> operand_node = cast_node<nodeExpression>(popLastNode());
   std::shared_ptr<nodeExpression> unary_node = std::make_shared<nodeExpression>(NODE_TYPE_UNARY, operand_node->getFilePosition());
   unary_node->setValueNode(operand_node);
   unary_node->setStringValue(operator_);
   unary_node->setUnaryIndirectionDepth(pointer_depth);
-  unary_node->setDatatype(operand_node->getDatatype());
+  if (operand_node->getDatatype())
+  {
+    std::shared_ptr<datatype> result_type = std::make_shared<datatype>(*operand_node->getDatatype());
+    for (int i = 0; i < pointer_depth; ++i)
+    {
+      result_type->decrementPointerDepth();
+    }
+    unary_node->setDatatype(result_type);
+  }
   pushNode(unary_node);
+}
+
+void parser::parseUnaryOperand()
+{
+  std::shared_ptr<token> token = peekToken();
+  if (token->isTokenTypeOperator() && token->getStringValue() == "(")
+  {
+    nextToken();
+    parseExpression();
+    std::shared_ptr<nodeExpression> expression = cast_node<nodeExpression>(popLastNode());
+    std::shared_ptr<class token> closing = nextToken();
+    assert(closing->getCharValue() == ')');
+    std::shared_ptr<nodeExpression> parentheses =
+        std::make_shared<nodeExpression>(NODE_TYPE_EXPRESSION_PARANTHESES, closing->getFilePosition());
+    parentheses->setParenthesesNode(expression);
+    parentheses->setDatatype(expression->getDatatype());
+    pushNode(parentheses);
+  }
+  else if (token->isTokenTypeOperator() && token->isUnaryOperator())
+  {
+    parseUnary();
+  }
+  else
+  {
+    parseOperand();
+  }
+
+  while ((token = peekToken()) &&
+         token->isTokenTypeOperator() &&
+         (token->getStringValue() == "[" || token->getStringValue() == "("))
+  {
+    if (token->getStringValue() == "[")
+    {
+      parseArraySubscript();
+    }
+    else
+    {
+      parseParenthesesExpressionOrFunctionCall(false);
+    }
+  }
 }
 
 void parser::parseBreak()

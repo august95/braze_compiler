@@ -119,10 +119,9 @@ void resolverScope::followUnaryAddress(std::shared_ptr<nodeExpression> node_, st
   std::shared_ptr<resolverEntity> last_entity = result->getRootEntity();
   std::shared_ptr<resolverEntity> unary_address = std::make_shared<resolverEntity>(node_);
   unary_address->setEntityType(E_UNARY_ADDRESS);
-  last_entity->setDatatype(last_entity->getNode()->getDatatype());
-  unary_address->setDatatype(last_entity->getNode()->getDatatype());
-  //load the address of the variable val into register
-  last_entity->setCodeGenInstruction(CG_POINTER_ACCESS);
+  std::shared_ptr<datatype> address_type = std::make_shared<datatype>(*last_entity->getNode()->getDatatype());
+  address_type->incrementPointerDepth();
+  unary_address->setDatatype(address_type);
   result->addEntity(unary_address);
 }
 
@@ -134,7 +133,6 @@ void resolverScope::followUnaryIndirection(std::shared_ptr<nodeExpression> node_
   indirection_entity->setEntityType(E_INDIRECTION);
   indirection_entity->setUnaryIndirectionDepth(node_->getUnaryIndirectionDepth());
   indirection_entity->setDatatype(node_->getDatatype());
-  last_entity->setDatatype(node_->getDatatype());
   result->addEntity(indirection_entity);
 }
 

@@ -5,7 +5,8 @@ nodeVariableDeclaration::nodeVariableDeclaration()
   : m_is_function_argument(0),
   m_is_global(0),
   m_padding(0),
-  m_stack_offset(0)
+  m_stack_offset(0),
+  m_array_length(0)
 {
 }
 
@@ -14,7 +15,8 @@ nodeVariableDeclaration::nodeVariableDeclaration(nodeType node_type, filePositio
   m_is_function_argument(0),
   m_is_global(0),
   m_padding(0),
-  m_stack_offset(0)
+  m_stack_offset(0),
+  m_array_length(0)
 {
 }
 
@@ -27,7 +29,7 @@ int nodeVariableDeclaration::getDatatypeSize()
 
   if (m_datatype)
   {
-    return m_datatype->getDatatypeSize();
+    return m_datatype->getDatatypeSize() * (m_array_length > 0 ? m_array_length : 1);
   }
   return 0;
 }
@@ -46,9 +48,9 @@ void nodeVariableDeclaration::calculateStackOffset(int& stack_offset)
     }
     else
     {
-      stack_offset -= m_datatype->getDatatypeSize();
+      stack_offset -= getDatatypeSize();
       // make the stack offset alligned to 4 byte
-      m_padding = datatype::Padding(m_datatype->getDatatypeSize(), DATA_SIZE_DWORD);
+      m_padding = datatype::Padding(getDatatypeSize(), DATA_SIZE_DWORD);
       setStackOffset(stack_offset);
       stack_offset -= m_padding;
       return;

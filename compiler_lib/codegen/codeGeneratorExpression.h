@@ -19,6 +19,9 @@ public:
   void generateExpressionable(std::shared_ptr<nodeExpression> node, int flags);
   void generateExpNode(std::shared_ptr<nodeExpression> node);
   void generateUnary(std::shared_ptr<nodeExpression> node);
+  void generateLValueAddress(std::shared_ptr<nodeExpression> node);
+  void generateArrayAddress(std::shared_ptr<nodeExpression> node);
+  void generateValueAtAddress(std::shared_ptr<datatype> datatype);
   void generateWriteStrings();
 
 private:
@@ -50,4 +53,3 @@ private:
 
   class codeGenerator* m_codegen;
 };
-

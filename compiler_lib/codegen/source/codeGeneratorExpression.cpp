@@ -35,6 +35,12 @@ void codeGeneratorExpression::generateExpressionable(std::shared_ptr<nodeExpress
   }
   else if (node->getNodeType() == NODE_TYPE_EXPRESSION)
   {
+    if (node->isArray())
+    {
+      generateArrayAddress(node);
+      generateValueAtAddress(node->getDatatype());
+      return;
+    }
     generateExpNode(node);
   }
   else if (node->getNodeType() == NODE_TYPE_STRING)
@@ -89,10 +95,33 @@ void codeGeneratorExpression::generateExpressionArithmetic(std::shared_ptr<nodeE
     // FIXME:  operands might be identifiers without datatype. Make the symbol resolver store a pointer to
     // the node that is identified during parsing
 
-    if (datatype_on_stack && previous_datatype_on_stack && (datatype_on_stack->getPointerDepth() > 0 || right->getDatatype()->getPointerDepth() > 0))
+    if (datatype_on_stack && previous_datatype_on_stack)
     {
-      assert(0);
-      // handle pointer access
+      std::shared_ptr<datatype> pointer_type;
+      std::string offset_register;
+      if (previous_datatype_on_stack->getPointerDepth() > 0 &&
+          datatype_on_stack->getPointerDepth() == 0)
+      {
+        pointer_type = previous_datatype_on_stack;
+        offset_register = "ecx";
+      }
+      else if (node_->getExpressionType() & EXPRESSION_IS_ADDITION &&
+               datatype_on_stack->getPointerDepth() > 0 &&
+               previous_datatype_on_stack->getPointerDepth() == 0)
+      {
+        pointer_type = datatype_on_stack;
+        offset_register = "eax";
+      }
+      if (pointer_type && (node_->getExpressionType() & (EXPRESSION_IS_ADDITION | EXPRESSION_IS_SUBTRACTION)))
+      {
+        int element_size = pointer_type->getPointerDepth() > 1
+            ? DATA_SIZE_DWORD
+            : datatype::getPrimitiveTypeSize(pointer_type->getPrimitiveType());
+        if (element_size > 1)
+        {
+          m_asm_writer.asmGen("imul " + offset_register + ", " + std::to_string(element_size));
+        }
+      }
     }
 
     // result sent is stored in eax
@@ -224,7 +253,97 @@ void codeGeneratorExpression::generateAssignmentExpression(std::shared_ptr<nodeE
 
 void codeGeneratorExpression::generateUnary(std::shared_ptr<nodeExpression> node)
 {
-  resolveNodeForValue(node);  
+  if (node->getStringValue() == "&")
+  {
+    generateLValueAddress(node->getValueNode());
+    m_asm_writer.asmGenPushIns("ebx", node->getDatatype(), 0);
+  }
+  else if (node->getStringValue() == "*")
+  {
+    generateLValueAddress(node);
+    generateValueAtAddress(node->getDatatype());
+  }
+  else
+  {
+    resolveNodeForValue(node);
+  }
+}
+
+void codeGeneratorExpression::generateLValueAddress(std::shared_ptr<nodeExpression> node)
+{
+  if (node->getNodeType() == NODE_TYPE_IDENTIFIER)
+  {
+    std::shared_ptr<resolverResult> result;
+    m_resolver.follow(node, result);
+    m_asm_writer.asmGen("lea ebx, [" + result->getRootEntity()->getAddress() + "]");
+    return;
+  }
+  if (node->getNodeType() == NODE_TYPE_UNARY && node->getStringValue() == "*")
+  {
+    generateExpressionable(node->getValueNode(), 0);
+    m_asm_writer.asmGenPopIns("ebx");
+    for (int i = 1; i < node->getUnaryIndirectionDepth(); ++i)
+    {
+      m_asm_writer.asmGen("mov ebx, [ebx]");
+    }
+    return;
+  }
+  if (node->isArray())
+  {
+    generateArrayAddress(node);
+    return;
+  }
+  assert(0 && "expression is not an assignable lvalue");
+}
+
+void codeGeneratorExpression::generateArrayAddress(std::shared_ptr<nodeExpression> node)
+{
+  std::shared_ptr<nodeExpression> base = node->getLeftNode();
+  std::shared_ptr<nodeVariableDeclaration> declaration =
+      try_cast_node<nodeVariableDeclaration>(base->getDeclarationNode());
+  if (declaration && declaration->getArrayLength() > 0)
+  {
+    std::shared_ptr<resolverResult> result;
+    m_resolver.follow(base, result);
+    m_asm_writer.asmGen("lea ebx, [" + result->getRootEntity()->getAddress() + "]");
+  }
+  else
+  {
+    generateExpressionable(base, 0);
+    m_asm_writer.asmGenPopIns("ebx");
+  }
+
+  generateExpressionable(node->getRightNode(), 0);
+  m_asm_writer.asmGenPopIns("ecx");
+  std::shared_ptr<datatype> base_type = base->getDatatype();
+  int element_size = DATA_SIZE_DWORD;
+  if (base_type)
+  {
+    element_size = base_type->getPointerDepth() > 1
+        ? DATA_SIZE_DWORD
+        : datatype::getPrimitiveTypeSize(base_type->getPrimitiveType());
+  }
+  if (element_size > 1)
+  {
+    m_asm_writer.asmGen("imul ecx, " + std::to_string(element_size));
+  }
+  m_asm_writer.asmGen("add ebx, ecx");
+}
+
+void codeGeneratorExpression::generateValueAtAddress(std::shared_ptr<datatype> value_type)
+{
+  assert(value_type);
+  if (value_type->getDatatypeSize() == DATA_SIZE_DWORD)
+  {
+    m_asm_writer.asmGen("mov eax, dword [ebx]");
+  }
+  else
+  {
+    std::string size = value_type->getDatatypeRegisterSize();
+    std::string extend = value_type->isSigned() ? "movsx" : "movzx";
+    m_asm_writer.asmGen(extend + " eax, " + size + " [ebx]");
+  }
+  m_asm_writer.asmGenPushIns("eax", value_type, 0);
 }
 
 void codeGeneratorExpression::generateNumber(std::shared_ptr<nodeExpression> node, int flags)
@@ -239,11 +358,41 @@ void codeGeneratorExpression::generateIdentifier(std::shared_ptr<nodeExpression>
   std::shared_ptr<resolverResult> result;
   m_resolver.follow(node, result);
   std::shared_ptr<resolverEntity> entity = result->peekEntity();
+  std::shared_ptr<nodeVariableDeclaration> declaration =
+      try_cast_node<nodeVariableDeclaration>(node->getDeclarationNode());
+  if (declaration && declaration->getArrayLength() > 0)
+  {
+    std::shared_ptr<datatype> pointer_type = std::make_shared<datatype>(*node->getDatatype());
+    pointer_type->incrementPointerDepth();
+    m_asm_writer.asmGen("lea ebx, [" + entity->getAddress() + "]");
+    m_asm_writer.asmGenPushIns("ebx", pointer_type, node->getStackOffset());
+    return;
+  }
   generateMemoryAccess(node, entity, 0); // push value to stack
 }
 
 void codeGeneratorExpression::generateAssignmentPart(std::shared_ptr<nodeExpression> node, std::string operator_)
 {
+  if (node->getNodeType() == NODE_TYPE_UNARY && node->getStringValue() == "*")
+  {
+    generateLValueAddress(node);
+    m_asm_writer.asmGenPopIns("eax");
+    std::string reg_to_use = "eax";
+    std::string mov_type = node->getDatatype()->getDatatypeRegisterSize();
+    node->getDatatype()->getRegToUse(reg_to_use);
+    generateAssignmentInstructionForOperator(mov_type, "ebx", reg_to_use, operator_);
+    return;
+  }
+  if (node->isArray())
+  {
+    generateArrayAddress(node);
+    m_asm_writer.asmGenPopIns("eax");
+    std::string reg_to_use = "eax";
+    std::string mov_type = node->getDatatype()->getDatatypeRegisterSize();
+    node->getDatatype()->getRegToUse(reg_to_use);
+    generateAssignmentInstructionForOperator(mov_type, "ebx", reg_to_use, operator_);
+    return;
+  }
   std::shared_ptr<resolverResult> result;
   m_resolver.follow(node, result);
   std::shared_ptr<resolverEntity> entity = result->peekEntity();
@@ -443,4 +592,3 @@ std::string codeGeneratorExpression::registerString(std::string str)
   m_strings[str] = "str_" + std::to_string(m_codegen->generateLableCount());
   return m_strings[str];
 }
-

@@ -71,7 +71,7 @@ will stay like:
     //moveRightLeftNodeToLeft are only needed for nodeExpression
     if (std::shared_ptr<nodeExpression> node_expression = try_cast_node< nodeExpression>(node_))
     {
-      if ((node_expression->getLeftNode()->isArray() || node_expression->getRightNode()->isAssignmentNode()) ||
+      if ((node_expression->getRightNode() && node_expression->getRightNode()->isAssignmentNode()) ||
         ((node_->getLeftNode()->getNodeType() == NODE_TYPE_ENUM_EXPRESSION && STRINGS_EQUAL(node_->getLeftNode()->getStringValue().c_str(), "()")) &&
           (node_->getLeftNode()->getNodeType() == NODE_TYPE_ENUM_EXPRESSION && STRINGS_EQUAL(node_->getLeftNode()->getStringValue().c_str(), ","))))
       {

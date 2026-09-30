@@ -50,7 +50,9 @@ private:
   void parseExpressionOperatorOrOperand(bool& continue_to_parse_exp);
   void parseOperand();
   void parseOperator();
-  void parseParenthesesExpressionOrFunctionCall();
+  void parseParenthesesExpressionOrFunctionCall(bool parse_following_operators = true);
+  void parseUnaryOperand();
+  void parseArraySubscript();
   void parseComma();
   void parseNormalExpression();
   void parseIncrementOperator();

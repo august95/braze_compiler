@@ -110,10 +110,15 @@ void codeGeneratorGlobalDecleration::generateGlobalVariablePrimitive(std::shared
   std::string var_name = node->getStringValue();
   std::string var_value = "0";
   std::shared_ptr<datatype> datatype = node->getDatatype();
+  if (node->getArrayLength() > 0)
+  {
+    m_asm_writer.asmGen(var_name + ": times " + std::to_string(node->getArrayLength()) + " " +
+                        datatype->getStringForPrimitiveSize() + " 0");
+    return;
+  }
   if (std::shared_ptr<nodeExpression> node_exp = cast_node<nodeExpression>(node->getValueNode()))
   {
     var_value = std::to_string(node_exp->getNumberValue());
   }
   m_asm_writer.asmGen(var_name + ": " + datatype->getStringForPrimitiveSize() + " " + var_value);
 }
-
