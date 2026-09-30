@@ -109,6 +109,12 @@
     <None Include="test_files\codegeneration\test_codegen_unary.c">
       <Filter>test_files\codegeneration</Filter>
     </None>
+    <None Include="test_files\codegeneration\test_codegen_array.c">
+      <Filter>test_files\codegeneration</Filter>
+    </None>
+    <None Include="test_files\codegeneration\test_codegen_pointer_arithmetic.c">
+      <Filter>test_files\codegeneration</Filter>
+    </None>
     <None Include="test_files\codegeneration\test_codegen_unary2.c">
       <Filter>test_files\codegeneration</Filter>
     </None>

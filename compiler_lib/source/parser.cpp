@@ -203,6 +203,15 @@ void parser::parseOperand()
     node_->setStringValue(token->getStringValue());
     node_->setDeclarationNode(m_symbol_resolver.findDeclerationNode(node_));
     node_->setDatatype(node_->getDeclarationNode() ? node_->getDeclarationNode()->getDatatype() : 0);
+    if (std::shared_ptr<nodeVariableDeclaration> declaration =
+            try_cast_node<nodeVariableDeclaration>(node_->getDeclarationNode()))
+    {
+      if (declaration->getArrayLength() > 0 && node_->getDatatype())
+      {
+        node_->setDatatype(std::make_shared<datatype>(*node_->getDatatype()));
+        node_->getDatatype()->incrementPointerDepth();
+      }
+    }
   }
   else if (token->isTokenTypeString())
   {
@@ -364,7 +373,15 @@ void parser::parseNormalExpression()
   if (expression_node->getStringValue() == "+" || expression_node->getStringValue() == "-")
   {
     std::shared_ptr<datatype> pointer_type;
-    if (left_node->getDatatype() && left_node->getDatatype()->getPointerDepth() > 0)
+    bool left_is_pointer = left_node->getDatatype() && left_node->getDatatype()->getPointerDepth() > 0;
+    bool right_is_pointer = right_node->getDatatype() && right_node->getDatatype()->getPointerDepth() > 0;
+    if (expression_node->getStringValue() == "-" && left_is_pointer && right_is_pointer)
+    {
+      std::shared_ptr<datatype> difference_type = std::make_shared<datatype>(operator_token->getFilePosition());
+      difference_type->setDataType("int");
+      expression_node->setDatatype(difference_type);
+    }
+    else if (left_is_pointer)
     {
       pointer_type = left_node->getDatatype();
     }

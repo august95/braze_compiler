@@ -2064,18 +2064,22 @@ TEST(codegen, unary) {
     "mov dword [ebp-8], eax\n"
     "lea ebx, [ebp-8]\n"
     "push ebx\n"
-    "pop ebx\n"
-    //    "; PUSH ADDRESS &\n"
-    "push ebx\n"
     "pop eax\n"
     "mov dword [ebp-4], eax\n"
+    "push dword 6\n"
     "push dword [ebp-4]\n"
-    //    "; INDIRECTION\n"
     "pop ebx\n"
-    "mov ebx, [ebx]\n"
-    "push ebx\n"
+    "pop eax\n"
+    "mov dword [ebx], eax\n"
+    "push dword [ebp-8]\n"
     "pop eax\n"
     "mov dword [ebp-12], eax\n"
+    "push dword [ebp-4]\n"
+    "pop ebx\n"
+    "mov eax, dword [ebx]\n"
+    "push eax\n"
+    "pop eax\n"
+    "mov dword [ebp-16], eax\n"
     "add esp, 16\n"
     "pop ebp\n"
     "ret\n"
@@ -2124,24 +2128,17 @@ TEST(codegen, unary2) {
     "mov dword [ebp-4], eax\n"
     "lea ebx, [ebp-4]\n"
     "push ebx\n"
-    "pop ebx\n"
-    //    "; PUSH ADDRESS &\n"
-    "push ebx\n"
     "pop eax\n"
     "mov dword [ebp-8], eax\n"
     "lea ebx, [ebp-8]\n"
     "push ebx\n"
-    "pop ebx\n"
-    //    "; PUSH ADDRESS &\n"
-    "push ebx\n"
     "pop eax\n"
     "mov dword [ebp-12], eax\n"
     "push dword [ebp-12]\n"
-    //    "; INDIRECTION\n"
     "pop ebx\n"
     "mov ebx, [ebx]\n"
-    "mov ebx, [ebx]\n"
-    "push ebx\n"
+    "mov eax, dword [ebx]\n"
+    "push eax\n"
     "pop eax\n"
     "mov dword [ebp-16], eax\n"
     "add esp, 16\n"
@@ -2198,10 +2195,9 @@ TEST(codegen, unary3) {
     "pop eax\n"
     "mov dword [ebp-4], eax\n"
     "push dword [ebp-4]\n"
-    //    "; INDIRECTION\n"
     "pop ebx\n"
-    "mov ebx, [ebx]\n"
-    "push ebx\n"
+    "mov eax, dword [ebx]\n"
+    "push eax\n"
     "add esp, 4\n"
     "add esp, 16\n"
     "pop ebp\n"
@@ -2236,6 +2232,102 @@ TEST(codegen, unary3) {
   //  compareFiles(target, file_path + asm_file);
   EXPECT_TRUE(compareFiles(target, file_path + asm_file));
 
+  translation_unit.stop();
+}
+
+TEST(codegen, array) {
+  std::string target =
+    "section .data\n"
+    "section .text\n"
+    "global main\n"
+    "main:\n"
+    "push ebp\n"
+    "mov ebp, esp\n"
+    "sub esp, 16\n"
+    "push dword 3\n"
+    "lea ebx, [ebp-8]\n"
+    "push dword 0\n"
+    "pop ecx\n"
+    "imul ecx, 4\n"
+    "add ebx, ecx\n"
+    "pop eax\n"
+    "mov dword [ebx], eax\n"
+    "push dword 7\n"
+    "lea ebx, [ebp-8]\n"
+    "push dword 1\n"
+    "pop ecx\n"
+    "imul ecx, 4\n"
+    "add ebx, ecx\n"
+    "pop eax\n"
+    "mov dword [ebx], eax\n"
+    "lea ebx, [ebp-8]\n"
+    "push dword 1\n"
+    "pop ecx\n"
+    "imul ecx, 4\n"
+    "add ebx, ecx\n"
+    "mov eax, dword [ebx]\n"
+    "push eax\n"
+    "pop eax\n"
+    "mov dword [ebp-12], eax\n"
+    "add esp, 16\n"
+    "pop ebp\n"
+    "ret\n"
+    "section .rodata\n";
+
+  std::string file_name = "codegeneration/test_codegen_array.c";
+  translationUnit translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
+  EXPECT_TRUE(compareFiles(target, file_path + file_name + ".asm"));
+  translation_unit.stop();
+}
+
+TEST(codegen, pointer_arithmetic) {
+  std::string target =
+    "section .data\n"
+    "section .text\n"
+    "global main\n"
+    "main:\n"
+    "push ebp\n"
+    "mov ebp, esp\n"
+    "sub esp, 16\n"
+    "push dword 1\n"
+    "pop eax\n"
+    "mov dword [ebp-4], eax\n"
+    "lea ebx, [ebp-4]\n"
+    "push ebx\n"
+    "pop eax\n"
+    "mov dword [ebp-8], eax\n"
+    "push dword [ebp-8]\n"
+    "push dword 2\n"
+    "pop ecx\n"
+    "pop eax\n"
+    "imul ecx, 4\n"
+    "add eax, ecx\n"
+    "push eax\n"
+    "pop eax\n"
+    "mov dword [ebp-12], eax\n"
+    "push dword [ebp-12]\n"
+    "push dword [ebp-8]\n"
+    "pop ecx\n"
+    "pop eax\n"
+    "sub eax, ecx\n"
+    "cdq\n"
+    "mov ecx, 4\n"
+    "idiv ecx\n"
+    "push eax\n"
+    "pop eax\n"
+    "mov dword [ebp-16], eax\n"
+    "add esp, 16\n"
+    "pop ebp\n"
+    "ret\n"
+    "section .rodata\n";
+
+  std::string file_name = "codegeneration/test_codegen_pointer_arithmetic.c";
+  translationUnit translation_unit;
+  translation_unit.initialize(file_path + file_name);
+  translation_unit.startCompiler();
+  EXPECT_TRUE(compareFiles(target, file_path + file_name + ".asm"));
   translation_unit.stop();
 }
 

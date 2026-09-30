@@ -47,6 +47,10 @@ void codeGeneratorExpression::generateExpressionable(std::shared_ptr<nodeExpress
   {
     generateString(node);
   }
+  else if (node->getNodeType() == NODE_TYPE_EXPRESSION_PARANTHESES)
+  {
+    generateExpressionable(node->getParenthesesNode(), flags);
+  }
   else if (node->getNodeType() == NODE_TYPE_UNARY)
   {
     generateUnary(node);
@@ -124,10 +128,25 @@ void codeGeneratorExpression::generateExpressionArithmetic(std::shared_ptr<nodeE
       }
     }
 
-    // result sent is stored in eax
+    bool pointer_difference = datatype_on_stack && previous_datatype_on_stack &&
+        datatype_on_stack->getPointerDepth() > 0 &&
+        previous_datatype_on_stack->getPointerDepth() > 0 &&
+        (node_->getExpressionType() & EXPRESSION_IS_SUBTRACTION);
     generateMath("eax", "ecx", node_->getExpressionType());
+    if (pointer_difference)
+    {
+      int element_size = previous_datatype_on_stack->getPointerDepth() > 1
+          ? DATA_SIZE_DWORD
+          : datatype::getPrimitiveTypeSize(previous_datatype_on_stack->getPrimitiveType());
+      if (element_size > 1)
+      {
+        m_asm_writer.asmGen("cdq");
+        m_asm_writer.asmGen("mov ecx, " + std::to_string(element_size));
+        m_asm_writer.asmGen("idiv ecx");
+      }
+    }
   }
-  m_asm_writer.asmGenPushIns("eax", 0, 0); // we dont always have accces to the assigned node in the node tree from here
+  m_asm_writer.asmGenPushIns("eax", node_->getDatatype(), 0); // we dont always have accces to the assigned node in the node tree from here
 }
 
 void codeGeneratorExpression::generateExpressionLogicalArithmetic(std::shared_ptr<nodeExpression> node)
@@ -217,11 +236,21 @@ void codeGeneratorExpression::generateEntityAccessForUnaryIndirection(std::share
   if (!datatype)
     assert(0);
   m_asm_writer.asmGenPopIns("ebx");
-  for (int i = 0; i < entity->getUnaryIndirectionDepth(); i++)
+  for (int i = 1; i < entity->getUnaryIndirectionDepth(); i++)
   {
     m_asm_writer.asmGen("mov ebx, [ebx]");
   }
-  m_asm_writer.asmGenPushIns("ebx", entity->getDatatype(), 0);
+  if (entity->getDatatype()->getDatatypeSize() == DATA_SIZE_DWORD)
+  {
+    m_asm_writer.asmGen("mov ebx, [ebx]");
+    m_asm_writer.asmGenPushIns("ebx", entity->getDatatype(), 0);
+  }
+  else
+  {
+    std::string extension = entity->getDatatype()->isSigned() ? "movsx" : "movzx";
+    m_asm_writer.asmGen(extension + " eax, " + entity->getDatatype()->getDatatypeRegisterSize() + " [ebx]");
+    m_asm_writer.asmGenPushIns("eax", entity->getDatatype(), 0);
+  }
 
 }
 
@@ -232,11 +261,11 @@ void codeGeneratorExpression::generateEntityAccessStart(std::shared_ptr<resolver
     m_asm_writer.asmGen("lea ebx, [" + result->getRootAddress() + "]");
     m_asm_writer.asmGenPushIns("ebx", root_entity->getDatatype(), 0);
   }
-  else if (root_entity->getCodeGenInstruction() & CG_POINTER_ACCESS) //pointer access, resolverScope::followUnaryAddress is setting this flag
+  else if (result->peekEntity() && (result->peekEntity()->getCodeGenInstruction() & CG_POINTER_ACCESS))
   {
+    std::shared_ptr<datatype> pointer_type = std::make_shared<datatype>(*result->peekEntity()->getDatatype());
     m_asm_writer.asmGen("lea ebx, [" + root_entity->getAddress() + "]");
-    m_asm_writer.asmGenPushIns("ebx", root_entity->getDatatype(), 0);
-    m_asm_writer.getDatatypeOnStack()->incrementPointerDepth();
+    m_asm_writer.asmGenPushIns("ebx", pointer_type, 0);
   }
   else if (root_entity->getEntityType() == E_VARIABLE)
   {
@@ -271,6 +300,11 @@ void codeGeneratorExpression::generateUnary(std::shared_ptr<nodeExpression> node
 
 void codeGeneratorExpression::generateLValueAddress(std::shared_ptr<nodeExpression> node)
 {
+  if (node->getNodeType() == NODE_TYPE_EXPRESSION_PARANTHESES)
+  {
+    generateLValueAddress(node->getParenthesesNode());
+    return;
+  }
   if (node->getNodeType() == NODE_TYPE_IDENTIFIER)
   {
     std::shared_ptr<resolverResult> result;
@@ -363,7 +397,10 @@ void codeGeneratorExpression::generateIdentifier(std::shared_ptr<nodeExpression>
   if (declaration && declaration->getArrayLength() > 0)
   {
     std::shared_ptr<datatype> pointer_type = std::make_shared<datatype>(*node->getDatatype());
-    pointer_type->incrementPointerDepth();
+    if (pointer_type->getPointerDepth() == 0)
+    {
+      pointer_type->incrementPointerDepth();
+    }
     m_asm_writer.asmGen("lea ebx, [" + entity->getAddress() + "]");
     m_asm_writer.asmGenPushIns("ebx", pointer_type, node->getStackOffset());
     return;
